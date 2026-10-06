@@ -5,7 +5,8 @@ export const defaultStudent = {
   section: 'DS 2',
   branch: 'Data Science',
   assistantProfessor: 'Mr. S Bosu Babu',
-  githubRepo: 'https://github.com/tambalisathvika'
+  githubRepo: 'https://github.com/tambalisathvika',
+  linkedinUrl: 'https://www.linkedin.com/in/tambali-sathvika'
 };
 
 export const defaultExperiments = [

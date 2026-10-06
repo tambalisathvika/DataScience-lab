@@ -2873,6 +2873,24 @@ body {
   color: var(--primary-teal);
 }
 
+.id-linkedin-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #0a66c2;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  padding-top: 0.55rem;
+  margin-top: 0.55rem;
+  border-top: 1px dashed var(--border-light);
+  transition: all 0.15s ease;
+}
+
+.id-linkedin-link:hover {
+  color: #004182;
+}
+
 /* Right Stats Grid */
 .profile-stats-grid {
   display: grid;

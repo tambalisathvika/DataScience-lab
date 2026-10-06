@@ -160,9 +160,21 @@ export default function EditStudentModal({ isOpen, onClose, student, onSave }) {
                 type="url" 
                 name="githubRepo" 
                 className="form-input" 
-                value={formData.githubRepo} 
+                value={formData.githubRepo || ''} 
                 onChange={handleInputChange} 
                 placeholder="https://github.com/username/repository"
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">LinkedIn Profile URL</label>
+              <input 
+                type="url" 
+                name="linkedinUrl" 
+                className="form-input" 
+                value={formData.linkedinUrl || ''} 
+                onChange={handleInputChange} 
+                placeholder="https://www.linkedin.com/in/username"
               />
             </div>
           </div>

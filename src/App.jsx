@@ -17,22 +17,27 @@ import ConfirmDialog from './components/ConfirmDialog';
 import { defaultStudent, defaultExperiments } from './data/defaultData';
 import { loadStorage, saveStorage } from './utils/storage';
 
-const APP_VERSION = 'v3.1-videos';
+const APP_VERSION = 'v3.2-linkedin';
 
 export default function App() {
-  // Clear old cached experiments to enforce only Experiment 6
+  // Clear old cached experiments and synchronize student credentials
   useEffect(() => {
     const storedVersion = localStorage.getItem('ds_lab_version');
     if (storedVersion !== APP_VERSION) {
       localStorage.setItem('ds_lab_version', APP_VERSION);
       saveStorage('ds_lab_experiments', defaultExperiments);
       setExperiments(defaultExperiments);
+      const currentStudent = loadStorage('ds_lab_student', defaultStudent);
+      const updatedStudent = { ...defaultStudent, ...currentStudent, linkedinUrl: currentStudent.linkedinUrl || defaultStudent.linkedinUrl };
+      saveStorage('ds_lab_student', updatedStudent);
+      setStudent(updatedStudent);
     }
   }, []);
 
   // 1. Persistent Student State
   const [student, setStudent] = useState(() => {
-    return loadStorage('ds_lab_student', defaultStudent);
+    const current = loadStorage('ds_lab_student', defaultStudent);
+    return { ...defaultStudent, ...current, linkedinUrl: current.linkedinUrl || defaultStudent.linkedinUrl };
   });
 
   // 2. Persistent Experiments State (Enforce Only Experiment 6)

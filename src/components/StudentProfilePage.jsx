@@ -3,7 +3,7 @@ import MbuLogo from './MbuLogo';
 import { 
   User, Edit3, Github, ExternalLink, Printer, 
   CheckCircle2, Award, Calendar, BookOpen, ShieldCheck, 
-  GraduationCap, Mail, Phone, MapPin 
+  GraduationCap, Mail, Phone, MapPin, Linkedin
 } from 'lucide-react';
 
 export default function StudentProfilePage({ 
@@ -145,9 +145,26 @@ export default function StudentProfilePage({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="id-github-link"
+                title="Open Candidate's GitHub Repository"
               >
-                <Github size={14} />
-                <span>View Candidate Repository</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                  <Github size={14} />
+                  <span>View Candidate Repository</span>
+                </div>
+                <ExternalLink size={12} />
+              </a>
+
+              <a
+                href={student.linkedinUrl || 'https://www.linkedin.com/in/tambali-sathvika'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="id-linkedin-link"
+                title="Open Candidate's LinkedIn Profile"
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                  <Linkedin size={14} style={{ color: '#0a66c2' }} />
+                  <span>View LinkedIn Profile</span>
+                </div>
                 <ExternalLink size={12} />
               </a>
             </div>

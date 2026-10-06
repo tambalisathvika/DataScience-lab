@@ -1,6 +1,6 @@
 import React from 'react';
 import MbuLogo from './MbuLogo';
-import { Pencil, Github, ExternalLink, GraduationCap, ShieldCheck, Award } from 'lucide-react';
+import { Pencil, Github, ExternalLink, GraduationCap, ShieldCheck, Award, Linkedin } from 'lucide-react';
 
 export default function StudentCard({ student, onEdit }) {
   return (
@@ -64,17 +64,30 @@ export default function StudentCard({ student, onEdit }) {
             </div>
           </div>
 
-          {/* GitHub action button */}
-          <div className="student-footer-action">
+          {/* GitHub & LinkedIn action buttons */}
+          <div className="student-footer-action" style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
             <a 
-              href={student.githubRepo || 'https://github.com'} 
+              href={student.githubRepo || 'https://github.com/tambalisathvika'} 
               target="_blank" 
               rel="noopener noreferrer" 
               className="student-gh-button"
               title="Open Student's GitHub Repository"
             >
-              <Github size={15} />
+              <Github size={14} />
               <span>View Repository</span>
+              <ExternalLink size={12} style={{ opacity: 0.7 }} />
+            </a>
+
+            <a 
+              href={student.linkedinUrl || 'https://www.linkedin.com/in/tambali-sathvika'} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="student-gh-button"
+              style={{ background: '#f0f7fd', color: '#0a66c2', borderColor: '#cbe4f9' }}
+              title="Open Student's LinkedIn Profile"
+            >
+              <Linkedin size={14} />
+              <span>LinkedIn Profile</span>
               <ExternalLink size={12} style={{ opacity: 0.7 }} />
             </a>
           </div>
