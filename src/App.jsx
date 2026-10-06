@@ -17,7 +17,7 @@ import ConfirmDialog from './components/ConfirmDialog';
 import { defaultStudent, defaultExperiments } from './data/defaultData';
 import { loadStorage, saveStorage } from './utils/storage';
 
-const APP_VERSION = 'v3.0-only-exp6';
+const APP_VERSION = 'v3.1-videos';
 
 export default function App() {
   // Clear old cached experiments to enforce only Experiment 6
