@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   BookOpen, Layers, Clock, Award, CheckCircle2, 
   ArrowRight, ArrowLeft, Search, Code2, Terminal, 
-  FileText, Download, Printer, Play, ExternalLink, 
+  FileText, Download, Printer, ExternalLink, 
   Sparkles, Check, Copy, ChevronRight, X, FlaskConical,
   GraduationCap, HelpCircle, ShieldCheck, Cpu, Database
 } from 'lucide-react';
@@ -253,101 +253,70 @@ Mohan Babu University — Continuous Academic Evaluation Series (AY 2026–2027)
           </div>
         </header>
 
-        {/* 2. LEARNING RESOURCES & RELATED EXPERIMENTS GRID */}
-        <section className="module-resources-section">
-          <div className="section-header-row">
-            <div>
-              <h2 className="section-title-sm">
-                <Sparkles size={17} style={{ color: activeModule.theme.primaryColor }} />
-                <span>Learning Resources &amp; Laboratory Connections</span>
-              </h2>
-              <p className="section-subtitle-sm">
-                Integrated multimedia lectures, laboratory experiments, and executable code implementations.
-              </p>
-            </div>
-          </div>
-
-          <div className="module-resources-grid">
-            {/* CARD 1: Video Lecture Resource */}
-            <div className="pro-card resource-card">
-              <div className="resource-card-header">
-                <div className="resource-icon-wrap video">
-                  <Play size={16} />
-                </div>
-                <div>
-                  <h3 className="resource-title">Video Lecture</h3>
-                  <span className="resource-meta-label">{activeModule.videoResource.duration}</span>
-                </div>
-              </div>
-              
-              <div className="resource-video-frame">
-                <iframe
-                  src={activeModule.videoResource.embedUrl}
-                  title={activeModule.videoResource.title}
-                  className="resource-iframe"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
-
-              <p className="resource-desc">
-                {activeModule.videoResource.title}
-              </p>
-
-              <div className="resource-tags-wrap">
-                {activeModule.videoResource.tags.map((tag, idx) => (
-                  <span key={idx} className="resource-tag-chip">{tag}</span>
-                ))}
+        {/* 2. LABORATORY CONNECTIONS & PRACTICAL IMPLEMENTATIONS */}
+        {activeModule.relatedExperiments && activeModule.relatedExperiments.length > 0 && (
+          <section className="module-resources-section">
+            <div className="section-header-row">
+              <div>
+                <h2 className="section-title-sm">
+                  <FlaskConical size={17} style={{ color: activeModule.theme.primaryColor }} />
+                  <span>Laboratory Connections</span>
+                </h2>
+                <p className="section-subtitle-sm">
+                  Practical laboratory experiments directly mapped to theoretical curriculum topics.
+                </p>
               </div>
             </div>
 
-            {/* CARD 2: Connected Related Experiments */}
-            <div className="pro-card resource-card">
-              <div className="resource-card-header">
-                <div className="resource-icon-wrap flask">
-                  <FlaskConical size={16} />
-                </div>
-                <div>
-                  <h3 className="resource-title">Related Experiments</h3>
-                  <span className="resource-meta-label">
-                    {activeModule.relatedExperiments.length} Connected Lab Modules
-                  </span>
-                </div>
-              </div>
-
-              <p className="resource-desc">
-                Practical implementation modules from the laboratory syllabus directly mapped to these theoretical topics:
-              </p>
-
-              <div className="related-exps-list">
-                {activeModule.relatedExperiments.map((expRef) => (
-                  <div 
-                    key={expRef.id} 
-                    className="related-exp-item"
-                    onClick={() => handleOpenRelatedExperiment(expRef)}
-                    title={`Jump to Experiment ${expRef.number}: ${expRef.title}`}
-                  >
-                    <div className="exp-item-badge">
-                      <span>EXP {expRef.number}</span>
-                    </div>
-                    <div className="exp-item-content">
-                      <span className="exp-item-title">{expRef.title}</span>
-                      <span className="exp-item-relevance">{expRef.relevance}</span>
-                    </div>
-                    <div className="exp-item-arrow">
-                      <ArrowRight size={14} />
-                    </div>
+            <div className="module-resources-grid" style={{ gridTemplateColumns: '1fr' }}>
+              {/* Connected Related Experiments */}
+              <div className="pro-card resource-card">
+                <div className="resource-card-header">
+                  <div className="resource-icon-wrap flask">
+                    <FlaskConical size={16} />
                   </div>
-                ))}
-              </div>
+                  <div>
+                    <h3 className="resource-title">Related Experiments</h3>
+                    <span className="resource-meta-label">
+                      {activeModule.relatedExperiments.length} Connected Lab Module{activeModule.relatedExperiments.length > 1 ? 's' : ''}
+                    </span>
+                  </div>
+                </div>
 
-              <div className="resource-footer-note">
-                <ShieldCheck size={13} style={{ color: '#10b981' }} />
-                <span>Verified with MBU Continuous Academic Evaluation Syllabus</span>
+                <p className="resource-desc">
+                  Practical implementation modules from the laboratory syllabus directly mapped to these theoretical topics:
+                </p>
+
+                <div className="related-exps-list">
+                  {activeModule.relatedExperiments.map((expRef) => (
+                    <div 
+                      key={expRef.id} 
+                      className="related-exp-item"
+                      onClick={() => handleOpenRelatedExperiment(expRef)}
+                      title={`Jump to Experiment ${expRef.number}: ${expRef.title}`}
+                    >
+                      <div className="exp-item-badge">
+                        <span>EXP {expRef.number}</span>
+                      </div>
+                      <div className="exp-item-content">
+                        <span className="exp-item-title">{expRef.title}</span>
+                        <span className="exp-item-relevance">{expRef.relevance}</span>
+                      </div>
+                      <div className="exp-item-arrow">
+                        <ArrowRight size={14} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="resource-footer-note">
+                  <ShieldCheck size={13} style={{ color: '#10b981' }} />
+                  <span>Verified with MBU Continuous Academic Evaluation Syllabus</span>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* 3. CODE IMPLEMENTATION SECTION */}
         <section className="module-code-section">

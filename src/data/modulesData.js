@@ -39,26 +39,13 @@ export const dataScienceModules = [
       'Data Preprocessing Pipelines',
       'Descriptive Analysis & Metrics'
     ],
-    videoResource: {
-      title: 'Lecture 1: Foundations of Modern Data Science & Exploratory Analytics',
-      duration: '18:45 min',
-      embedUrl: 'https://www.youtube.com/embed/UFuo7EHI8zc',
-      instructor: 'Department of Data Science Faculty',
-      tags: ['Foundations', 'Data Types', 'Preprocessing', 'Descriptive Stats']
-    },
-    relatedExperimentIds: ['exp-1', 'exp-2'],
+    relatedExperimentIds: ['exp-6'],
     relatedExperiments: [
       {
-        id: 'exp-1',
-        number: '1',
-        title: 'Time Series Analysis',
-        relevance: 'Demonstrates timestamp data structures, pandas date_range, frequency conversion, and period arithmetic.'
-      },
-      {
-        id: 'exp-2',
-        number: '2',
-        title: 'Data Cleaning & Exploratory Data Analysis',
-        relevance: 'Implements practical data preprocessing, outlier detection using IQR, and descriptive statistical summarization.'
+        id: 'exp-6',
+        number: '6',
+        title: 'Time Series Analysis & Forecasting',
+        relevance: 'Demonstrates timestamp data structures, pandas date_range, frequency conversion, period arithmetic, and temporal analytics.'
       }
     ],
     codeExample: {
@@ -310,32 +297,13 @@ print(cat_summary.round(2))`
       'Singular Value Decomposition (SVD)',
       'Principal Component Analysis (PCA)'
     ],
-    videoResource: {
-      title: 'Lecture 2: Advanced Feature Engineering, Tree Ensembles & Dimensionality Reduction',
-      duration: '22:15 min',
-      embedUrl: 'https://www.youtube.com/embed/r0s4442q3Lg',
-      instructor: 'Department of Data Science Faculty',
-      tags: ['Feature Selection', 'Decision Trees', 'Ensemble Learning', 'PCA & SVD']
-    },
-    relatedExperimentIds: ['exp-3', 'exp-4', 'exp-5'],
+    relatedExperimentIds: ['exp-6'],
     relatedExperiments: [
       {
-        id: 'exp-3',
-        number: '3',
-        title: 'Regression Modeling & Continuous Estimation',
-        relevance: 'Demonstrates Stepwise regression principles, Ordinary Least Squares, and model evaluation metrics.'
-      },
-      {
-        id: 'exp-4',
-        number: '4',
-        title: 'Supervised Classification & Decision Trees',
-        relevance: 'Directly implements Entropy calculation, Information Gain splitting, and Decision Tree visualization.'
-      },
-      {
-        id: 'exp-5',
-        number: '5',
-        title: 'Unsupervised Clustering & Dimensionality Reduction',
-        relevance: 'Implements Principal Component Analysis (PCA), covariance matrix decomposition, and dimensionality reduction.'
+        id: 'exp-6',
+        number: '6',
+        title: 'Time Series Analysis & Forecasting',
+        relevance: 'Practical time-series workflows, temporal resampling, lag features, and period transformations for analytics.'
       }
     ],
     codeExample: {
