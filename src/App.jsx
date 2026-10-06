@@ -17,43 +17,37 @@ import ConfirmDialog from './components/ConfirmDialog';
 import { defaultStudent, defaultExperiments } from './data/defaultData';
 import { loadStorage, saveStorage } from './utils/storage';
 
-const APP_VERSION = 'v2.6-exp6';
+const APP_VERSION = 'v3.0-only-exp6';
 
 export default function App() {
-  // Clear old cached data if app version has changed to load expanded syllabus
+  // Clear old cached experiments to enforce only Experiment 6
   useEffect(() => {
     const storedVersion = localStorage.getItem('ds_lab_version');
     if (storedVersion !== APP_VERSION) {
-      localStorage.removeItem('ds_lab_student');
-      localStorage.removeItem('ds_lab_experiments');
       localStorage.setItem('ds_lab_version', APP_VERSION);
+      saveStorage('ds_lab_experiments', defaultExperiments);
+      setExperiments(defaultExperiments);
     }
   }, []);
 
   // 1. Persistent Student State
   const [student, setStudent] = useState(() => {
-    const storedVersion = localStorage.getItem('ds_lab_version');
-    if (storedVersion !== APP_VERSION) return defaultStudent;
     return loadStorage('ds_lab_student', defaultStudent);
   });
 
-  // 2. Persistent Experiments State
+  // 2. Persistent Experiments State (Enforce Only Experiment 6)
   const [experiments, setExperiments] = useState(() => {
     const storedVersion = localStorage.getItem('ds_lab_version');
-    if (storedVersion !== APP_VERSION) return defaultExperiments;
+    if (storedVersion !== APP_VERSION) {
+      saveStorage('ds_lab_experiments', defaultExperiments);
+      localStorage.setItem('ds_lab_version', APP_VERSION);
+      return defaultExperiments;
+    }
     const saved = loadStorage('ds_lab_experiments', null);
-    if (saved && Array.isArray(saved) && saved.length > 0) {
-      const hasExp6 = saved.some(e => e.id === 'exp-6' || e.number === '6');
-      if (!hasExp6) {
-        const exp6 = defaultExperiments.find(e => e.id === 'exp-6' || e.number === '6');
-        if (exp6) {
-          const merged = [...saved, exp6];
-          saveStorage('ds_lab_experiments', merged);
-          return merged;
-        }
-      }
+    if (saved && Array.isArray(saved) && saved.length === 1 && (saved[0].id === 'exp-6' || saved[0].number === '6')) {
       return saved;
     }
+    saveStorage('ds_lab_experiments', defaultExperiments);
     return defaultExperiments;
   });
 
