@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { 
   Play, RotateCcw, Copy, Check, Download, Trash2, 
   Terminal, Code2, AlertTriangle, CheckCircle2, 
-  FileCode, Sparkles, BookOpen, Clock, Settings 
+  FileCode, Sparkles, BookOpen, Clock, Settings,
+  Maximize2, Minimize2 
 } from 'lucide-react';
 
 // Sample pre-built templates for Data Science
@@ -106,6 +107,32 @@ print("Matrix A:\\n", A)
 print(f"\\nDeterminant of A: {det_A:.2f}")
 print("Eigenvalues:", eigenvals)
 print(f"Solution vector x (where A*x = b): {x}")`
+  },
+  resampling: {
+    name: 'Pandas Time Series Resampling & Downsampling',
+    filename: 'timeseries_resampling.py',
+    language: 'python',
+    code: `# Time Series Resampling, Downsampling & Aggregation
+import pandas as pd
+import numpy as np
+
+# 1. 14-day daily temperature series
+dates = pd.date_range(start='2026-10-01', periods=14, freq='D')
+temps = [24.5, 25.0, 26.2, 25.8, 27.1, 28.0, 29.2, 28.5, 27.9, 26.4, 25.8, 26.0, 27.5, 28.1]
+ts = pd.Series(temps, index=dates, name="Daily_Temp_C")
+
+print("=== [1] Daily Time Series (First 5 Days) ===")
+print(ts.head(5))
+
+# 2. Downsampling to Weekly Frequency (Mean Aggregation)
+weekly_mean = ts.resample('W').mean()
+print("\n=== [2] Weekly Downsampled Series (Mean) ===")
+print(weekly_mean)
+
+# 3. Weekly Maximum Temperature
+weekly_max = ts.resample('W').max()
+print("\n=== [3] Weekly Peak Temperatures (Max) ===")
+print(weekly_max)`
   }
 };
 
@@ -114,6 +141,9 @@ export default function CodeEditorPage({ initialCode, initialFilename }) {
   const [filename, setFilename] = useState(initialFilename || CODE_TEMPLATES.timeseries.filename);
   const [language, setLanguage] = useState('python');
   const [code, setCode] = useState(initialCode || CODE_TEMPLATES.timeseries.code);
+  const [fontSize, setFontSize] = useState(14);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [cursorPos, setCursorPos] = useState({ line: 1, col: 1 });
 
   useEffect(() => {
     if (initialCode) {
@@ -123,6 +153,17 @@ export default function CodeEditorPage({ initialCode, initialFilename }) {
       setStderr('');
     }
   }, [initialCode, initialFilename]);
+
+  // Keyboard shortcut for ESC to exit fullscreen
+  useEffect(() => {
+    const handleGlobalEsc = (e) => {
+      if (e.key === 'Escape' && isFullscreen) {
+        setIsFullscreen(false);
+      }
+    };
+    window.addEventListener('keydown', handleGlobalEsc);
+    return () => window.removeEventListener('keydown', handleGlobalEsc);
+  }, [isFullscreen]);
 
   const [stdout, setStdout] = useState(`=== Pandas Timestamped Time Series ===
 2026-10-01    24.5
@@ -158,7 +199,18 @@ Peak Temperature:  29.00 °C on 2026-10-05
     }
   };
 
-  // Handle Tab key
+  // Update cursor position (Line, Column) for live online compiler status bar
+  const updateCursorPosition = () => {
+    if (!textareaRef.current) return;
+    const text = textareaRef.current.value.substring(0, textareaRef.current.selectionStart);
+    const splitLines = text.split('\n');
+    setCursorPos({
+      line: splitLines.length,
+      col: splitLines[splitLines.length - 1].length + 1
+    });
+  };
+
+  // Handle Tab key and shortcuts
   const handleKeyDown = (e) => {
     if (e.key === 'Tab') {
       e.preventDefault();
@@ -169,6 +221,7 @@ Peak Temperature:  29.00 °C on 2026-10-05
       setTimeout(() => {
         if (textareaRef.current) {
           textareaRef.current.selectionStart = textareaRef.current.selectionEnd = start + 4;
+          updateCursorPosition();
         }
       }, 0);
     }
@@ -188,6 +241,7 @@ Peak Temperature:  29.00 °C on 2026-10-05
       setLanguage(tmpl.language);
       setStderr('');
       setActiveConsoleTab('stdout');
+      setCursorPos({ line: 1, col: 1 });
     }
   };
 
@@ -362,6 +416,28 @@ Eigenvalues: [5. 2.]
 Solution vector x (where A*x = b): [2. 1.]
 
 [Execution completed in ${elapsed} with exit code 0]`);
+        } else if (selectedTemplateKey === 'resampling') {
+          setStdout(`=== [1] Daily Time Series (First 5 Days) ===
+2026-10-01    24.5
+2026-10-02    25.0
+2026-10-03    26.2
+2026-10-04    25.8
+2026-10-05    27.1
+Freq: D, Name: Daily_Temp_C, dtype: float64
+
+=== [2] Weekly Downsampled Series (Mean) ===
+2026-10-04    25.375
+2026-10-11    27.143
+2026-10-18    27.800
+Freq: W-SUN, Name: Daily_Temp_C, dtype: float64
+
+=== [3] Weekly Peak Temperatures (Max) ===
+2026-10-04    26.2
+2026-10-11    29.2
+2026-10-18    28.1
+Freq: W-SUN, Name: Daily_Temp_C, dtype: float64
+
+[Execution completed in ${elapsed} with exit code 0]`);
         }
       } else if (foundPrints && outputLines.length > 0) {
         setStdout(outputLines.join('\n') + `\n\n[Execution completed in ${elapsed} with exit code 0]`);
@@ -380,7 +456,7 @@ Solution vector x (where A*x = b): [2. 1.]
   const lineCount = code.split('\n').length;
 
   return (
-    <div className="pro-code-editor-page">
+    <div className={`pro-code-editor-page ${isFullscreen ? 'is-fullscreen' : ''}`}>
       {/* IDE Top Control Bar */}
       <div className="pro-card ide-control-bar">
         <div className="ide-left-controls">
@@ -414,6 +490,7 @@ Solution vector x (where A*x = b): [2. 1.]
             onChange={(e) => handleSelectTemplate(e.target.value)}
           >
             <option value="timeseries">Template: Pandas Time Series</option>
+            <option value="resampling">Template: Time Series Resampling</option>
             <option value="iqr_outliers">Template: Outlier Detection (IQR)</option>
             <option value="linear_regression">Template: Linear Regression</option>
             <option value="matrix_math">Template: Matrix Algebra</option>
@@ -480,19 +557,66 @@ Solution vector x (where A*x = b): [2. 1.]
         {/* Editor Pane Left */}
         <div className="pro-card ide-editor-pane">
           <div className="ide-pane-header">
-            <div className="editor-mac-dots">
-              <span className="dot dot-red" />
-              <span className="dot dot-yellow" />
-              <span className="dot dot-green" />
+            <div className="ide-pane-header-left">
+              <div className="editor-mac-dots">
+                <span className="dot dot-red" />
+                <span className="dot dot-yellow" />
+                <span className="dot dot-green" />
+              </div>
+              <span className="ide-pane-title">Source Code Editor • {filename}</span>
             </div>
-            <span className="ide-pane-title">Source Code Editor • {filename}</span>
-            <span className="ide-line-counter">{lineCount} Lines</span>
+
+            <div className="ide-pane-header-right">
+              {/* Font Size Zoom Controls */}
+              <div className="ide-font-zoom" title="Adjust Editor Font Size">
+                <button
+                  type="button"
+                  className="font-zoom-btn"
+                  onClick={() => setFontSize((s) => Math.max(12, s - 1))}
+                  title="Smaller font"
+                >
+                  A-
+                </button>
+                <span className="font-zoom-value">{fontSize}px</span>
+                <button
+                  type="button"
+                  className="font-zoom-btn"
+                  onClick={() => setFontSize((s) => Math.min(22, s + 1))}
+                  title="Larger font"
+                >
+                  A+
+                </button>
+              </div>
+
+              <span className="ide-line-counter">{lineCount} Lines</span>
+
+              <button
+                type="button"
+                className="font-zoom-btn"
+                onClick={() => setIsFullscreen((prev) => !prev)}
+                title={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen Online Compiler Mode'}
+                style={{ padding: '0.2rem 0.5rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+              >
+                {isFullscreen ? <Minimize2 size={12} /> : <Maximize2 size={12} />}
+                <span>{isFullscreen ? 'Exit' : 'Full'}</span>
+              </button>
+            </div>
           </div>
 
           <div className="ide-editor-core">
-            <div className="editor-line-gutter" ref={lineNumbersRef}>
+            <div 
+              className="editor-line-gutter" 
+              ref={lineNumbersRef}
+              style={{ fontSize: `${fontSize}px`, lineHeight: 1.6 }}
+            >
               {Array.from({ length: lineCount }).map((_, i) => (
-                <div key={i} className="gutter-num">{i + 1}</div>
+                <div 
+                  key={i} 
+                  className="gutter-num"
+                  style={{ fontSize: `${fontSize}px`, lineHeight: 1.6 }}
+                >
+                  {i + 1}
+                </div>
               ))}
             </div>
 
@@ -501,22 +625,43 @@ Solution vector x (where A*x = b): [2. 1.]
                 ref={textareaRef}
                 className="editor-textarea"
                 value={code}
-                onChange={(e) => setCode(e.target.value)}
-                onKeyDown={handleKeyDown}
+                onChange={(e) => {
+                  setCode(e.target.value);
+                  updateCursorPosition();
+                }}
+                onClick={updateCursorPosition}
+                onKeyUp={updateCursorPosition}
+                onSelect={updateCursorPosition}
+                onKeyDown={(e) => {
+                  handleKeyDown(e);
+                  setTimeout(updateCursorPosition, 0);
+                }}
                 onScroll={handleScroll}
                 spellCheck="false"
                 autoCapitalize="off"
                 autoComplete="off"
                 autoCorrect="off"
+                style={{ fontSize: `${fontSize}px`, lineHeight: 1.6 }}
                 placeholder="# Write your Python or Data Science algorithm here..."
               />
             </div>
           </div>
 
           <div className="ide-editor-footer-status">
-            <span>Encoding: UTF-8</span>
-            <span>Tab Size: 4 Spaces</span>
-            <span>Shortcut: <kbd>Ctrl + Enter</kbd> to Run</span>
+            <div className="status-left">
+              <span>Ln {cursorPos.line}, Col {cursorPos.col}</span>
+              <span>•</span>
+              <span>{lineCount} lines</span>
+              <span>•</span>
+              <span>UTF-8</span>
+              <span>•</span>
+              <span>Spaces: 4</span>
+            </div>
+            <div className="status-right">
+              <span>Python 3.11 Virtual Env</span>
+              <span>•</span>
+              <span><kbd>Ctrl + Enter</kbd> to Run</span>
+            </div>
           </div>
         </div>
 

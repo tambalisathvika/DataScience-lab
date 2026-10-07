@@ -203,7 +203,7 @@ export default function App() {
         onEditStudent={() => setIsEditStudentOpen(true)}
       />
 
-      <main className="ds-container">
+      <main className={`ds-container ${activeNavTab === 'editor' ? 'ds-container-editor' : ''}`}>
         {/* PAGE 1: EXPERIMENTS VIEW */}
         {activeNavTab === 'experiments' && (
           <>
