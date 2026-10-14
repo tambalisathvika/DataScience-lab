@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 340" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg4" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#022c22" />
+      <stop offset="50%" stop-color="#064e3b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="emeraldGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+    <filter id="glow4" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <rect width="600" height="340" fill="url(#bg4)" />
+
+  <!-- Grid overlay -->
+  <g opacity="0.1" stroke="#34d399" stroke-width="1">
+    <line x1="0" y1="60" x2="600" y2="60" />
+    <line x1="0" y1="120" x2="600" y2="120" />
+    <line x1="0" y1="180" x2="600" y2="180" />
+    <line x1="0" y1="240" x2="600" y2="240" />
+    <line x1="120" y1="0" x2="120" y2="340" />
+    <line x1="240" y1="0" x2="240" y2="340" />
+    <line x1="360" y1="0" x2="360" y2="340" />
+    <line x1="480" y1="0" x2="480" y2="340" />
+  </g>
+
+  <circle cx="300" cy="135" r="85" fill="#059669" opacity="0.25" filter="url(#glow4)" />
+
+  <!-- Center: Hierarchical MultiIndex Matrix + Stack/Unstack Flow -->
+  <g transform="translate(130, 60)">
+    <!-- Main Matrix Card -->
+    <rect width="340" height="150" rx="10" fill="#064e3b" opacity="0.6" stroke="#34d399" stroke-width="2" filter="url(#glow4)" />
+    
+    <!-- Outer Level: Engineering -->
+    <rect x="20" y="20" width="70" height="50" rx="4" fill="#047857" />
+    <text x="55" y="48" fill="#ffffff" font-size="10" font-family="system-ui, sans-serif" font-weight="bold" text-anchor="middle">Engineering</text>
+
+    <!-- Inner Levels: CSE & ECE -->
+    <rect x="100" y="20" width="60" height="22" rx="3" fill="#0f766e" />
+    <text x="130" y="35" fill="#ccfbf1" font-size="9" font-family="monospace" text-anchor="middle">CSE: 85</text>
+    <rect x="100" y="48" width="60" height="22" rx="3" fill="#0f766e" />
+    <text x="130" y="63" fill="#ccfbf1" font-size="9" font-family="monospace" text-anchor="middle">ECE: 78</text>
+
+    <!-- Outer Level: Science -->
+    <rect x="20" y="80" width="70" height="50" rx="4" fill="#0284c7" />
+    <text x="55" y="108" fill="#ffffff" font-size="10" font-family="system-ui, sans-serif" font-weight="bold" text-anchor="middle">Science</text>
+
+    <!-- Inner Levels: Physics & Chem -->
+    <rect x="100" y="80" width="60" height="22" rx="3" fill="#0369a1" />
+    <text x="130" y="95" fill="#e0f2fe" font-size="9" font-family="monospace" text-anchor="middle">Phy: 92</text>
+    <rect x="100" y="108" width="60" height="22" rx="3" fill="#0369a1" />
+    <text x="130" y="123" fill="#e0f2fe" font-size="9" font-family="monospace" text-anchor="middle">Chem: 88</text>
+
+    <!-- Pivot Arrow -->
+    <path d="M 175,75 L 215,75" stroke="#34d399" stroke-width="2.5" marker-end="url(#arrow)" />
+    <polygon points="218,75 208,70 208,80" fill="#34d399" />
+    <text x="195" y="65" fill="#6ee7b7" font-size="8" font-family="monospace" text-anchor="middle">unstack()</text>
+
+    <!-- Unstacked Reshaped Columns -->
+    <g transform="translate(230, 25)">
+      <rect width="90" height="100" rx="6" fill="#0f172a" stroke="#10b981" stroke-width="1.5" />
+      <rect width="90" height="20" rx="6" fill="#047857" />
+      <text x="45" y="14" fill="#ffffff" font-size="8.5" font-family="monospace" font-weight="bold" text-anchor="middle">Wide Format</text>
+      <rect x="8" y="30" width="34" height="28" rx="2" fill="#065f46" />
+      <text x="25" y="47" fill="#6ee7b7" font-size="9" font-family="monospace" text-anchor="middle">85.0</text>
+      <rect x="48" y="30" width="34" height="28" rx="2" fill="#7f1d1d" opacity="0.6" />
+      <text x="65" y="47" fill="#fca5a5" font-size="9" font-family="monospace" text-anchor="middle">NaN</text>
+      <rect x="8" y="64" width="34" height="28" rx="2" fill="#7f1d1d" opacity="0.6" />
+      <text x="25" y="81" fill="#fca5a5" font-size="9" font-family="monospace" text-anchor="middle">NaN</text>
+      <rect x="48" y="64" width="34" height="28" rx="2" fill="#065f46" />
+      <text x="65" y="81" fill="#6ee7b7" font-size="9" font-family="monospace" text-anchor="middle">92.0</text>
+    </g>
+  </g>
+
+  <!-- Badge & Typography -->
+  <rect x="40" y="260" width="520" height="60" rx="8" fill="#0f172a" opacity="0.9" stroke="#065f46" stroke-width="1" />
+  <text x="60" y="285" fill="#34d399" font-size="10" font-family="system-ui, sans-serif" font-weight="bold" letter-spacing="2">EXPERIMENT 04 • DATA WRANGLING</text>
+  <text x="60" y="306" fill="#ffffff" font-size="15" font-family="system-ui, sans-serif" font-weight="bold">Hierarchical MultiIndex, Stack/Unstack &amp; Imputation</text>
+</svg>

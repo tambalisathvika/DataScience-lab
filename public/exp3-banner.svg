@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 340" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#451a03" />
+      <stop offset="50%" stop-color="#78350f" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="amberGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#f97316" />
+    </linearGradient>
+    <filter id="glow3" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <rect width="600" height="340" fill="url(#bg3)" />
+
+  <!-- Grid overlay -->
+  <g opacity="0.1" stroke="#fbbf24" stroke-width="1">
+    <line x1="0" y1="60" x2="600" y2="60" />
+    <line x1="0" y1="120" x2="600" y2="120" />
+    <line x1="0" y1="180" x2="600" y2="180" />
+    <line x1="0" y1="240" x2="600" y2="240" />
+    <line x1="120" y1="0" x2="120" y2="340" />
+    <line x1="240" y1="0" x2="240" y2="340" />
+    <line x1="360" y1="0" x2="360" y2="340" />
+    <line x1="480" y1="0" x2="480" y2="340" />
+  </g>
+
+  <circle cx="300" cy="140" r="85" fill="#d97706" opacity="0.25" filter="url(#glow3)" />
+
+  <!-- 4 Feature Pills in Center -->
+  <!-- 1. Missing Data -->
+  <g transform="translate(110, 65)">
+    <rect width="170" height="55" rx="8" fill="#1c1917" stroke="#f59e0b" stroke-width="2" />
+    <circle cx="30" cy="27" r="14" fill="#b45309" />
+    <text x="30" y="32" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">NaN</text>
+    <text x="55" y="26" fill="#fef3c7" font-size="11" font-family="system-ui, sans-serif" font-weight="bold">Missing Data</text>
+    <text x="55" y="42" fill="#fbbf24" font-size="9" font-family="monospace">.fillna(mean) / dropna()</text>
+  </g>
+
+  <!-- 2. Data Transformation -->
+  <g transform="translate(320, 65)">
+    <rect width="170" height="55" rx="8" fill="#1c1917" stroke="#f97316" stroke-width="2" />
+    <circle cx="30" cy="27" r="14" fill="#c2410c" />
+    <text x="30" y="32" fill="#ffffff" font-size="14" font-weight="bold" text-anchor="middle">⇄</text>
+    <text x="55" y="26" fill="#ffedd5" font-size="11" font-family="system-ui, sans-serif" font-weight="bold">Data Transformation</text>
+    <text x="55" y="42" fill="#fb923c" font-size="9" font-family="monospace">.map() • pd.cut() • Scale</text>
+  </g>
+
+  <!-- 3. Outlier Detection -->
+  <g transform="translate(110, 135)">
+    <rect width="170" height="55" rx="8" fill="#1c1917" stroke="#ef4444" stroke-width="2" />
+    <circle cx="30" cy="27" r="14" fill="#b91c1c" />
+    <text x="30" y="32" fill="#ffffff" font-size="13" font-weight="bold" text-anchor="middle">1.5</text>
+    <text x="55" y="26" fill="#fee2e2" font-size="11" font-family="system-ui, sans-serif" font-weight="bold">Outlier Detection</text>
+    <text x="55" y="42" fill="#f87171" font-size="9" font-family="monospace">IQR = Q3 - Q1 Rule</text>
+  </g>
+
+  <!-- 4. Regex Text -->
+  <g transform="translate(320, 135)">
+    <rect width="170" height="55" rx="8" fill="#1c1917" stroke="#eab308" stroke-width="2" />
+    <circle cx="30" cy="27" r="14" fill="#a16207" />
+    <text x="30" y="32" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">.*</text>
+    <text x="55" y="26" fill="#fef9c3" font-size="11" font-family="system-ui, sans-serif" font-weight="bold">Regex Text Cleaning</text>
+    <text x="55" y="42" fill="#facc15" font-size="9" font-family="monospace">re.sub() • str.extract()</text>
+  </g>
+
+  <!-- Connective Pipeline line -->
+  <line x1="120" y1="210" x2="480" y2="210" stroke="url(#amberGrad)" stroke-width="3" stroke-linecap="round" />
+  <circle cx="195" cy="210" r="5" fill="#f59e0b" />
+  <circle cx="300" cy="210" r="7" fill="#f97316" />
+  <circle cx="405" cy="210" r="5" fill="#eab308" />
+
+  <!-- Badge & Typography -->
+  <rect x="40" y="260" width="520" height="60" rx="8" fill="#0f172a" opacity="0.9" stroke="#78350f" stroke-width="1" />
+  <text x="60" y="285" fill="#f59e0b" font-size="10" font-family="system-ui, sans-serif" font-weight="bold" letter-spacing="2">EXPERIMENT 03 • DATA PREPROCESSING</text>
+  <text x="60" y="306" fill="#ffffff" font-size="15" font-family="system-ui, sans-serif" font-weight="bold">Missing Values, Transformations, IQR &amp; Regex</text>
+</svg>

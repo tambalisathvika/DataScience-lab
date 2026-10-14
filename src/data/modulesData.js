@@ -39,8 +39,26 @@ export const dataScienceModules = [
       'Data Preprocessing Pipelines',
       'Descriptive Analysis & Metrics'
     ],
-    relatedExperimentIds: ['exp-4', 'exp-5', 'exp-6'],
+    relatedExperimentIds: ['exp-1', 'exp-2', 'exp-3', 'exp-4', 'exp-5', 'exp-6'],
     relatedExperiments: [
+      {
+        id: 'exp-1',
+        number: '1',
+        title: 'Data Ingestion & File Storage Formats',
+        relevance: 'Foundational data collection across Text, JSON, and Microsoft Excel spreadsheets using Pandas read_csv, read_json, and read_excel.'
+      },
+      {
+        id: 'exp-2',
+        number: '2',
+        title: 'Web APIs & Database Connectivity',
+        relevance: 'Ingesting remote live data from REST Web APIs and managing relational SQL pipelines with SQLite.'
+      },
+      {
+        id: 'exp-3',
+        number: '3',
+        title: 'Data Cleaning & Preprocessing',
+        relevance: 'Core data preprocessing pipelines: handling missing values (fillna/dropna), categorical transformations, IQR outlier detection, and regex cleansing.'
+      },
       {
         id: 'exp-4',
         number: '4',
@@ -309,8 +327,26 @@ print(cat_summary.round(2))`
       'Singular Value Decomposition (SVD)',
       'Principal Component Analysis (PCA)'
     ],
-    relatedExperimentIds: ['exp-4', 'exp-5', 'exp-6'],
+    relatedExperimentIds: ['exp-1', 'exp-2', 'exp-3', 'exp-4', 'exp-5', 'exp-6'],
     relatedExperiments: [
+      {
+        id: 'exp-1',
+        number: '1',
+        title: 'Data Ingestion & File Storage Formats',
+        relevance: 'Foundational data ingestion across Text, JSON, and Microsoft Excel spreadsheets using Pandas.'
+      },
+      {
+        id: 'exp-2',
+        number: '2',
+        title: 'Web APIs & Database Connectivity',
+        relevance: 'Ingesting remote live data from REST Web APIs and managing relational SQL pipelines with SQLite.'
+      },
+      {
+        id: 'exp-3',
+        number: '3',
+        title: 'Data Cleaning & Preprocessing',
+        relevance: 'Essential feature engineering: missing value imputation, transformations, and IQR outlier detection.'
+      },
       {
         id: 'exp-4',
         number: '4',

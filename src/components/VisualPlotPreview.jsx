@@ -12,10 +12,664 @@ import {
   Shuffle,
   Maximize2,
   FolderTree,
-  Activity
+  Activity,
+  FileText,
+  Braces,
+  FileSpreadsheet,
+  Server,
+  Database,
+  Filter,
+  SlidersHorizontal,
+  AlertTriangle,
+  Search
 } from 'lucide-react';
 
 export default function VisualPlotPreview({ plotType, title }) {
+
+  // =========================================================================
+  // EXPERIMENT 1: DATA INGESTION & FILE STORAGE FORMATS
+  // =========================================================================
+
+  // 1A. Text & Delimited Stream Parsing (1A)
+  if (plotType === 'text_delimited_stream') {
+    const records = [
+      { id: '101', name: 'Aarav Sharma', dept: 'Data Science', gpa: '8.92', att: '94.5%' },
+      { id: '102', name: 'Diya Reddy', dept: 'Data Science', gpa: '9.15', att: '96.0%' },
+      { id: '103', name: 'Rohan Verma', dept: 'Computer Science', gpa: '7.85', att: '88.0%' },
+      { id: '104', name: 'Ananya Patel', dept: 'Electronics', gpa: '8.40', att: '91.5%' }
+    ];
+
+    return (
+      <div className="visual-plot-card">
+        <div className="plot-header-bar">
+          <div className="plot-title-group">
+            <FileText size={15} style={{ color: '#818cf8' }} />
+            <span className="plot-title-text">Visual Plot: CSV Character Stream to DataFrame Matrix</span>
+          </div>
+          <span className="plot-engine-tag">pd.read_csv(sep=',')</span>
+        </div>
+
+        <div className="svg-plot-container">
+          <svg viewBox="0 0 500 240" className="plot-svg-canvas" preserveAspectRatio="xMidYMid meet">
+            {/* Raw Character Stream Box (Top) */}
+            <rect x="25" y="20" width="450" height="42" rx="6" fill="#0f172a" stroke="#4338ca" strokeWidth="1.5" />
+            <text x="35" y="36" fontSize="9" fill="#818cf8" fontWeight="700">RAW FILE BUFFER STREAM (Delimiter = Comma)</text>
+            <text x="35" y="52" fontSize="9.5" fill="#e0e7ff" fontFamily="monospace">
+              101<tspan fill="#f43f5e">,</tspan>Aarav Sharma<tspan fill="#f43f5e">,</tspan>Data Science<tspan fill="#f43f5e">,</tspan>8.92<tspan fill="#f43f5e">,</tspan>94.5<tspan fill="#38bdf8">\n</tspan>102<tspan fill="#f43f5e">,</tspan>Diya Reddy...
+            </text>
+
+            {/* Parsing Ingestion Funnel Arrow */}
+            <path d="M 250,65 L 250,90" stroke="#818cf8" strokeWidth="2.5" />
+            <polygon points="250,95 245,85 255,85" fill="#818cf8" />
+            <text x="270" y="82" fontSize="9" fill="#c7d2fe" fontWeight="600">C-Engine Tokenizer</text>
+
+            {/* Tabular DataFrame Grid (Bottom) */}
+            <rect x="25" y="100" width="450" height="110" rx="8" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="1.5" />
+            <rect x="25" y="100" width="450" height="24" rx="8" fill="#1e1b4b" />
+            
+            {/* Headers */}
+            <text x="45" y="116" fontSize="9" fill="#e0e7ff" fontWeight="700">StudentID</text>
+            <text x="130" y="116" fontSize="9" fill="#e0e7ff" fontWeight="700">StudentName</text>
+            <text x="245" y="116" fontSize="9" fill="#e0e7ff" fontWeight="700">Department</text>
+            <text x="360" y="116" fontSize="9" fill="#e0e7ff" fontWeight="700">CGPA</text>
+            <text x="425" y="116" fontSize="9" fill="#e0e7ff" fontWeight="700">Attendance</text>
+            <line x1="25" y1="124" x2="475" y2="124" stroke="#e2e8f0" />
+
+            {/* Rows */}
+            {records.map((r, idx) => (
+              <g key={idx}>
+                <text x="45" y={142 + idx * 18} fontSize="9" fill="#4338ca" fontWeight="700">{r.id}</text>
+                <text x="130" y={142 + idx * 18} fontSize="9" fill="#1e293b" fontWeight="600">{r.name}</text>
+                <text x="245" y={142 + idx * 18} fontSize="9" fill="#64748b">{r.dept}</text>
+                <text x="360" y={142 + idx * 18} fontSize="9" fill="#0d9488" fontWeight="700">{r.gpa}</text>
+                <text x="425" y={142 + idx * 18} fontSize="9" fill="#0284c7" fontWeight="600">{r.att}</text>
+                {idx < 3 && <line x1="30" y1={148 + idx * 18} x2="470" y2={148 + idx * 18} stroke="#f1f5f9" />}
+              </g>
+            ))}
+
+            <text x="250" y="225" fontSize="8.5" textAnchor="middle" fill="#64748b" fontStyle="italic">
+              High-performance vectorized memory allocation into contiguous 2D NumPy array buffers.
+            </text>
+          </svg>
+        </div>
+        <div className="plot-footer-note">
+          <span>Figure 1A.1: Delimited text parser decoding byte streams into indexed Pandas Series columns.</span>
+        </div>
+      </div>
+    );
+  }
+
+  // 1B. JSON Tree to Matrix (1B)
+  if (plotType === 'json_tree_matrix') {
+    return (
+      <div className="visual-plot-card">
+        <div className="plot-header-bar">
+          <div className="plot-title-group">
+            <Braces size={15} style={{ color: '#c084fc' }} />
+            <span className="plot-title-text">Visual Plot: Hierarchical JSON to Normalized Flat Matrix</span>
+          </div>
+          <span className="plot-engine-tag">pd.json_normalize()</span>
+        </div>
+
+        <div className="svg-plot-container">
+          <svg viewBox="0 0 500 240" className="plot-svg-canvas" preserveAspectRatio="xMidYMid meet">
+            {/* Left: Nested JSON Object Tree */}
+            <rect x="25" y="25" width="200" height="185" rx="8" fill="#0f172a" stroke="#7e22ce" strokeWidth="1.5" />
+            <rect x="25" y="25" width="200" height="26" rx="8" fill="#581c87" />
+            <text x="125" y="42" fontSize="10" textAnchor="middle" fill="#ffffff" fontWeight="700">Hierarchical JSON Object</text>
+            
+            <text x="35" y="68" fontSize="9" fill="#c084fc" fontFamily="monospace">{"{"}</text>
+            <text x="45" y="85" fontSize="9" fill="#e9d5ff" fontFamily="monospace">"id": "DS201",</text>
+            <text x="45" y="102" fontSize="9" fill="#e9d5ff" fontFamily="monospace">"name": "Kavya Murthy",</text>
+            <text x="45" y="120" fontSize="9" fill="#38bdf8" fontFamily="monospace">"scores": {"{"}</text>
+            <text x="60" y="138" fontSize="9" fill="#facc15" fontFamily="monospace">"Mid1": 24,</text>
+            <text x="60" y="155" fontSize="9" fill="#facc15" fontFamily="monospace">"Mid2": 23,</text>
+            <text x="60" y="172" fontSize="9" fill="#facc15" fontFamily="monospace">"Lab": 48</text>
+            <text x="45" y="188" fontSize="9" fill="#38bdf8" fontFamily="monospace">{"}"}</text>
+            <text x="35" y="202" fontSize="9" fill="#c084fc" fontFamily="monospace">{"}"}</text>
+
+            {/* Transform Arrow */}
+            <path d="M 235,115 L 275,115" stroke="#c084fc" strokeWidth="2.5" />
+            <polygon points="280,115 270,110 270,120" fill="#c084fc" />
+            <text x="257" y="105" fontSize="8" textAnchor="middle" fill="#c084fc" fontWeight="700">json_normalize()</text>
+
+            {/* Right: Normalized Flat Columns */}
+            <rect x="290" y="25" width="185" height="185" rx="8" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="1.5" />
+            <rect x="290" y="25" width="185" height="26" rx="8" fill="#1e1b4b" />
+            <text x="382" y="42" fontSize="10" textAnchor="middle" fill="#ffffff" fontWeight="700">Flattened 2D Columns</text>
+
+            <rect x="300" y="60" width="165" height="26" rx="4" fill="#e0e7ff" />
+            <text x="310" y="76" fontSize="9" fill="#3730a3" fontWeight="700">id</text>
+            <text x="440" y="76" fontSize="9" textAnchor="end" fill="#0f172a" fontWeight="600">DS201</text>
+
+            <rect x="300" y="92" width="165" height="26" rx="4" fill="#e0e7ff" />
+            <text x="310" y="108" fontSize="9" fill="#3730a3" fontWeight="700">name</text>
+            <text x="440" y="108" fontSize="9" textAnchor="end" fill="#0f172a" fontWeight="600">Kavya Murthy</text>
+
+            <rect x="300" y="124" width="165" height="26" rx="4" fill="#fef3c7" stroke="#f59e0b" strokeWidth="1" />
+            <text x="310" y="140" fontSize="9" fill="#92400e" fontWeight="700">scores.Mid1</text>
+            <text x="440" y="140" fontSize="9" textAnchor="end" fill="#b45309" fontWeight="800">24</text>
+
+            <rect x="300" y="156" width="165" height="26" rx="4" fill="#fef3c7" stroke="#f59e0b" strokeWidth="1" />
+            <text x="310" y="172" fontSize="9" fill="#92400e" fontWeight="700">scores.Mid2</text>
+            <text x="440" y="172" fontSize="9" textAnchor="end" fill="#b45309" fontWeight="800">23</text>
+
+            <rect x="300" y="188" width="165" height="18" rx="3" fill="#fef3c7" stroke="#f59e0b" strokeWidth="1" />
+            <text x="310" y="200" fontSize="8" fill="#92400e" fontWeight="700">scores.Lab</text>
+            <text x="440" y="200" fontSize="8" textAnchor="end" fill="#b45309" fontWeight="800">48</text>
+          </svg>
+        </div>
+        <div className="plot-footer-note">
+          <span>Figure 1B.1: Recursive unnesting of embedded child dictionaries into composite dot-delimited column keys.</span>
+        </div>
+      </div>
+    );
+  }
+
+  // 1C. Microsoft Excel Multi-Sheet Grid (1C)
+  if (plotType === 'excel_sheets_grid') {
+    return (
+      <div className="visual-plot-card">
+        <div className="plot-header-bar">
+          <div className="plot-title-group">
+            <FileSpreadsheet size={15} style={{ color: '#10b981' }} />
+            <span className="plot-title-text">Visual Plot: Microsoft Excel Multi-Worksheet Architecture</span>
+          </div>
+          <span className="plot-engine-tag">pd.ExcelWriter &amp; read_excel()</span>
+        </div>
+
+        <div className="svg-plot-container">
+          <svg viewBox="0 0 500 240" className="plot-svg-canvas" preserveAspectRatio="xMidYMid meet">
+            {/* Outer Workbook Container */}
+            <rect x="35" y="20" width="430" height="195" rx="8" fill="#f8fafc" stroke="#10b981" strokeWidth="2" />
+            
+            {/* Top Toolbar Ribbon */}
+            <rect x="35" y="20" width="430" height="28" rx="8" fill="#065f46" />
+            <text x="50" y="38" fontSize="10" fill="#ffffff" fontWeight="700">mbu_student_performance.xlsx • Excel Workbook</text>
+            <text x="445" y="38" fontSize="9" textAnchor="end" fill="#a7f3d0">OpenPyXL Engine</text>
+
+            {/* Active Worksheet Grid: CSE_Department */}
+            <rect x="50" y="58" width="400" height="115" rx="4" fill="#ffffff" stroke="#cbd5e1" strokeWidth="1" />
+            
+            {/* Grid Header Row */}
+            <rect x="50" y="58" width="400" height="22" fill="#ecfdf5" />
+            <text x="70" y="73" fontSize="9" fill="#065f46" fontWeight="700">RollNo</text>
+            <text x="160" y="73" fontSize="9" fill="#065f46" fontWeight="700">Name</text>
+            <text x="270" y="73" fontSize="9" fill="#065f46" fontWeight="700">Python_Marks</text>
+            <text x="375" y="73" fontSize="9" fill="#065f46" fontWeight="700">DSA_Marks</text>
+            <line x1="50" y1="80" x2="450" y2="80" stroke="#a7f3d0" strokeWidth="1" />
+
+            {/* Row 1 */}
+            <text x="70" y="98" fontSize="9" fill="#334155" fontWeight="600">24CS101</text>
+            <text x="160" y="98" fontSize="9" fill="#0f172a" fontWeight="600">Aditya Nair</text>
+            <text x="270" y="98" fontSize="9" fill="#0d9488" fontWeight="700">88</text>
+            <text x="375" y="98" fontSize="9" fill="#0d9488" fontWeight="700">84</text>
+            <line x1="50" y1="106" x2="450" y2="106" stroke="#f1f5f9" />
+
+            {/* Row 2 */}
+            <text x="70" y="124" fontSize="9" fill="#334155" fontWeight="600">24CS102</text>
+            <text x="160" y="124" fontSize="9" fill="#0f172a" fontWeight="600">Bhavna Joshi</text>
+            <text x="270" y="124" fontSize="9" fill="#0d9488" fontWeight="700">92</text>
+            <text x="375" y="124" fontSize="9" fill="#0d9488" fontWeight="700">90</text>
+            <line x1="50" y1="132" x2="450" y2="132" stroke="#f1f5f9" />
+
+            {/* Row 3 */}
+            <text x="70" y="150" fontSize="9" fill="#334155" fontWeight="600">24CS103</text>
+            <text x="160" y="150" fontSize="9" fill="#0f172a" fontWeight="600">Chirag Reddy</text>
+            <text x="270" y="150" fontSize="9" fill="#0d9488" fontWeight="700">79</text>
+            <text x="375" y="150" fontSize="9" fill="#0d9488" fontWeight="700">81</text>
+
+            {/* Bottom Sheet Tabs */}
+            {/* Sheet 1 Tab (Active) */}
+            <rect x="50" y="180" width="130" height="26" rx="4" fill="#ffffff" stroke="#10b981" strokeWidth="1.5" />
+            <rect x="50" y="180" width="130" height="4" fill="#10b981" />
+            <text x="115" y="196" fontSize="9.5" textAnchor="middle" fill="#065f46" fontWeight="700">CSE_Department (Active)</text>
+
+            {/* Sheet 2 Tab */}
+            <rect x="185" y="182" width="150" height="24" rx="4" fill="#e2e8f0" stroke="#cbd5e1" strokeWidth="1" />
+            <text x="260" y="197" fontSize="9.5" textAnchor="middle" fill="#64748b" fontWeight="600">DataScience_Department</text>
+
+            <text x="445" y="197" fontSize="8.5" textAnchor="end" fill="#64748b">sheet_name='CSE_Department'</text>
+          </svg>
+        </div>
+        <div className="plot-footer-note">
+          <span>Figure 1C.1: Multi-sheet Excel workbook structure allowing targeted extraction of departmental tables.</span>
+        </div>
+      </div>
+    );
+  }
+
+  // =========================================================================
+  // EXPERIMENT 2: WEB APIS & DATABASE CONNECTIVITY
+  // =========================================================================
+
+  // 2A. Web API Pipeline (2A)
+  if (plotType === 'web_api_pipeline') {
+    return (
+      <div className="visual-plot-card">
+        <div className="plot-header-bar">
+          <div className="plot-title-group">
+            <Server size={15} style={{ color: '#0284c7' }} />
+            <span className="plot-title-text">Visual Plot: RESTful Web API Request-Response Pipeline</span>
+          </div>
+          <span className="plot-engine-tag">requests.get() &amp; JSON DataFrame</span>
+        </div>
+
+        <div className="svg-plot-container">
+          <svg viewBox="0 0 500 240" className="plot-svg-canvas" preserveAspectRatio="xMidYMid meet">
+            {/* Client Node */}
+            <rect x="30" y="60" width="110" height="110" rx="8" fill="#0f172a" stroke="#0284c7" strokeWidth="2" />
+            <rect x="30" y="60" width="110" height="24" rx="8" fill="#0369a1" />
+            <text x="85" y="76" fontSize="9.5" textAnchor="middle" fill="#ffffff" fontWeight="700">Python Client</text>
+            <text x="85" y="105" fontSize="8.5" textAnchor="middle" fill="#38bdf8" fontFamily="monospace">requests.get()</text>
+            <text x="85" y="125" fontSize="8" textAnchor="middle" fill="#94a3b8">Params: ?limit=10</text>
+            <text x="85" y="145" fontSize="8" textAnchor="middle" fill="#94a3b8">Headers: Auth Bearer</text>
+
+            {/* Request Arrow (Rightward) */}
+            <path d="M 145,90 L 225,90" stroke="#0284c7" strokeWidth="2.5" />
+            <polygon points="230,90 220,85 220,95" fill="#0284c7" />
+            <text x="187" y="82" fontSize="8" textAnchor="middle" fill="#0284c7" fontWeight="700">HTTP GET</text>
+
+            {/* API Server Node */}
+            <rect x="235" y="45" width="120" height="140" rx="10" fill="#0f172a" stroke="#38bdf8" strokeWidth="2" />
+            <circle cx="295" cy="80" r="22" fill="#0369a1" />
+            <text x="295" y="84" fontSize="9" textAnchor="middle" fill="#ffffff" fontWeight="800">API</text>
+            <text x="295" y="120" fontSize="10" textAnchor="middle" fill="#ffffff" fontWeight="700">REST Server</text>
+            <rect x="250" y="132" width="90" height="18" rx="3" fill="#065f46" />
+            <text x="295" y="145" fontSize="8.5" textAnchor="middle" fill="#34d399" fontWeight="700">Status: 200 OK</text>
+            <text x="295" y="168" fontSize="8" textAnchor="middle" fill="#94a3b8">Content: JSON</text>
+
+            {/* Response Arrow (Rightward to DataFrame) */}
+            <path d="M 360,115 L 390,115" stroke="#10b981" strokeWidth="2.5" />
+            <polygon points="395,115 385,110 385,120" fill="#10b981" />
+            <text x="377" y="105" fontSize="8" textAnchor="middle" fill="#10b981" fontWeight="700">JSON</text>
+
+            {/* Ingested DataFrame Node */}
+            <rect x="400" y="60" width="85" height="110" rx="8" fill="#f8fafc" stroke="#10b981" strokeWidth="2" />
+            <rect x="400" y="60" width="85" height="24" rx="8" fill="#065f46" />
+            <text x="442" y="76" fontSize="9" textAnchor="middle" fill="#ffffff" fontWeight="700">DataFrame</text>
+            <text x="442" y="105" fontSize="8" textAnchor="middle" fill="#065f46" fontWeight="700">id | name | city</text>
+            <text x="442" y="125" fontSize="8" textAnchor="middle" fill="#475569">1 | Leanne | Gwen</text>
+            <text x="442" y="145" fontSize="8" textAnchor="middle" fill="#475569">2 | Ervin | Wisoky</text>
+
+            <rect x="40" y="195" width="420" height="24" rx="4" fill="#0f172a" />
+            <text x="250" y="211" fontSize="9" textAnchor="middle" fill="#38bdf8" fontWeight="600">
+              Live REST Ingestion: Automated deserialization of HTTP JSON payloads into analytics memory.
+            </text>
+          </svg>
+        </div>
+        <div className="plot-footer-note">
+          <span>Figure 2A.1: Distributed API ingestion protocol transforming HTTP endpoints into reproducible DataFrames.</span>
+        </div>
+      </div>
+    );
+  }
+
+  // 2B. SQLite Relational Schema (2B)
+  if (plotType === 'sqlite_relational_schema') {
+    return (
+      <div className="visual-plot-card">
+        <div className="plot-header-bar">
+          <div className="plot-title-group">
+            <Database size={15} style={{ color: '#06b6d4' }} />
+            <span className="plot-title-text">Visual Plot: SQLite Relational Schema &amp; Pandas Query Execution</span>
+          </div>
+          <span className="plot-engine-tag">sqlite3 &amp; pd.read_sql_query()</span>
+        </div>
+
+        <div className="svg-plot-container">
+          <svg viewBox="0 0 500 240" className="plot-svg-canvas" preserveAspectRatio="xMidYMid meet">
+            {/* Database Engine Schema Box */}
+            <rect x="30" y="25" width="210" height="185" rx="8" fill="#0f172a" stroke="#0891b2" strokeWidth="2" />
+            <rect x="30" y="25" width="210" height="28" rx="8" fill="#155e75" />
+            <text x="135" y="43" fontSize="10" textAnchor="middle" fill="#ffffff" fontWeight="700">SQLite Engine: LabStudents</text>
+            
+            <text x="45" y="75" fontSize="9" fill="#22d3ee" fontWeight="700">StudentID (PK)</text>
+            <text x="180" y="75" fontSize="8.5" fill="#94a3b8">INTEGER</text>
+
+            <text x="45" y="98" fontSize="9" fill="#e0f2fe" fontWeight="600">FullName</text>
+            <text x="180" y="98" fontSize="8.5" fill="#94a3b8">TEXT</text>
+
+            <text x="45" y="121" fontSize="9" fill="#e0f2fe" fontWeight="600">Branch</text>
+            <text x="180" y="121" fontSize="8.5" fill="#94a3b8">TEXT</text>
+
+            <text x="45" y="144" fontSize="9" fill="#e0f2fe" fontWeight="600">Semester</text>
+            <text x="180" y="144" fontSize="8.5" fill="#94a3b8">INTEGER</text>
+
+            <text x="45" y="167" fontSize="9" fill="#22d3ee" fontWeight="700">CGPA</text>
+            <text x="180" y="167" fontSize="8.5" fill="#94a3b8">REAL</text>
+
+            <rect x="40" y="180" width="190" height="20" rx="3" fill="#083344" />
+            <text x="135" y="194" fontSize="8" textAnchor="middle" fill="#38bdf8" fontFamily="monospace">Parameterized INSERT (?, ?, ...)</text>
+
+            {/* Query Pipeline Connector */}
+            <path d="M 245,115 L 280,115" stroke="#06b6d4" strokeWidth="2.5" />
+            <polygon points="285,115 275,110 275,120" fill="#06b6d4" />
+
+            {/* Query Execution Output Box */}
+            <rect x="290" y="25" width="185" height="185" rx="8" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="1.5" />
+            <rect x="290" y="25" width="185" height="28" rx="8" fill="#0e7490" />
+            <text x="382" y="43" fontSize="10" textAnchor="middle" fill="#ffffff" fontWeight="700">pd.read_sql_query()</text>
+
+            <rect x="300" y="60" width="165" height="22" rx="3" fill="#0f172a" />
+            <text x="382" y="75" fontSize="8" textAnchor="middle" fill="#22d3ee" fontFamily="monospace">WHERE CGPA &gt;= 8.5</text>
+
+            {/* Result Records */}
+            <rect x="300" y="90" width="165" height="26" rx="4" fill="#ecfeff" stroke="#06b6d4" strokeWidth="1" />
+            <text x="310" y="106" fontSize="8.5" fill="#0e7490" fontWeight="700">101: Sathvika T.</text>
+            <text x="455" y="106" fontSize="9" textAnchor="end" fill="#0891b2" fontWeight="800">9.45 GPA</text>
+
+            <rect x="300" y="122" width="165" height="26" rx="4" fill="#ecfeff" stroke="#06b6d4" strokeWidth="1" />
+            <text x="310" y="138" fontSize="8.5" fill="#0e7490" fontWeight="700">102: Pradyumna D.</text>
+            <text x="455" y="138" fontSize="9" textAnchor="end" fill="#0891b2" fontWeight="800">9.20 GPA</text>
+
+            <rect x="300" y="154" width="165" height="26" rx="4" fill="#ecfeff" stroke="#06b6d4" strokeWidth="1" />
+            <text x="310" y="170" fontSize="8.5" fill="#0e7490" fontWeight="700">103: Venkata R.</text>
+            <text x="455" y="170" fontSize="9" textAnchor="end" fill="#0891b2" fontWeight="800">8.85 GPA</text>
+
+            <text x="382" y="200" fontSize="8" textAnchor="middle" fill="#64748b" fontStyle="italic">ORDER BY CGPA DESC applied</text>
+          </svg>
+        </div>
+        <div className="plot-footer-note">
+          <span>Figure 2B.1: Relational SQL execution offloading heavy filtering to SQLite before DataFrame ingestion.</span>
+        </div>
+      </div>
+    );
+  }
+
+  // =========================================================================
+  // EXPERIMENT 3: DATA CLEANING & PREPROCESSING
+  // =========================================================================
+
+  // 3A. Missing Data Imputation Map (3A)
+  if (plotType === 'missing_data_imputation_map') {
+    return (
+      <div className="visual-plot-card">
+        <div className="plot-header-bar">
+          <div className="plot-title-group">
+            <Filter size={15} style={{ color: '#f59e0b' }} />
+            <span className="plot-title-text">Visual Plot: Missing Value Diagnosis &amp; Statistical Imputation</span>
+          </div>
+          <span className="plot-engine-tag">dropna() &amp; fillna(mean/mode)</span>
+        </div>
+
+        <div className="svg-plot-container">
+          <svg viewBox="0 0 500 240" className="plot-svg-canvas" preserveAspectRatio="xMidYMid meet">
+            {/* Left: Raw Data with Null Holes */}
+            <rect x="30" y="30" width="190" height="175" rx="8" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="1.5" />
+            <rect x="30" y="30" width="190" height="26" rx="8" fill="#78350f" />
+            <text x="125" y="47" fontSize="10" textAnchor="middle" fill="#ffffff" fontWeight="700">Raw Data (with Nulls)</text>
+
+            <text x="40" y="74" fontSize="9" fill="#64748b" fontWeight="600">Student</text>
+            <text x="110" y="74" fontSize="9" fill="#64748b" fontWeight="600">Mid1</text>
+            <text x="175" y="74" fontSize="9" fill="#64748b" fontWeight="600">Dept</text>
+            <line x1="35" y1="80" x2="215" y2="80" stroke="#e2e8f0" />
+
+            <text x="40" y="100" fontSize="9" fill="#1e293b">101: Aarav</text>
+            <text x="115" y="100" fontSize="9" fill="#0f172a" fontWeight="700">22.0</text>
+            <text x="175" y="100" fontSize="9" fill="#0f172a">CSE</text>
+
+            <text x="40" y="125" fontSize="9" fill="#1e293b">102: Bhavna</text>
+            <text x="115" y="125" fontSize="9" fill="#0f172a" fontWeight="700">18.0</text>
+            <text x="175" y="125" fontSize="9" fill="#0f172a">ECE</text>
+
+            {/* Missing Rows */}
+            <text x="40" y="150" fontSize="9" fill="#1e293b">103: Chirag</text>
+            <rect x="105" y="137" width="35" height="18" rx="3" fill="#fee2e2" stroke="#ef4444" strokeWidth="1" />
+            <text x="122" y="150" fontSize="9" textAnchor="middle" fill="#b91c1c" fontWeight="700">NaN</text>
+            <text x="175" y="150" fontSize="9" fill="#0f172a">CSE</text>
+
+            <text x="40" y="175" fontSize="9" fill="#1e293b">104: Divya</text>
+            <text x="115" y="175" fontSize="9" fill="#0f172a" fontWeight="700">24.0</text>
+            <rect x="165" y="162" width="45" height="18" rx="3" fill="#fee2e2" stroke="#ef4444" strokeWidth="1" />
+            <text x="187" y="175" fontSize="9" textAnchor="middle" fill="#b91c1c" fontWeight="700">NaN</text>
+
+            {/* Imputation Flow Arrow */}
+            <path d="M 225,115 L 270,115" stroke="#f59e0b" strokeWidth="2.5" />
+            <polygon points="275,115 265,110 265,120" fill="#f59e0b" />
+            <text x="250" y="105" fontSize="8" textAnchor="middle" fill="#b45309" fontWeight="700">fillna(mean)</text>
+
+            {/* Right: Imputed Clean Data */}
+            <rect x="280" y="30" width="190" height="175" rx="8" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="1.5" />
+            <rect x="280" y="30" width="190" height="26" rx="8" fill="#065f46" />
+            <text x="375" y="47" fontSize="10" textAnchor="middle" fill="#ffffff" fontWeight="700">Cleaned (Imputed Data)</text>
+
+            <text x="290" y="74" fontSize="9" fill="#64748b" fontWeight="600">Student</text>
+            <text x="360" y="74" fontSize="9" fill="#64748b" fontWeight="600">Mid1</text>
+            <text x="425" y="74" fontSize="9" fill="#64748b" fontWeight="600">Dept</text>
+            <line x1="285" y1="80" x2="465" y2="80" stroke="#e2e8f0" />
+
+            <text x="290" y="100" fontSize="9" fill="#1e293b">101: Aarav</text>
+            <text x="365" y="100" fontSize="9" fill="#0f172a" fontWeight="700">22.0</text>
+            <text x="425" y="100" fontSize="9" fill="#0f172a">CSE</text>
+
+            <text x="290" y="125" fontSize="9" fill="#1e293b">102: Bhavna</text>
+            <text x="365" y="125" fontSize="9" fill="#0f172a" fontWeight="700">18.0</text>
+            <text x="425" y="125" fontSize="9" fill="#0f172a">ECE</text>
+
+            {/* Imputed Cells */}
+            <text x="290" y="150" fontSize="9" fill="#1e293b">103: Chirag</text>
+            <rect x="350" y="137" width="40" height="18" rx="3" fill="#dcfce7" stroke="#10b981" strokeWidth="1" />
+            <text x="370" y="150" fontSize="9" textAnchor="middle" fill="#15803d" fontWeight="800">21.80*</text>
+            <text x="425" y="150" fontSize="9" fill="#0f172a">CSE</text>
+
+            <text x="290" y="175" fontSize="9" fill="#1e293b">104: Divya</text>
+            <text x="365" y="175" fontSize="9" fill="#0f172a" fontWeight="700">24.0</text>
+            <rect x="415" y="162" width="45" height="18" rx="3" fill="#dcfce7" stroke="#10b981" strokeWidth="1" />
+            <text x="437" y="175" fontSize="9" textAnchor="middle" fill="#15803d" fontWeight="800">CSE*</text>
+
+            <text x="250" y="222" fontSize="8.5" textAnchor="middle" fill="#64748b">
+              * Numerical null imputed with column mean (21.80); Categorical null imputed with mode ('CSE').
+            </text>
+          </svg>
+        </div>
+        <div className="plot-footer-note">
+          <span>Figure 3A.1: Zero data attrition achieved by statistical central tendency imputation.</span>
+        </div>
+      </div>
+    );
+  }
+
+  // 3B. Data Transformation Binning (3B)
+  if (plotType === 'data_transformation_binning') {
+    return (
+      <div className="visual-plot-card">
+        <div className="plot-header-bar">
+          <div className="plot-title-group">
+            <SlidersHorizontal size={15} style={{ color: '#f97316' }} />
+            <span className="plot-title-text">Visual Plot: Continuous Discretization (pd.cut) &amp; Feature Scaling</span>
+          </div>
+          <span className="plot-engine-tag">pd.cut() &amp; Min-Max [0, 1]</span>
+        </div>
+
+        <div className="svg-plot-container">
+          <svg viewBox="0 0 500 240" className="plot-svg-canvas" preserveAspectRatio="xMidYMid meet">
+            {/* Axis Baseline (Marks from 0 to 100) */}
+            <line x1="50" y1="120" x2="450" y2="120" stroke="#cbd5e1" strokeWidth="3" />
+
+            {/* Bins Partition Rectangles */}
+            {/* Pass: 0 to 60 */}
+            <rect x="50" y="55" width="130" height="65" fill="#fee2e2" opacity="0.6" stroke="#ef4444" strokeWidth="1" />
+            <text x="115" y="80" fontSize="11" textAnchor="middle" fill="#b91c1c" fontWeight="700">Pass Band</text>
+            <text x="115" y="98" fontSize="9" textAnchor="middle" fill="#ef4444">0 – 60 Marks</text>
+
+            {/* Good: 60 to 75 */}
+            <rect x="180" y="55" width="85" height="65" fill="#fef3c7" opacity="0.6" stroke="#f59e0b" strokeWidth="1" />
+            <text x="222" y="80" fontSize="11" textAnchor="middle" fill="#b45309" fontWeight="700">Good</text>
+            <text x="222" y="98" fontSize="9" textAnchor="middle" fill="#d97706">60 – 75</text>
+
+            {/* Very Good: 75 to 90 */}
+            <rect x="265" y="55" width="95" height="65" fill="#e0f2fe" opacity="0.6" stroke="#0284c7" strokeWidth="1" />
+            <text x="312" y="80" fontSize="11" textAnchor="middle" fill="#0369a1" fontWeight="700">Very Good</text>
+            <text x="312" y="98" fontSize="9" textAnchor="middle" fill="#0284c7">75 – 90</text>
+
+            {/* Distinction: 90 to 100 */}
+            <rect x="360" y="55" width="90" height="65" fill="#dcfce7" opacity="0.6" stroke="#10b981" strokeWidth="1" />
+            <text x="405" y="80" fontSize="11" textAnchor="middle" fill="#15803d" fontWeight="700">Distinction</text>
+            <text x="405" y="98" fontSize="9" textAnchor="middle" fill="#16a34a">90 – 100</text>
+
+            {/* Student Sample Points on Axis */}
+            {/* Ramesh: 62 */}
+            <circle cx="190" cy="120" r="5" fill="#b45309" />
+            <text x="190" y="140" fontSize="9" textAnchor="middle" fill="#0f172a" fontWeight="700">Ramesh: 62</text>
+            <text x="190" y="152" fontSize="8" textAnchor="middle" fill="#64748b">Norm: 0.179</text>
+
+            {/* Sita: 88 */}
+            <circle cx="345" cy="120" r="5" fill="#0369a1" />
+            <text x="345" y="140" fontSize="9" textAnchor="middle" fill="#0f172a" fontWeight="700">Sita: 88</text>
+            <text x="345" y="152" fontSize="8" textAnchor="middle" fill="#64748b">Norm: 0.846</text>
+
+            {/* Kiran: 94 */}
+            <circle cx="410" cy="120" r="5" fill="#15803d" />
+            <text x="410" y="140" fontSize="9" textAnchor="middle" fill="#0f172a" fontWeight="700">Kiran: 94</text>
+            <text x="410" y="152" fontSize="8" textAnchor="middle" fill="#64748b">Norm: 1.000</text>
+
+            {/* Scaling Formula Banner */}
+            <rect x="50" y="175" width="400" height="34" rx="6" fill="#0f172a" />
+            <text x="250" y="196" fontSize="9.5" textAnchor="middle" fill="#38bdf8" fontWeight="600">
+              Min-Max Normalization: x_norm = (x - 55) / (94 - 55) ∈ [0.0, 1.0]
+            </text>
+          </svg>
+        </div>
+        <div className="plot-footer-note">
+          <span>Figure 3B.1: Discretization partitions continuous spectrums into ordinal categorical buckets.</span>
+        </div>
+      </div>
+    );
+  }
+
+  // 3C. Outlier IQR Scatter & Thresholds (3C)
+  if (plotType === 'outlier_iqr_scatter') {
+    return (
+      <div className="visual-plot-card">
+        <div className="plot-header-bar">
+          <div className="plot-title-group">
+            <AlertTriangle size={15} style={{ color: '#ef4444' }} />
+            <span className="plot-title-text">Visual Plot: Tukey 1.5 * IQR Outlier Detection Boundaries</span>
+          </div>
+          <span className="plot-engine-tag">IQR = Q3 - Q1 Boundary Rule</span>
+        </div>
+
+        <div className="svg-plot-container">
+          <svg viewBox="0 0 500 240" className="plot-svg-canvas" preserveAspectRatio="xMidYMid meet">
+            {/* Axis Grid */}
+            <line x1="50" y1="180" x2="460" y2="180" stroke="#cbd5e1" strokeWidth="1.5" />
+            <line x1="50" y1="30" x2="50" y2="180" stroke="#cbd5e1" strokeWidth="1.5" />
+
+            {/* Y Ticks */}
+            <text x="42" y="180" fontSize="9" textAnchor="end" fill="#64748b">0</text>
+            <text x="42" y="145" fontSize="9" textAnchor="end" fill="#64748b">200</text>
+            <text x="42" y="105" fontSize="9" textAnchor="end" fill="#64748b">500</text>
+            <text x="42" y="45" fontSize="9" textAnchor="end" fill="#64748b">1000</text>
+
+            {/* Normal Range Shading [88.75 to 238.75] */}
+            <rect x="50" y="138" width="410" height="35" fill="#ecfdf5" opacity="0.7" />
+            
+            {/* Upper Bound Threshold Line (238.75) */}
+            <line x1="50" y1="138" x2="460" y2="138" stroke="#ef4444" strokeWidth="2" strokeDasharray="4 3" />
+            <rect x="320" y="122" width="130" height="18" rx="3" fill="#fee2e2" stroke="#ef4444" strokeWidth="1" />
+            <text x="385" y="134" fontSize="8.5" textAnchor="middle" fill="#b91c1c" fontWeight="700">Upper Cutoff: 238.75</text>
+
+            {/* Normal Observation Points (120 to 200) */}
+            {[65, 85, 105, 125, 145, 165, 185, 205, 225, 245, 265, 285, 305].map((x, idx) => (
+              <circle key={idx} cx={x} cy={165 - (idx % 3) * 6} r="4" fill="#0d9488" />
+            ))}
+
+            {/* Extreme Outliers: Obs 14 (850) and Obs 15 (920) */}
+            <circle cx="390" cy="62" r="6" fill="#ef4444" stroke="#ffffff" strokeWidth="2" />
+            <rect x="350" y="40" width="80" height="18" rx="3" fill="#7f1d1d" />
+            <text x="390" y="52" fontSize="8.5" textAnchor="middle" fill="#fee2e2" fontWeight="800">Obs 14: 850 ⚠️</text>
+
+            <circle cx="430" cy="48" r="6" fill="#ef4444" stroke="#ffffff" strokeWidth="2" />
+            <rect x="395" y="24" width="80" height="18" rx="3" fill="#7f1d1d" />
+            <text x="435" y="36" fontSize="8.5" textAnchor="middle" fill="#fee2e2" fontWeight="800">Obs 15: 920 ⚠️</text>
+
+            {/* Quartile Legend Card */}
+            <rect x="60" y="45" width="180" height="60" rx="6" fill="#0f172a" />
+            <text x="70" y="62" fontSize="9" fill="#34d399" fontWeight="700">Q1: 145.00  |  Q3: 182.50</text>
+            <text x="70" y="78" fontSize="9" fill="#38bdf8" fontWeight="700">IQR = 37.50</text>
+            <text x="70" y="94" fontSize="8.5" fill="#fca5a5">Outliers Exceeding Bound: 2 rows</text>
+
+            <text x="250" y="210" fontSize="9.5" textAnchor="middle" fill="#1e293b" fontWeight="600">
+              Observation Sample Index (n=15)
+            </text>
+          </svg>
+        </div>
+        <div className="plot-footer-note">
+          <span>Figure 3C.1: Non-parametric IQR outlier detection preventing extreme metric distortion.</span>
+        </div>
+      </div>
+    );
+  }
+
+  // 3D. Regex Token Extraction (3D)
+  if (plotType === 'regex_token_extraction') {
+    return (
+      <div className="visual-plot-card">
+        <div className="plot-header-bar">
+          <div className="plot-title-group">
+            <Search size={15} style={{ color: '#eab308' }} />
+            <span className="plot-title-text">Visual Plot: Regex Pattern Matching &amp; Entity Tokenization</span>
+          </div>
+          <span className="plot-engine-tag">re.search() &amp; str.extract()</span>
+        </div>
+
+        <div className="svg-plot-container">
+          <svg viewBox="0 0 500 240" className="plot-svg-canvas" preserveAspectRatio="xMidYMid meet">
+            {/* Raw Messy Text String Header */}
+            <rect x="30" y="20" width="440" height="42" rx="6" fill="#0f172a" stroke="#ca8a04" strokeWidth="1.5" />
+            <text x="40" y="36" fontSize="8.5" fill="#facc15" fontWeight="700">UNSTRUCTURED INPUT TEXT OBSERVATION</text>
+            <text x="40" y="52" fontSize="9.5" fill="#fef9c3" fontFamily="monospace">
+              "Sathvika T. - Phone: (0877) 223-4567, Email: sathvika.t@mbu.edu.in"
+            </text>
+
+            {/* 3 Regex Tokenizer Pipes */}
+            {/* Tokenizer 1: Name */}
+            <g transform="translate(30, 80)">
+              <rect width="135" height="115" rx="8" fill="#f8fafc" stroke="#3b82f6" strokeWidth="1.5" />
+              <rect width="135" height="24" rx="8" fill="#1d4ed8" />
+              <text x="67" y="16" fontSize="9" textAnchor="middle" fill="#ffffff" fontWeight="700">1. Name Pattern</text>
+              <text x="10" y="42" fontSize="8" fill="#1e40af" fontFamily="monospace">r"^([A-Za-z\s.]+)-"</text>
+              <rect x="10" y="60" width="115" height="30" rx="4" fill="#dbeafe" />
+              <text x="67" y="79" fontSize="10" textAnchor="middle" fill="#1e3a8a" fontWeight="800">Sathvika T.</text>
+              <text x="67" y="104" fontSize="8" textAnchor="middle" fill="#64748b">Leading Text Anchor</text>
+            </g>
+
+            {/* Tokenizer 2: Email & Domain */}
+            <g transform="translate(182, 80)">
+              <rect width="135" height="115" rx="8" fill="#f8fafc" stroke="#10b981" strokeWidth="1.5" />
+              <rect width="135" height="24" rx="8" fill="#047857" />
+              <text x="67" y="16" fontSize="9" textAnchor="middle" fill="#ffffff" fontWeight="700">2. Email &amp; Domain</text>
+              <text x="10" y="42" fontSize="8" fill="#065f46" fontFamily="monospace">r"@([\w.-]+)"</text>
+              <rect x="10" y="60" width="115" height="30" rx="4" fill="#d1fae5" />
+              <text x="67" y="79" fontSize="10" textAnchor="middle" fill="#064e3b" fontWeight="800">mbu.edu.in</text>
+              <text x="67" y="104" fontSize="8" textAnchor="middle" fill="#64748b">Host Group Extraction</text>
+            </g>
+
+            {/* Tokenizer 3: Clean Phone */}
+            <g transform="translate(335, 80)">
+              <rect width="135" height="115" rx="8" fill="#f8fafc" stroke="#f59e0b" strokeWidth="1.5" />
+              <rect width="135" height="24" rx="8" fill="#b45309" />
+              <text x="67" y="16" fontSize="9" textAnchor="middle" fill="#ffffff" fontWeight="700">3. Phone Digits</text>
+              <text x="10" y="42" fontSize="8" fill="#92400e" fontFamily="monospace">re.sub(r'\D', '')</text>
+              <rect x="10" y="60" width="115" height="30" rx="4" fill="#fef3c7" />
+              <text x="67" y="79" fontSize="10" textAnchor="middle" fill="#78350f" fontWeight="800">08772234567</text>
+              <text x="67" y="104" fontSize="8" textAnchor="middle" fill="#64748b">Stripped Non-Digits</text>
+            </g>
+
+            <rect x="50" y="208" width="400" height="20" rx="4" fill="#0f172a" />
+            <text x="250" y="222" fontSize="8.5" textAnchor="middle" fill="#fef08a">
+              Vectorized regex matching converts messy unstructured textual entries into relational features.
+            </text>
+          </svg>
+        </div>
+        <div className="plot-footer-note">
+          <span>Figure 3D.1: Deterministic capture group parsing extracting semantic entities from freeform text.</span>
+        </div>
+      </div>
+    );
+  }
+
   // =========================================================================
   // EXPERIMENT 4: DATA WRANGLING & HIERARCHICAL INDEXING
   // =========================================================================
