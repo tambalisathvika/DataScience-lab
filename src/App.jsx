@@ -17,7 +17,7 @@ import ConfirmDialog from './components/ConfirmDialog';
 import { defaultStudent, defaultExperiments } from './data/defaultData';
 import { loadStorage, saveStorage } from './utils/storage';
 
-const APP_VERSION = 'v3.2-linkedin';
+const APP_VERSION = 'v4.0-exp456';
 
 export default function App() {
   // Clear old cached experiments and synchronize student credentials
@@ -40,7 +40,7 @@ export default function App() {
     return { ...defaultStudent, ...current, linkedinUrl: current.linkedinUrl || defaultStudent.linkedinUrl };
   });
 
-  // 2. Persistent Experiments State (Enforce Only Experiment 6)
+  // 2. Persistent Experiments State (Synchronized with Experiments 4, 5, 6)
   const [experiments, setExperiments] = useState(() => {
     const storedVersion = localStorage.getItem('ds_lab_version');
     if (storedVersion !== APP_VERSION) {
@@ -49,7 +49,7 @@ export default function App() {
       return defaultExperiments;
     }
     const saved = loadStorage('ds_lab_experiments', null);
-    if (saved && Array.isArray(saved) && saved.length === 1 && (saved[0].id === 'exp-6' || saved[0].number === '6')) {
+    if (saved && Array.isArray(saved) && saved.length >= 3) {
       return saved;
     }
     saveStorage('ds_lab_experiments', defaultExperiments);

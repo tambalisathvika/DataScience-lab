@@ -10,7 +10,351 @@ export const defaultStudent = {
 };
 
 export const defaultExperiments = [
-  {
+{
+  "id": "exp-4",
+  "number": "4",
+  "category": "Data Wrangling",
+  "title": "Data Wrangling & Hierarchical Indexing",
+  "description": "Reshape complex tabular data using hierarchical multi-indexing, stack, unstack, and merge with combine-first value imputation.",
+  "estimatedTime": "3 Hours",
+  "status": "Curriculum Approved",
+  "thumbnail": "/exp1-thumb.png",
+  "completed": true,
+  "moduleId": "mod-1",
+  "youtubeUrl": "https://www.youtube.com/watch?v=KK6En6JnI5o",
+  "videoUrl": "https://www.youtube.com/watch?v=KK6En6JnI5o",
+  "githubUrl": "https://github.com/tambalisathvika/DataScience-lab/tree/main/Experiment-4",
+  "summary": "Comprehensive study of hierarchical multi-indexing with pd.MultiIndex.from_arrays, partial indexing across outer and inner index levels, tabular reshaping via unstack() and stack(), index-based merging with pd.merge(..., left_index=True, right_index=True), and robust missing value imputation using combine_first().",
+  "topics": [
+    "4A. Perform Hierarchical Indexing & Partial Indexing",
+    "4B. Rearrange Tabular Data with unstack and stack Method",
+    "4C. Merge DataFrames on Index & Impute with combine_first()"
+  ],
+  "subExperiments": [
+    {
+      "id": "4A",
+      "letter": "A",
+      "number": "4",
+      "title": "Perform Hierarchical Indexing and Select Data Subsets Using Partial Indexing",
+      "description": "Create a Pandas Series with hierarchical indexing using a list of lists and select subsets of data using partial indexing at outer and inner levels.",
+      "aim": "To create a Pandas Series with hierarchical (multi-level) indexing using a list of lists and to select subsets of data using partial indexing at the outer and inner levels.",
+      "learningObjective": "Master multi-tiered index generation with pd.MultiIndex.from_arrays, hierarchical Series indexing, and multi-level data selection with .loc.",
+      "syntax": "Create MultiIndex:\npd.MultiIndex.from_arrays(arrays, names=None)\n\nTo create a Series:\npd.Series(data, index=multi_index)\n\nTo select data:\nseries.loc['Outer_Level']\nseries.loc[('Outer_Level', 'Inner_Level')]",
+      "generalSyntax": "import pandas as pd\nmulti_index = pd.MultiIndex.from_arrays([outer_list, inner_list], names=['Level1', 'Level2'])\nseries = pd.Series(values, index=multi_index)\nsubset = series.loc['Level1_Key']",
+      "aboutProgram": "Hierarchical indexing (MultiIndex) is an integral feature of Pandas that enables working with higher-dimensional data in lower-dimensional (1D Series and 2D DataFrame) data structures. By structuring indexes into nested levels, partial indexing allows seamless querying of sub-groups without complex Boolean filtering.",
+      "visualPlotType": "hierarchical_bar",
+      "youtubeUrl": "https://www.youtube.com/watch?v=KK6En6JnI5o",
+      "videoUrl": "https://www.youtube.com/watch?v=KK6En6JnI5o",
+      "githubUrl": "https://github.com/tambalisathvika/DataScience-lab/tree/main/Experiment-4/4A_hierarchical_indexing.py",
+      "procedure": [
+        "Import pandas into the Python environment.",
+        "Define hierarchical index levels using a nested list representing Departments and Branches.",
+        "Construct a pd.MultiIndex using pd.MultiIndex.from_arrays() specifying level names.",
+        "Instantiate a Pandas Series binding numeric scores to the hierarchical index.",
+        "Apply partial indexing at the outer tier using series.loc[\"Engineering\"].",
+        "Select a specific scalar value using a tuple key: series.loc[(\"Engineering\", \"CSE\")].",
+        "Extract department records using series.loc[\"Science\"]."
+      ],
+      "vivaVoce": [
+        {
+          "question": "What is a MultiIndex in Pandas and when is it preferred?",
+          "answer": "A MultiIndex (hierarchical index) allows representation of higher-dimensional data in standard 2D Series and DataFrames, enabling grouped slicing across multiple category tiers without pivoting."
+        },
+        {
+          "question": "How do you access data at the inner level in a hierarchically indexed Series?",
+          "answer": "You can access inner level items using tuple indexing like series.loc[('Outer', 'Inner')] or using the cross-section method series.xs('Inner', level='Branch')."
+        }
+      ],
+      "program": "import pandas as pd\n\n# Create a list of lists for hierarchical index\nindex = [\n    ['Engineering', 'Engineering', 'Science', 'Science'],\n    ['CSE', 'ECE', 'Physics', 'Chemistry']\n]\n\n# Create MultiIndex\nmulti_index = pd.MultiIndex.from_arrays(\n    index,\n    names=['Department', 'Branch']\n)\n\n# Create a Series using the hierarchical index\nmarks = pd.Series(\n    [85, 78, 92, 88],\n    index=multi_index\n)\n\nprint(\"Original Series:\")\nprint(marks)\n\n# Partial indexing at the outer level\nprint(\"\\nData for Engineering:\")\nprint(marks.loc['Engineering'])\n\n# Partial indexing at the inner level\nprint(\"\\nData for CSE:\")\nprint(marks.loc[('Engineering', 'CSE')])\n\n# Selecting a subset using both levels\nprint(\"\\nData for Science:\")\nprint(marks.loc['Science'])",
+      "output": "Original Series:\nDepartment   Branch   \nEngineering  CSE          85\n             ECE          78\nScience      Physics      92\n             Chemistry    88\ndtype: int64\n\nData for Engineering:\nBranch\nCSE    85\nECE    78\ndtype: int64\n\nData for CSE:\n85\n\nData for Science:\nBranch\nPhysics      92\nChemistry    88\ndtype: int64\n\nExplanation:\n• MultiIndex.from_arrays() creates a hierarchical index with two levels:\n  o Outer level: Department\n  o Inner level: Branch\n• marks.loc['Engineering'] selects all records under the outer level Engineering.\n• marks.loc[('Engineering', 'CSE')] selects a specific value using both outer and inner levels.\n• marks.loc['Science'] selects all records belonging to the Science department.\n\nResult:\nThe program successfully demonstrates hierarchical indexing and partial indexing at both outer and inner levels in Pandas.",
+      "explanation": "Hierarchical indexing organizes multi-tiered data categories. Partial indexing allows slicing outer department groups or drilling down to inner branch records."
+    },
+    {
+      "id": "4B",
+      "letter": "B",
+      "number": "4",
+      "title": "Rearrange Tabular Data with Hierarchical Indexing Using unstack and stack Method",
+      "description": "Rearrange tabular data with hierarchical indexing using Pandas unstack() to pivot row levels into columns, and stack() to pivot columns back into rows.",
+      "aim": "To rearrange tabular data with hierarchical indexing using the Pandas unstack() and stack() methods.",
+      "learningObjective": "Understand the mechanisms of unstack() and stack() in converting between long/tidy and wide tabular formats.",
+      "syntax": "unstack(): Converts row index levels to columns\nDataFrame.unstack(level=-1)\n\nstack(): Converts columns to row index levels\nDataFrame.stack()",
+      "generalSyntax": "df_unstacked = df.unstack()\ndf_stacked = df_unstacked.stack()",
+      "aboutProgram": "In data wrangling, data frequently requires transformation between tall (stacked) and wide (unstacked) representations. The unstack() method pivots an inner index level from rows to columns, introducing NaNs if combinations are irregular. Conversely, stack() compresses column headers back into the hierarchical index, creating tidy tabular data.",
+      "visualPlotType": "unstack_stack_flow",
+      "youtubeUrl": "https://www.youtube.com/watch?v=KK6En6JnI5o",
+      "videoUrl": "https://www.youtube.com/watch?v=KK6En6JnI5o",
+      "githubUrl": "https://github.com/tambalisathvika/DataScience-lab/tree/main/Experiment-4/4B_stack_unstack.py",
+      "procedure": [
+        "Import the pandas library.",
+        "Create a MultiIndex from tuples representing department and branch pairings.",
+        "Build a DataFrame with multi-year performance data (columns: 2025, 2026).",
+        "Invoke data.unstack() to move the inner index (Branch) from rows to columns.",
+        "Inspect the resulting wide-format DataFrame with multi-level columns.",
+        "Invoke unstacked_data.stack() to pivot column labels back into hierarchical row indices."
+      ],
+      "vivaVoce": [
+        {
+          "question": "Explain the difference between stack() and unstack() in Pandas.",
+          "answer": "unstack() pivots the innermost level of a row index into columns (wide format). stack() collapses columns into a hierarchical row index level (tall/tidy format)."
+        },
+        {
+          "question": "What happens to missing combinations when unstack() is called?",
+          "answer": "Any category intersections that did not have observations in the original index are automatically filled with NaN (missing value) indicators."
+        }
+      ],
+      "program": "import pandas as pd\n\n# Create hierarchical index\nindex = pd.MultiIndex.from_tuples(\n    [\n        ('Engineering', 'CSE'),\n        ('Engineering', 'ECE'),\n        ('Science', 'Physics'),\n        ('Science', 'Chemistry')\n    ],\n    names=['Department', 'Branch']\n)\n\n# Create tabular data\ndata = pd.DataFrame(\n    {\n        '2025': [85, 78, 92, 88],\n        '2026': [90, 82, 95, 91]\n    },\n    index=index\n)\n\nprint(\"Original Tabular Data:\")\nprint(data)\n\n# Unstack the inner level\nunstacked_data = data.unstack()\n\nprint(\"\\nData after Unstack():\")\nprint(unstacked_data)\n\n# Stack the data back\nstacked_data = unstacked_data.stack()\n\nprint(\"\\nData after Stack():\")\nprint(stacked_data)",
+      "output": "Original Tabular Data:\n\n                       2025  2026\nDepartment   Branch              \nEngineering  CSE          85    90\n             ECE          78    82\nScience      Physics      92    95\n             Chemistry    88    91\n\nData after Unstack():\n\n             2025                    2026                        \nBranch        CSE   ECE Chemistry Physics  CSE   ECE Chemistry Physics\nDepartment                                                            \nEngineering  85.0  78.0       NaN     NaN 90.0  82.0       NaN     NaN\nScience       NaN   NaN      88.0    92.0  NaN   NaN      91.0    95.0\n\nData after Stack():\n\nDepartment   Branch   \nEngineering  CSE          85    90\n             ECE          78    82\nScience      Chemistry    88    91\n             Physics      92    95\ndtype: int64\n\nExplanation:\n1. Hierarchical Indexing: Department and Branch form the two levels of the hierarchical index.\n2. unstack() method: Moves the inner index (Branch) from the rows to the columns.\n3. stack() method: Moves the column labels back into the hierarchical row index.\n\nResult:\nThe unstack() method converts row-level hierarchical indexes into columns, while the stack() method converts columns back into hierarchical row indexes.",
+      "explanation": "unstack() pivots row index levels into wide columnar formats, while stack() collapses column hierarchies back into long indexed rows."
+    },
+    {
+      "id": "4C",
+      "letter": "C",
+      "number": "4",
+      "title": "Merge DataFrames Using Index as Key and Combine Data Using combine_first()",
+      "description": "Create two DataFrames, merge them using index as merge key, and combine data using combine_first() to impute missing values.",
+      "aim": "To create two different Pandas DataFrames, merge them using the index as the merge key, and combine their data using the combine_first() method to fill missing values with available values from another DataFrame.",
+      "learningObjective": "Learn index-aligned relational merging with pd.merge() and conditional value fallback using DataFrame.combine_first().",
+      "syntax": "Merge using index:\npd.merge(df1, df2, left_index=True, right_index=True, how='outer')\n\ncombine_first():\ndf1.combine_first(df2)",
+      "generalSyntax": "merged = pd.merge(df1, df2, left_index=True, right_index=True, how='outer')\ncombined = df1.combine_first(df2)",
+      "aboutProgram": "Data imputation often requires combining overlapping datasets where primary records have gaps that can be resolved by a secondary reference. The combine_first() method aligns two DataFrames on their indexes and columns, filling nulls in the caller with valid values from the argument DataFrame.",
+      "visualPlotType": "combine_first_bars",
+      "youtubeUrl": "https://www.youtube.com/watch?v=KK6En6JnI5o",
+      "videoUrl": "https://www.youtube.com/watch?v=KK6En6JnI5o",
+      "githubUrl": "https://github.com/tambalisathvika/DataScience-lab/tree/main/Experiment-4/4C_combine_first.py",
+      "procedure": [
+        "Import pandas.",
+        "Construct two DataFrames df1 and df2 with overlapping student ID indices, containing intentional None/NaN values.",
+        "Perform an outer join using pd.merge(df1, df2, left_index=True, right_index=True, how=\"outer\").",
+        "Execute df1.combine_first(df2) to patch missing marks and grades from df2 into df1.",
+        "Display original, merged, and combined DataFrames to verify successful imputation."
+      ],
+      "vivaVoce": [
+        {
+          "question": "How does combine_first() resolve missing data across two DataFrames?",
+          "answer": "df1.combine_first(df2) aligns two DataFrames on their index and fills NaN holes in df1 with corresponding non-null values from df2."
+        },
+        {
+          "question": "What is the advantage of using left_index=True and right_index=True in pd.merge()?",
+          "answer": "It avoids having to reset the index to a column, executing relational join logic directly on the DataFrame row indices for maximum efficiency."
+        }
+      ],
+      "program": "import pandas as pd\n\n# Create the first DataFrame\ndf1 = pd.DataFrame(\n    {\n        'Name': ['Ravi', 'Sita', 'Arun'],\n        'Marks': [85, None, 78],\n        'Grade': ['A', 'B', None]\n    },\n    index=[101, 102, 103]\n)\n\n# Create the second DataFrame\ndf2 = pd.DataFrame(\n    {\n        'Name': ['Ravi', 'Sita', 'Kiran'],\n        'Marks': [90, 88, 82],\n        'Grade': [None, 'A', 'B']\n    },\n    index=[101, 102, 104]\n)\n\nprint(\"First DataFrame:\")\nprint(df1)\n\nprint(\"\\nSecond DataFrame:\")\nprint(df2)\n\n# Merge DataFrames using index as merge key\nmerged = pd.merge(\n    df1,\n    df2,\n    left_index=True,\n    right_index=True,\n    how='outer',\n    suffixes=('_DF1', '_DF2')\n)\n\nprint(\"\\nMerged DataFrame:\")\nprint(merged)\n\n# Combine data using combine_first()\ncombined = df1.combine_first(df2)\n\nprint(\"\\nDataFrame after combine_first():\")\nprint(combined)",
+      "output": "First DataFrame:\n      Name  Marks Grade\n101   Ravi   85.0     A\n102   Sita    NaN     B\n103   Arun   78.0  None\n\nSecond DataFrame:\n      Name  Marks Grade\n101   Ravi   90.0  None\n102   Sita   88.0     A\n104  Kiran   82.0     B\n\nMerged DataFrame:\n      Name_DF1  Marks_DF1 Grade_DF1 Name_DF2  Marks_DF2 Grade_DF2\n101       Ravi       85.0         A     Ravi       90.0      None\n102       Sita        NaN         B     Sita       88.0         A\n103       Arun       78.0      None      NaN        NaN       NaN\n104        NaN        NaN       NaN    Kiran       82.0         B\n\nDataFrame after combine_first():\n      Name  Marks Grade\n101   Ravi   85.0     A\n102   Sita   88.0     B\n103   Arun   78.0  None\n104  Kiran   82.0     B\n\nExplanation:\n1. Creating DataFrames: Two DataFrames, df1 and df2, are created with student information. Their index values act as student IDs.\n2. Merging using index: pd.merge(df1, df2, left_index=True, right_index=True, how='outer') preserves all index keys.\n3. Combining overlapping data: df1.combine_first(df2) uses values from df1 wherever they exist. If df1 contains a missing value (e.g. Sita's marks = NaN), it takes 88 from df2.\n\nResult:\nThe program demonstrates both index-based merging and combining overlapping DataFrame data using combine_first().",
+      "explanation": "combine_first() seamlessly imputes missing values in a primary DataFrame with values from an overlapping secondary DataFrame."
+    }
+  ]
+},
+{
+  "id": "exp-5",
+  "number": "5",
+  "category": "Data Visualization",
+  "title": "Data Visualization with Matplotlib & Seaborn",
+  "description": "Perform comprehensive data visualization using Matplotlib and Seaborn across line, bar, histogram, scatter, and boxplots.",
+  "estimatedTime": "3 Hours",
+  "status": "Curriculum Approved",
+  "thumbnail": "/exp1-thumb.png",
+  "completed": true,
+  "moduleId": "mod-1",
+  "youtubeUrl": "https://www.youtube.com/watch?v=Bw_yIdyeNhY",
+  "videoUrl": "https://www.youtube.com/watch?v=Bw_yIdyeNhY",
+  "githubUrl": "https://github.com/tambalisathvika/DataScience-lab/tree/main/Experiment-5",
+  "summary": "Comprehensive exploration of static and statistical plotting using Matplotlib and Seaborn: multi-panel subplots with custom ticks and peak annotations, side-by-side grouped and stacked bar charts, frequency histograms with Kernel Density Estimation (KDE) overlays, bivariate scatter plots with Pearson correlation (r = 1.00), and multi-category box plots depicting five-number distribution summaries.",
+  "topics": [
+    "5A. Line Plot with Subplots, Annotations & File Export",
+    "5B. Grouped & Stacked Bar Plots from DataFrame Index",
+    "5C. Histogram Frequency & Continuous Density (KDE) Plots",
+    "5D. Scatter Plot & Pearson Correlation Analysis",
+    "5E. Box Plots for Multi-Category Numerical Distributions"
+  ],
+  "subExperiments": [
+    {
+      "id": "5A",
+      "letter": "A",
+      "number": "5",
+      "title": "Create a Line Plot with Title, Axis Labels, Ticks, Tick Labels, Annotations and Save to a File",
+      "description": "Create multi-panel line subplots in Matplotlib with customized axes, tick markers, arrow annotations pointing at peaks, and export high-resolution PNG.",
+      "aim": "To create a line plot using Matplotlib by setting the title, axis labels, ticks, tick labels, and annotations on subplots, and save the generated plot to an image file.",
+      "learningObjective": "Master multi-axis subplots, figure customization, annotation arrows, and high-DPI figure exporting in Matplotlib.",
+      "syntax": "Create subplots:\nfig, ax = plt.subplots(2, 1, figsize=(10, 8))\n\nSet title and labels:\nax[0].set_title(\"Title\")\nax[0].set_xlabel(\"X-axis\")\nax[0].set_ylabel(\"Y-axis\")\n\nTicks and labels:\nax[0].set_xticks(range(len(months)))\nax[0].set_xticklabels(months)\n\nAnnotation:\nax[0].annotate(\"Highest Sales\", xy=(5, 250), xytext=(3.5, 270),\n               arrowprops=dict(arrowstyle=\"->\"))\n\nSave plot:\nplt.savefig(\"filename.png\", dpi=300, bbox_inches=\"tight\")",
+      "generalSyntax": "fig, ax = plt.subplots(rows, cols)\nax.plot(x, y, marker='o', label='Series')\nax.annotate('Note', xy=(x0, y0), xytext=(x1, y1), arrowprops=dict(arrowstyle='->'))\nplt.savefig('output.png', dpi=300)",
+      "aboutProgram": "Matplotlib object-oriented API uses Figure and Axes objects for granular control over every visual element. Subplots partition the canvas into vertical or horizontal panels, while annotations with arrow pointers highlight key events or extremes.",
+      "visualPlotType": "line_annotations_plot",
+      "youtubeUrl": "https://www.youtube.com/watch?v=Bw_yIdyeNhY",
+      "videoUrl": "https://www.youtube.com/watch?v=Bw_yIdyeNhY",
+      "githubUrl": "https://github.com/tambalisathvika/DataScience-lab/tree/main/Experiment-5/5A_line_plots_annotations.py",
+      "procedure": [
+        "Import matplotlib.pyplot.",
+        "Prepare chronological monthly data series for sales and expenses.",
+        "Initialize a 2x1 subplot grid using plt.subplots(2, 1, figsize=(10, 8)).",
+        "Plot sales on the first subplot with circular markers and gridlines.",
+        "Add an arrow annotation pointing to the highest sales month (Jun: 250).",
+        "Plot expenses on the second subplot with square markers and peak annotation (Jun: 160).",
+        "Configure super title, adjust layout with plt.tight_layout(), and save to PNG at 300 DPI."
+      ],
+      "vivaVoce": [
+        {
+          "question": "What is the purpose of bbox_inches=\"tight\" in plt.savefig()?",
+          "answer": "It crops excess whitespace around the canvas, ensuring that axis labels, titles, and legends are not clipped in the exported image file."
+        },
+        {
+          "question": "How do ax.annotate() parameters xy and xytext differ?",
+          "answer": "xy specifies the coordinates of the point being annotated (where the arrowhead points), whereas xytext specifies the position of the annotation text label."
+        }
+      ],
+      "program": "import matplotlib.pyplot as plt\n\n# Data\nmonths = [\"Jan\", \"Feb\", \"Mar\", \"Apr\", \"May\", \"Jun\"]\nsales = [120, 150, 180, 160, 220, 250]\nexpenses = [80, 100, 120, 110, 140, 160]\n\n# Create subplots\nfig, ax = plt.subplots(2, 1, figsize=(10, 8))\n\n# Subplot 1: Sales\nax[0].plot(months, sales, marker=\"o\", linewidth=2, label=\"Sales\")\nax[0].set_title(\"Monthly Sales\")\nax[0].set_xlabel(\"Month\")\nax[0].set_ylabel(\"Sales\")\nax[0].set_xticks(range(len(months)))\nax[0].set_xticklabels(months)\nax[0].annotate(\"Highest Sales\", xy=(5, 250), xytext=(3.5, 270),\n               arrowprops=dict(arrowstyle=\"->\"))\nax[0].legend()\nax[0].grid(True)\n\n# Subplot 2: Expenses\nax[1].plot(months, expenses, marker=\"s\", linewidth=2, label=\"Expenses\")\nax[1].set_title(\"Monthly Expenses\")\nax[1].set_xlabel(\"Month\")\nax[1].set_ylabel(\"Expenses\")\nax[1].set_xticks(range(len(months)))\nax[1].set_xticklabels(months)\nax[1].annotate(\"Highest Expense\", xy=(5, 160), xytext=(3.5, 180),\n               arrowprops=dict(arrowstyle=\"->\"))\nax[1].legend()\nax[1].grid(True)\n\n# Overall title\nfig.suptitle(\"Monthly Sales and Expenses Analysis\", fontsize=16)\nplt.tight_layout()\nplt.savefig(\"monthly_sales_expenses.png\", dpi=300, bbox_inches=\"tight\")\nplt.show()",
+      "output": "The program generates two subplots:\n       Monthly Sales and Expenses Analysis\n\n          Monthly Sales\nSales\n250 |                         ● ← Highest Sales\n220 |                    ●\n180 |             ●\n150 |        ●\n120 |   ●\n    +--------------------------------\n       Jan  Feb  Mar  Apr  May  Jun\n                    Month\n\n          Monthly Expenses\nExpenses\n160 |                         ■ ← Highest Expense\n140 |                    ■\n120 |             ■\n110 |        ■\n100 |   ■\n 80 | ●\n    +--------------------------------\n       Jan  Feb  Mar  Apr  May  Jun\n                    Month\n\nOutput File:\nThe plot is saved as:\nmonthly_sales_expenses.png\nat 300 DPI, making it suitable for reports and practical records.\n\nResult:\nThus, a line plot with titles, axis labels, ticks, tick labels, annotations, and multiple subplots was successfully created using Matplotlib and saved to an image file.",
+      "explanation": "Subplots partition complex datasets into synchronized panels. Direct arrow annotations highlight local extrema without cluttering axes."
+    },
+    {
+      "id": "5B",
+      "letter": "B",
+      "number": "5",
+      "title": "Create Bar Plots Using Series and DataFrame Index (Grouped & Stacked)",
+      "description": "Create grouped side-by-side bar plots and vertically stacked bar charts from Pandas DataFrames to compare multi-subject student performance.",
+      "aim": "To create bar plots using Pandas Series and DataFrame index, and to create both grouped bar plots and stacked bar plots using Matplotlib.",
+      "learningObjective": "Understand how Pandas utilizes index labels for categorical X-axes and columns for grouped and stacked bar geometry.",
+      "syntax": "Grouped Bar Plot:\ndf.plot(kind='bar', figsize=(8, 5))\n\nStacked Bar Plot:\ndf.plot(kind='bar', stacked=True, figsize=(8, 5))",
+      "generalSyntax": "df.plot(kind='bar') # grouped\ndf.plot(kind='bar', stacked=True) # stacked",
+      "aboutProgram": "Bar charts represent categorical comparisons. In Pandas, DataFrame.plot(kind=\"bar\") clusters column values side by side for each row index. Setting stacked=True stacks the column values vertically, illustrating both individual contributions and the cumulative sum.",
+      "visualPlotType": "grouped_stacked_bar",
+      "youtubeUrl": "https://www.youtube.com/watch?v=3Rok5fgOWrw",
+      "videoUrl": "https://www.youtube.com/watch?v=3Rok5fgOWrw",
+      "githubUrl": "https://github.com/tambalisathvika/DataScience-lab/tree/main/Experiment-5/5B_bar_plots_grouped_stacked.py",
+      "procedure": [
+        "Import pandas and matplotlib.pyplot.",
+        "Construct a DataFrame where rows represent students and columns represent marks across subjects (Python, Java, C++).",
+        "Generate a grouped bar plot with df.plot(kind=\"bar\") to view marks side by side.",
+        "Configure chart labels, rotation, and legend.",
+        "Generate a stacked bar plot with df.plot(kind=\"bar\", stacked=True) to display aggregate student performance.",
+        "Display both figures with plt.show()."
+      ],
+      "vivaVoce": [
+        {
+          "question": "What is the main visual difference between grouped and stacked bar plots?",
+          "answer": "Grouped bar plots position bars side by side per category, making comparison of individual variables straightforward. Stacked bar plots stack bars vertically, emphasizing overall cumulative totals and part-to-whole ratios."
+        },
+        {
+          "question": "How do you create a horizontal bar plot in Pandas?",
+          "answer": "Use df.plot(kind=\"barh\") or df.plot.barh() which swaps the X and Y axes."
+        }
+      ],
+      "program": "import pandas as pd\nimport matplotlib.pyplot as plt\n\n# Create DataFrame\ndata = {\n    'Python': [85, 90, 78, 88],\n    'Java': [75, 82, 80, 85],\n    'C++': [80, 76, 85, 90]\n}\n\ndf = pd.DataFrame(\n    data,\n    index=['Student1', 'Student2', 'Student3', 'Student4']\n)\n\nprint(\"DataFrame:\")\nprint(df)\n\n# 1. Grouped Bar Plot (Side-by-Side Bars)\ndf.plot(kind='bar', figsize=(8, 5))\nplt.title(\"Student Marks in Different Programming Languages (Grouped)\")\nplt.xlabel(\"Students\")\nplt.ylabel(\"Marks\")\nplt.xticks(rotation=0)\nplt.legend(title=\"Subjects\")\nplt.tight_layout()\nplt.show()\n\n# 2. Stacked Bar Plot\ndf.plot(kind='bar', stacked=True, figsize=(8, 5))\nplt.title(\"Stacked Bar Plot of Student Marks\")\nplt.xlabel(\"Students\")\nplt.ylabel(\"Total Marks\")\nplt.xticks(rotation=0)\nplt.legend(title=\"Subjects\")\nplt.tight_layout()\nplt.show()",
+      "output": "DataFrame:\n\n          Python  Java  C++\nStudent1      85    75   80\nStudent2      90    82   76\nStudent3      78    80   85\nStudent4      88    85   90\n\nGrouped Bar Plot:\nThe graphical output contains three bars side by side for each student:\n• Python, Java, C++\n\nStacked Bar Plot:\nThe graphical output contains one bar for each student, with Python, Java, and C++ marks stacked vertically.\n\nResult:\nThus, grouped bar plots and stacked bar plots were successfully created from a Pandas DataFrame using its index values.",
+      "explanation": "Grouped bars facilitate cross-subject comparison per student, whereas stacked bars highlight total cumulative scores alongside component breakdowns."
+    },
+    {
+      "id": "5C",
+      "letter": "C",
+      "number": "5",
+      "title": "Create Histogram to Display Value Frequency and Density Plot to Generate Continuous Distribution",
+      "description": "Construct frequency histograms and smooth Kernel Density Estimation (KDE) continuous probability curves using Seaborn and Matplotlib.",
+      "aim": "To create a Histogram for displaying the frequency distribution of observed data and a Density Plot for representing the continuous probability distribution of the data using Python, Pandas, Matplotlib, and Seaborn.",
+      "learningObjective": "Understand discrete bin discretization in histograms and non-parametric continuous density estimation with KDE.",
+      "syntax": "Histogram:\nsns.histplot(data, bins=10, kde=False)\n\nDensity Plot:\nsns.kdeplot(data, fill=True)\n\nCombined Histogram with Density Curve:\nsns.histplot(data, bins=10, kde=True)",
+      "generalSyntax": "sns.histplot(df['Column'], bins=k, kde=True)\nsns.kdeplot(df['Column'], fill=True)",
+      "aboutProgram": "Histograms partition continuous variables into contiguous intervals (bins) to visualize sample frequency. Kernel Density Estimation (KDE) computes a continuous probability density function by placing Gaussian kernels over each sample, avoiding boundary artifacts.",
+      "visualPlotType": "hist_kde_plot",
+      "youtubeUrl": "https://www.youtube.com/watch?v=t_W6eC8-17w",
+      "videoUrl": "https://www.youtube.com/watch?v=t_W6eC8-17w",
+      "githubUrl": "https://github.com/tambalisathvika/DataScience-lab/tree/main/Experiment-5/5C_histogram_density_plots.py",
+      "procedure": [
+        "Import pandas, matplotlib.pyplot, and seaborn.",
+        "Prepare observed student exam marks dataset (20 observations).",
+        "Plot a discrete frequency histogram with 6 bins using sns.histplot(df[\"Marks\"], bins=6, kde=False).",
+        "Generate a smooth continuous density curve using sns.kdeplot(df[\"Marks\"], fill=True).",
+        "Combine both views into an annotated composite figure with sns.histplot(..., kde=True)."
+      ],
+      "vivaVoce": [
+        {
+          "question": "When should you use a Density Plot (KDE) over a standard Histogram?",
+          "answer": "Histograms depend heavily on arbitrary bin-width choices, causing discontinuous jagged steps. Kernel Density Estimation (KDE) computes a continuous, smooth probability density function independent of bin boundaries."
+        },
+        {
+          "question": "What does the area under a KDE probability density curve equal?",
+          "answer": "The total area under a valid continuous probability density function (PDF) integrates to exactly 1.0 (100% total probability)."
+        }
+      ],
+      "program": "import pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\n# Sample observed data\ndata = [45, 50, 52, 55, 58, 60, 62, 65, 68, 70,\n        72, 75, 78, 80, 82, 85, 88, 90, 92, 95]\n\ndf = pd.DataFrame({'Marks': data})\nprint(\"Observed Data:\")\nprint(df)\n\n# 1. Histogram\nplt.figure(figsize=(8, 5))\nsns.histplot(df['Marks'], bins=6, kde=False)\nplt.title(\"Histogram of Marks\")\nplt.xlabel(\"Marks\")\nplt.ylabel(\"Frequency\")\nplt.tight_layout()\nplt.show()\n\n# 2. Density Plot\nplt.figure(figsize=(8, 5))\nsns.kdeplot(df['Marks'], fill=True)\nplt.title(\"Density Plot of Marks\")\nplt.xlabel(\"Marks\")\nplt.ylabel(\"Density\")\nplt.tight_layout()\nplt.show()\n\n# 3. Combined Histogram with Density Curve\nplt.figure(figsize=(8, 5))\nsns.histplot(df['Marks'], bins=6, kde=True)\nplt.title(\"Histogram with Density Curve\")\nplt.xlabel(\"Marks\")\nplt.ylabel(\"Frequency / Density\")\nplt.tight_layout()\nplt.show()",
+      "output": "Observed Data:\n    Marks\n0      45\n1      50\n...\n18     92\n19     95\n\nGraphical Output:\n1. Histogram:\nDisplays the marks divided into intervals (bins), with the height of each bar representing the frequency of observations in that interval.\n2. Density Plot:\nDisplays a smooth curve representing the estimated continuous probability distribution of the observed marks.\n3. Combined Histogram + Density Plot:\nGenerated using sns.histplot(df['Marks'], bins=6, kde=True) with density curve overlaid.\n\nResult:\nThus, a histogram and density plot were successfully created to visualize the frequency distribution and continuous probability distribution of the observed data.",
+      "explanation": "Histograms capture discrete bin distributions while KDE models the underlying continuous population probability density function."
+    },
+    {
+      "id": "5D",
+      "letter": "D",
+      "number": "5",
+      "title": "Create Scatter Plot and Examine the Relationship Between Two One-Dimensional Data Series",
+      "description": "Plot bivariate scatter observations and compute Pearson correlation coefficient (r = 1.00) to evaluate linear dependency.",
+      "aim": "To create a Scatter Plot using two one-dimensional data series and examine the relationship or correlation between them using Python, Pandas, and Matplotlib.",
+      "learningObjective": "Master bivariate scatter plotting, coordinate dispersion diagnosis, and Pearson correlation coefficient computation.",
+      "syntax": "Matplotlib:\nplt.scatter(x, y)\n\nPandas:\ndf.plot.scatter(x='Column1', y='Column2')\n\nCorrelation Calculation:\ncorrelation = df['Column1'].corr(df['Column2'])",
+      "generalSyntax": "plt.scatter(x, y)\nr = df['x'].corr(df['y'])",
+      "aboutProgram": "Scatter plots visualize bivariate numerical relationships. By plotting predictor variables on the X-axis against response variables on the Y-axis, patterns such as positive linear correlation, negative trends, or nonlinear clusters become readily apparent. Pearson r quantifies this degree of linear association.",
+      "visualPlotType": "scatter_correlation_plot",
+      "youtubeUrl": "https://www.youtube.com/watch?v=Bw_yIdyeNhY",
+      "videoUrl": "https://www.youtube.com/watch?v=Bw_yIdyeNhY",
+      "githubUrl": "https://github.com/tambalisathvika/DataScience-lab/tree/main/Experiment-5/5D_scatter_plot_correlation.py",
+      "procedure": [
+        "Import pandas and matplotlib.pyplot.",
+        "Define two continuous data series: Study_Hours and Marks.",
+        "Build a Pandas DataFrame binding both series.",
+        "Plot the points using plt.scatter(df[\"Study_Hours\"], df[\"Marks\"]).",
+        "Add titles, axis labels, and enable background gridlines.",
+        "Calculate the Pearson correlation coefficient using df[\"Study_Hours\"].corr(df[\"Marks\"]).",
+        "Print and analyze the resulting correlation metric (r = 1.00)."
+      ],
+      "vivaVoce": [
+        {
+          "question": "What does Pearson's correlation coefficient measure and what is its range?",
+          "answer": "It measures the linear relationship between two continuous variables, ranging from -1.0 (perfect negative linear correlation) to +1.0 (perfect positive linear correlation), where 0 indicates no linear correlation."
+        },
+        {
+          "question": "Does a correlation coefficient of 0 imply no relationship exists?",
+          "answer": "No, it only implies no linear relationship exists; strong nonlinear relationships (e.g., quadratic or sinusoidal) can still exist with r = 0."
+        }
+      ],
+      "program": "import pandas as pd\nimport matplotlib.pyplot as plt\n\n# Two one-dimensional data series\nstudy_hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\nmarks = [45, 50, 55, 60, 65, 70, 72, 80, 85, 90]\n\n# Create DataFrame\ndf = pd.DataFrame({\n    'Study_Hours': study_hours,\n    'Marks': marks\n})\n\nprint(\"Data:\")\nprint(df)\n\n# Create Scatter Plot\nplt.figure(figsize=(8, 5))\nplt.scatter(df['Study_Hours'], df['Marks'])\nplt.title(\"Relationship Between Study Hours and Marks\")\nplt.xlabel(\"Study Hours\")\nplt.ylabel(\"Marks\")\nplt.grid(True)\nplt.tight_layout()\nplt.show()\n\n# Calculate correlation\ncorrelation = df['Study_Hours'].corr(df['Marks'])\nprint(\"\\nCorrelation Coefficient:\", round(correlation, 2))",
+      "output": "Data:\n   Study_Hours  Marks\n0            1     45\n1            2     50\n2            3     55\n3            4     60\n4            5     65\n5            6     70\n6            7     72\n7            8     80\n8            9     85\n9           10     90\n\nCorrelation Coefficient: 1.00\n\nGraphical Output:\nThe scatter plot contains:\n• X-axis: Study Hours \n• Y-axis: Marks \n• Each point represents one observation. \n• The points move upward as study hours increase, indicating a positive relationship between study hours and marks.\n\nResult:\nThus, the scatter plot was successfully created and the relationship between the two one-dimensional data series was examined using the correlation coefficient.",
+      "explanation": "Scatter plots diagnose bivariate distributions. The calculated Pearson correlation coefficient of r = 1.00 confirms an exact positive linear dependency between study hours and marks."
+    },
+    {
+      "id": "5E",
+      "letter": "E",
+      "number": "5",
+      "title": "Create Box Plots to Visualize Data with Many Categorical Variables",
+      "description": "Generate multi-category box plots in Seaborn to compare mark distributions across CSE, ECE, and EEE engineering departments.",
+      "aim": "To create Box Plots for visualizing the distribution of numerical data across multiple categorical variables using Python, Pandas, Matplotlib, and Seaborn.",
+      "learningObjective": "Master categorical distribution visualization, five-number summary interpretation, and outlier detection with box plots.",
+      "syntax": "Seaborn:\nsns.boxplot(x='Category', y='Value', data=df)\n\nPandas:\ndf.boxplot(column='Value', by='Category')",
+      "generalSyntax": "sns.boxplot(x='Category_Col', y='Numeric_Col', data=df)",
+      "aboutProgram": "A Box and Whisker Plot displays the five-number summary of a dataset: Minimum, First Quartile (Q1), Median, Third Quartile (Q3), and Maximum. By grouping on a categorical axis, distributions across departments are compared simultaneously, highlighting variations in median, dispersion (IQR), and potential outlier deviations.",
+      "visualPlotType": "boxplot_categorical",
+      "youtubeUrl": "https://www.youtube.com/watch?v=Bw_yIdyeNhY",
+      "videoUrl": "https://www.youtube.com/watch?v=Bw_yIdyeNhY",
+      "githubUrl": "https://github.com/tambalisathvika/DataScience-lab/tree/main/Experiment-5/5E_box_plots_categorical.py",
+      "procedure": [
+        "Import pandas, matplotlib.pyplot, and seaborn.",
+        "Construct a DataFrame containing department categories (CSE, ECE, EEE) alongside student marks.",
+        "Invoke sns.boxplot(x=\"Department\", y=\"Marks\", data=df).",
+        "Configure plot title, axis labels, and subtle horizontal gridlines.",
+        "Analyze median marks, interquartile ranges, and department dispersion."
+      ],
+      "vivaVoce": [
+        {
+          "question": "What are the components of a Box Plot and what do the whiskers represent?",
+          "answer": "A Box Plot displays Minimum, Q1 (25th percentile), Median (50th percentile), Q3 (75th percentile), and Maximum. The box represents the Interquartile Range (IQR = Q3 - Q1), and whiskers extend to 1.5 * IQR. Points beyond whiskers are classified as outliers."
+        },
+        {
+          "question": "Why are Box Plots preferred over mean/variance for skewed distributions?",
+          "answer": "Because the median and IQR used in box plots are non-parametric and robust against extreme outlier distortion, unlike the arithmetic mean and variance."
+        }
+      ],
+      "program": "import pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\n# Create sample data\ndata = {\n    'Department': [\n        'CSE', 'CSE', 'CSE', 'CSE', 'CSE',\n        'ECE', 'ECE', 'ECE', 'ECE', 'ECE',\n        'EEE', 'EEE', 'EEE', 'EEE', 'EEE'\n    ],\n    'Marks': [\n        78, 85, 90, 72, 88,\n        65, 70, 82, 75, 80,\n        60, 68, 72, 76, 85\n    ]\n}\n\ndf = pd.DataFrame(data)\nprint(\"Data:\")\nprint(df)\n\n# Create Box Plot\nplt.figure(figsize=(8, 5))\nsns.boxplot(\n    x='Department',\n    y='Marks',\n    data=df\n)\nplt.title(\"Marks Distribution by Department\")\nplt.xlabel(\"Department\")\nplt.ylabel(\"Marks\")\nplt.grid(axis='y', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()",
+      "output": "Data:\n   Department  Marks\n0         CSE     78\n1         CSE     85\n2         CSE     90\n3         CSE     72\n4         CSE     88\n5         ECE     65\n6         ECE     70\n7         ECE     82\n8         ECE     75\n9         ECE     80\n10        EEE     60\n11        EEE     68\n12        EEE     72\n13        EEE     76\n14        EEE     85\n\nGraphical Output:\nThe box plot displays one box for each category:\n• CSE → distribution of CSE marks (Median: 85, Range: 72–90)\n• ECE → distribution of ECE marks (Median: 75, Range: 65–82)\n• EEE → distribution of EEE marks (Median: 72, Range: 60–85)\n\nResult:\nThus, the Box Plot was successfully created to visualize and compare the distribution of numerical data across multiple categorical variables.",
+      "explanation": "Box plots illustrate categorical distribution disparities: CSE exhibits the highest median mark (85), followed by ECE (75) and EEE (72)."
+    }
+  ]
+},
+{
     id: 'exp-6',
     number: '6',
     category: 'Time Series',
@@ -556,4 +900,3 @@ Freq: 12h, Name: Power_kW, dtype: float64`,
     ]
   }
 ];
-

@@ -39,8 +39,20 @@ export const dataScienceModules = [
       'Data Preprocessing Pipelines',
       'Descriptive Analysis & Metrics'
     ],
-    relatedExperimentIds: ['exp-6'],
+    relatedExperimentIds: ['exp-4', 'exp-5', 'exp-6'],
     relatedExperiments: [
+      {
+        id: 'exp-4',
+        number: '4',
+        title: 'Data Wrangling & Hierarchical Indexing',
+        relevance: 'Demonstrates hierarchical indexing, reshaping tabular data using unstack/stack, and missing value imputation with combine_first().'
+      },
+      {
+        id: 'exp-5',
+        number: '5',
+        title: 'Data Visualization with Matplotlib & Seaborn',
+        relevance: 'Applied exploratory data analysis through subplots, annotations, grouped/stacked bar charts, histograms, KDE, scatter plots, and box plots.'
+      },
       {
         id: 'exp-6',
         number: '6',
@@ -297,8 +309,20 @@ print(cat_summary.round(2))`
       'Singular Value Decomposition (SVD)',
       'Principal Component Analysis (PCA)'
     ],
-    relatedExperimentIds: ['exp-6'],
+    relatedExperimentIds: ['exp-4', 'exp-5', 'exp-6'],
     relatedExperiments: [
+      {
+        id: 'exp-4',
+        number: '4',
+        title: 'Data Wrangling & Hierarchical Indexing',
+        relevance: 'Multi-tiered index manipulation and feature reshaping required prior to machine learning modeling.'
+      },
+      {
+        id: 'exp-5',
+        number: '5',
+        title: 'Data Visualization with Matplotlib & Seaborn',
+        relevance: 'Distribution inspection and feature correlation analysis (Pearson r) to identify relevant predictors.'
+      },
       {
         id: 'exp-6',
         number: '6',
