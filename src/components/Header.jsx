@@ -20,11 +20,11 @@ export default function Header({ student, onEditStudent }) {
 
         <div className="pro-heading-group">
           <h1 className="pro-main-title">
-            DS LAB
+            DATA SCIENCE DIGITAL LABORATORY
             <span className="title-teal-dot" />
           </h1>
           <p className="pro-sub-title">
-            Data Science Laboratory
+            Interactive Computational Laboratory &amp; Virtual Kernel
           </p>
           <p className="pro-sub-desc">
             Continuous practical evaluation, algorithm implementations, and experimental analytics workbench.

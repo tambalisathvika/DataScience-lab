@@ -5923,3 +5923,301 @@ body {
     padding-right: 0.35rem;
   }
 }
+
+/* ==============================================================================
+   INTERACTIVE CODE EDITOR & TRY IT YOURSELF LIVE COMPILER ENHANCEMENTS
+   ============================================================================== */
+
+.pro-interactive-editor-card {
+  background: #080d1a;
+  border-radius: var(--radius-lg);
+  border: 1px solid #1e293b;
+  overflow: hidden;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.5rem;
+}
+
+.editor-top-bar {
+  background: #0f172a;
+  padding: 0.65rem 1.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #1e293b;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.editor-left-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.editor-file-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(30, 41, 59, 0.8);
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid #334155;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.8rem;
+  color: #f1f5f9;
+  font-weight: 600;
+}
+
+.ide-lang-select-compact {
+  padding: 0.3rem 0.65rem;
+  background: #1e293b;
+  border: 1px solid #38bdf8;
+  border-radius: var(--radius-sm);
+  font-size: 0.775rem;
+  font-weight: 700;
+  color: #38bdf8;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.ide-lang-select-compact:hover {
+  background: #253349;
+  border-color: #7dd3fc;
+}
+
+.editor-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.editor-status-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: #10b981;
+  font-weight: 700;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.editor-code-body {
+  display: grid;
+  grid-template-columns: 50px 1fr;
+  background: #080d1a;
+  min-height: 280px;
+  max-height: 500px;
+  overflow-y: auto;
+  border-bottom: 1px solid #1e293b;
+  position: relative;
+}
+
+.editor-line-gutter {
+  background: #0b1120;
+  border-right: 1px solid #1e293b;
+  padding: 0.85rem 0;
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+  overflow: hidden;
+}
+
+.gutter-num {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  text-align: right;
+  padding-right: 0.75rem;
+  color: #475569;
+}
+
+.editor-textarea-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.editor-textarea {
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  padding: 0.85rem 1rem;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  font-family: 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.825rem;
+  line-height: 1.6;
+  color: #f8fafc;
+  caret-color: #38bdf8;
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: auto;
+  tab-size: 4;
+}
+
+.editor-terminal-container {
+  background: #050811;
+  display: flex;
+  flex-direction: column;
+}
+
+.terminal-header-bar {
+  background: #090e1a;
+  padding: 0.55rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #1e293b;
+}
+
+.console-tab-mini {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.console-tab-mini:hover {
+  color: #f1f5f9;
+}
+
+.console-tab-mini.active {
+  background: rgba(30, 41, 59, 0.8);
+  color: #38bdf8;
+}
+
+.console-tab-mini.error {
+  color: #ef4444;
+}
+
+.term-shortcut-hint {
+  font-size: 0.7rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.terminal-screen {
+  padding: 0.85rem 1rem;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.8rem;
+  line-height: 1.55;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.terminal-prompt-line {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.term-green-prompt {
+  color: #10b981;
+  font-weight: 700;
+}
+
+.term-command {
+  color: #38bdf8;
+}
+
+.terminal-output-text {
+  margin: 0;
+  color: #e2e8f0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Code Mode Switcher Pills */
+.code-mode-pills-wrap {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid #334155;
+  border-radius: 9999px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.code-mode-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: transparent;
+  border: none;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.code-mode-pill:hover {
+  color: #f1f5f9;
+}
+
+.code-mode-pill.active {
+  background: linear-gradient(135deg, #0d9488 0%, #0284c7 100%);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.4);
+}
+
+/* Sub-Experiment Card "Try it" Button */
+.btn-try-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(14, 165, 233, 0.08);
+  border: 1px solid rgba(14, 165, 233, 0.25);
+  color: #0284c7;
+  padding: 0.38rem 0.7rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-try-ghost:hover {
+  background: rgba(14, 165, 233, 0.18);
+  border-color: #0284c7;
+  color: #0369a1;
+  transform: translateY(-1px);
+}
+
+/* Video Lecture Wrapper in Experiment Details */
+.video-lecture-card {
+  margin-bottom: 2rem;
+}
+
+.exp-video-wrapper {
+  background: #080d1a;
+  border-radius: var(--radius-lg);
+  border: 1px solid #1e293b;
+  overflow: hidden;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.45);
+}
+
+.interactive-embed-wrapper {
+  width: 100%;
+}

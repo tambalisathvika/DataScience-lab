@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
+import VideoPlayer from './VideoPlayer';
+import InteractiveCodeEditor from './InteractiveCodeEditor';
 import { 
   ArrowLeft, Github, ExternalLink, Play, BookOpen, 
   Layers, CheckCircle2, ChevronRight, Code2, Sparkles, 
   FileText, Download, Printer, Copy, Check, Clock, 
   Award, ShieldCheck, Terminal, Wrench, ArrowRight,
   Database, HelpCircle, Youtube, FileCheck, Cpu, Edit3,
-  MoreVertical
+  MoreVertical, PlayCircle
 } from 'lucide-react';
 
 export default function ExperimentDetails({
@@ -20,6 +22,7 @@ export default function ExperimentDetails({
 }) {
   const [copiedCode, setCopiedCode] = useState(false);
   const [downloadNotice, setDownloadNotice] = useState('');
+  const [masterCodeMode, setMasterCodeMode] = useState('interactive'); // 'interactive' | 'static'
 
   if (!experiment) return null;
 
@@ -108,7 +111,7 @@ Executed successfully in 0.18s`;
         </button>
 
         <div className="breadcrumb-trail">
-          <span className="crumb" onClick={onBack} style={{ cursor: 'pointer' }}>DS LAB</span>
+          <span className="crumb" onClick={onBack} style={{ cursor: 'pointer' }}>DATA SCIENCE DIGITAL LABORATORY</span>
           <ChevronRight size={13} className="crumb-arrow" />
           <span className="crumb" onClick={onBack} style={{ cursor: 'pointer' }}>Experiments</span>
           <ChevronRight size={13} className="crumb-arrow" />
@@ -259,6 +262,58 @@ Executed successfully in 0.18s`;
         </div>
       </section>
 
+      {/* 2.5 LAB DEMONSTRATION & VIDEO LECTURE (EMBEDDED) */}
+      <section className="pro-card exp-full-section-card video-lecture-card">
+        <div className="section-header-block">
+          <div className="section-title-with-badge">
+            <div className="section-icon-badge video-badge">
+              <Play size={18} />
+            </div>
+            <div>
+              <span className="section-eyebrow">Academic Demonstration</span>
+              <h2 className="section-main-heading">Laboratory Video Lecture &amp; Walkthrough</h2>
+            </div>
+          </div>
+          <p className="section-sub-desc">
+            Conceptual video lecture explaining theory, dataset ingestion, and algorithm execution for Experiment {experiment.number}.
+          </p>
+        </div>
+
+        {videoUrl ? (
+          <div className="exp-video-wrapper">
+            <div className="video-cinema-bar">
+              <span className="dot dot-red" />
+              <span className="dot dot-yellow" />
+              <span className="dot dot-green" />
+              <span className="video-bar-title">Experiment 0{experiment.number} • Comprehensive Video Lecture</span>
+            </div>
+            <VideoPlayer
+              url={videoUrl}
+              title={`Experiment 0${experiment.number} Lecture Walkthrough`}
+            />
+          </div>
+        ) : (
+          <div className="video-pending-box">
+            <PlayCircle size={36} className="video-pending-icon" />
+            <h4 className="video-pending-title">Video Lecture Pending Configuration</h4>
+            <p className="video-pending-desc">
+              Configure <code>youtubeUrl</code> or <code>videoUrl</code> in this experiment's metadata to display an interactive laboratory video lecture.
+            </p>
+            {onEdit && (
+              <button
+                type="button"
+                className="btn-primary"
+                onClick={() => onEdit(experiment)}
+                style={{ marginTop: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}
+              >
+                <Edit3 size={14} />
+                <span>Configure Video Link Now</span>
+              </button>
+            )}
+          </div>
+        )}
+      </section>
+
       {/* 3. SUB-EXPERIMENTS (MAIN PRACTICAL MODULES 6A-6G) */}
       <section className="pro-card exp-full-section-card" id="sub-experiments-section">
         <div className="section-header-block">
@@ -320,6 +375,7 @@ Executed successfully in 0.18s`;
                   </button>
 
                   <button
+                    type="button"
                     className="btn-summary-ghost"
                     onClick={(e) => {
                       e.stopPropagation();
@@ -330,6 +386,21 @@ Executed successfully in 0.18s`;
                     <span>Summary</span>
                     <ExternalLink size={12} />
                   </button>
+
+                  {onOpenInEditor && (
+                    <button
+                      type="button"
+                      className="btn-try-ghost"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onOpenInEditor(sub.program || '', `exp_${codeId}_program.py`);
+                      }}
+                      title={`Try Practical ${codeId} in Interactive Code Editor`}
+                    >
+                      <Sparkles size={12} style={{ color: '#0ea5e9' }} />
+                      <span>⚡ Try it</span>
+                    </button>
+                  )}
                 </div>
               </article>
             );
@@ -390,53 +461,93 @@ Executed successfully in 0.18s`;
             <div className="code-practice-meta">
               <Terminal size={16} className="terminal-icon" />
               <span className="code-file-tag">experiment_{experiment.number}_pipeline.py</span>
-              <span className="code-kernel-tag">Python 3.11</span>
+              <span className="code-kernel-tag">All Languages Supported</span>
             </div>
 
             <div className="code-practice-actions">
-              <button 
-                className="btn-code-copy" 
-                onClick={handleCopyMasterCode}
-                title="Copy Code to Clipboard"
-              >
-                {copiedCode ? <Check size={14} style={{ color: '#10b981' }} /> : <Copy size={14} />}
-                <span>{copiedCode ? 'Copied' : 'Copy Code'}</span>
-              </button>
-
-              {onOpenInEditor && (
+              <div className="code-mode-pills-wrap">
                 <button
-                  className="btn-open-editor-primary"
-                  onClick={() => onOpenInEditor(masterCode, `experiment_${experiment.number}_pipeline.py`)}
-                  title="Open code in interactive editor"
+                  type="button"
+                  className={`code-mode-pill ${masterCodeMode === 'interactive' ? 'active' : ''}`}
+                  onClick={() => setMasterCodeMode('interactive')}
+                  title="Switch to interactive live compiler mode"
                 >
-                  <Code2 size={15} />
-                  <span>Open in Code Editor</span>
-                  <ArrowRight size={14} />
+                  <Sparkles size={12} style={{ color: masterCodeMode === 'interactive' ? '#38bdf8' : '#94a3b8' }} />
+                  <span>⚡ Try it Yourself</span>
                 </button>
+
+                <button
+                  type="button"
+                  className={`code-mode-pill ${masterCodeMode === 'static' ? 'active' : ''}`}
+                  onClick={() => setMasterCodeMode('static')}
+                  title="Switch to static reference code"
+                >
+                  <FileText size={12} />
+                  <span>Reference Script</span>
+                </button>
+              </div>
+
+              {masterCodeMode === 'static' && (
+                <>
+                  <button 
+                    type="button"
+                    className="btn-code-copy" 
+                    onClick={handleCopyMasterCode}
+                    title="Copy Code to Clipboard"
+                  >
+                    {copiedCode ? <Check size={14} style={{ color: '#10b981' }} /> : <Copy size={14} />}
+                    <span>{copiedCode ? 'Copied' : 'Copy Code'}</span>
+                  </button>
+
+                  {onOpenInEditor && (
+                    <button
+                      type="button"
+                      className="btn-open-editor-primary"
+                      onClick={() => onOpenInEditor(masterCode, `experiment_${experiment.number}_pipeline.py`)}
+                      title="Open code in interactive editor"
+                    >
+                      <Code2 size={15} />
+                      <span>Open in Full IDE</span>
+                      <ArrowRight size={14} />
+                    </button>
+                  )}
+                </>
               )}
             </div>
           </div>
 
-          <div className="code-practice-preview-grid">
-            <div className="code-preview-pane">
-              <div className="code-pane-tab-header">
-                <span>Verified Source Script</span>
-              </div>
-              <pre className="code-preview-pre">
-                <code>{masterCode}</code>
-              </pre>
+          {masterCodeMode === 'interactive' ? (
+            <div className="interactive-embed-wrapper" style={{ padding: '0.5rem' }}>
+              <InteractiveCodeEditor
+                initialCode={masterCode}
+                defaultOutput={masterOutput}
+                language="python"
+                filename={`experiment_${experiment.number}_pipeline.py`}
+                onOpenInEditor={onOpenInEditor ? () => onOpenInEditor(masterCode, `experiment_${experiment.number}_pipeline.py`) : undefined}
+              />
             </div>
+          ) : (
+            <div className="code-practice-preview-grid">
+              <div className="code-preview-pane">
+                <div className="code-pane-tab-header">
+                  <span>Verified Source Script</span>
+                </div>
+                <pre className="code-preview-pre">
+                  <code>{masterCode}</code>
+                </pre>
+              </div>
 
-            <div className="output-preview-pane">
-              <div className="output-pane-tab-header">
-                <span className="status-ping green" />
-                <span>Execution Terminal Output (Exit Code 0)</span>
+              <div className="output-preview-pane">
+                <div className="output-pane-tab-header">
+                  <span className="status-ping green" />
+                  <span>Execution Terminal Output (Exit Code 0)</span>
+                </div>
+                <pre className="output-preview-pre">
+                  {masterOutput}
+                </pre>
               </div>
-              <pre className="output-preview-pre">
-                {masterOutput}
-              </pre>
             </div>
-          </div>
+          )}
         </div>
       </section>
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import VideoPlayer from './VideoPlayer';
 import VisualPlotPreview from './VisualPlotPreview';
+import InteractiveCodeEditor from './InteractiveCodeEditor';
 import { 
   ArrowLeft, Github, ExternalLink, Terminal, BookOpen, 
   Target, Code2, FileText, ChevronRight, CheckCircle2, 
@@ -22,6 +23,7 @@ export default function SubExperimentDetails({
 
   const [copiedCode, setCopiedCode] = useState(false);
   const [downloadSuccess, setDownloadSuccess] = useState('');
+  const [editorMode, setEditorMode] = useState('interactive'); // 'interactive' | 'static'
 
   const letter = subExperiment.letter || 'A';
   const expNumber = parentExperiment.number || '6';
@@ -108,7 +110,7 @@ export default function SubExperimentDetails({
         )}
 
         <div className="breadcrumb-trail">
-          <span className="crumb" onClick={onBackToHome} style={{ cursor: 'pointer' }}>DS LAB</span>
+          <span className="crumb" onClick={onBackToHome} style={{ cursor: 'pointer' }}>DATA SCIENCE DIGITAL LABORATORY</span>
           <ChevronRight size={13} className="crumb-arrow" />
           <span className="crumb" onClick={onBackToExperiment} style={{ cursor: 'pointer' }}>
             Experiment {expNumber}
@@ -384,7 +386,7 @@ export default function SubExperimentDetails({
             ==================================================================== */}
         <div className="workspace-col-right">
           
-          {/* SECTION 5, 6, 7: PYTHON IMPLEMENTATION, COPY CODE, RUN CODE */}
+          {/* SECTION 5, 6, 7: IMPLEMENTATION & INTERACTIVE TRY IT YOURSELF */}
           <div className="pro-card code-panel-card">
             <div className="code-panel-header">
               <div className="code-panel-left">
@@ -393,49 +395,87 @@ export default function SubExperimentDetails({
                 </div>
                 <div>
                   <span className="code-filename">exp_{subCode}_program.py</span>
-                  <span className="code-runtime-info">5. Python Implementation</span>
+                  <span className="code-runtime-info">5. Implementation &amp; Execution</span>
                 </div>
               </div>
 
+              {/* MODE TOGGLES: Interactive vs Static */}
               <div className="code-panel-actions">
-                {/* 6. COPY CODE BUTTON */}
-                <button
-                  className="code-header-btn"
-                  onClick={handleCopyCode}
-                  title="Copy Python Program to Clipboard"
-                >
-                  {copiedCode ? <Check size={13} style={{ color: '#10b981' }} /> : <Copy size={13} />}
-                  <span>{copiedCode ? 'Copied' : 'Copy Code'}</span>
-                </button>
-
-                {/* 7. RUN CODE BUTTON */}
-                {onOpenInEditor && (
+                <div className="code-mode-pills-wrap">
                   <button
-                    className="code-header-btn primary"
-                    onClick={() => onOpenInEditor(programCode, `exp_${subCode}_program.py`)}
-                    title="Run code in interactive Code Editor"
+                    type="button"
+                    className={`code-mode-pill ${editorMode === 'interactive' ? 'active' : ''}`}
+                    onClick={() => setEditorMode('interactive')}
+                    title="Switch to interactive live compiler mode"
                   >
-                    <Play size={13} />
-                    <span>Run Code</span>
-                    <ExternalLink size={11} />
+                    <Sparkles size={12} style={{ color: editorMode === 'interactive' ? '#38bdf8' : '#94a3b8' }} />
+                    <span>⚡ Try it Yourself</span>
                   </button>
+
+                  <button
+                    type="button"
+                    className={`code-mode-pill ${editorMode === 'static' ? 'active' : ''}`}
+                    onClick={() => setEditorMode('static')}
+                    title="Switch to static reference code"
+                  >
+                    <FileText size={12} />
+                    <span>Reference Code</span>
+                  </button>
+                </div>
+
+                {editorMode === 'static' && (
+                  <>
+                    <button
+                      type="button"
+                      className="code-header-btn"
+                      onClick={handleCopyCode}
+                      title="Copy Python Program to Clipboard"
+                    >
+                      {copiedCode ? <Check size={13} style={{ color: '#10b981' }} /> : <Copy size={13} />}
+                      <span>{copiedCode ? 'Copied' : 'Copy Code'}</span>
+                    </button>
+
+                    {onOpenInEditor && (
+                      <button
+                        type="button"
+                        className="code-header-btn primary"
+                        onClick={() => onOpenInEditor(programCode, `exp_${subCode}_program.py`)}
+                        title="Run code in interactive Code Editor"
+                      >
+                        <Play size={13} />
+                        <span>Run in IDE</span>
+                        <ExternalLink size={11} />
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
             </div>
 
-            {/* LINE-NUMBERED CODE BLOCK */}
-            <div className="code-editor-container-grid">
-              <div className="code-line-numbers-gutter" aria-hidden="true">
-                {codeLines.map((_, i) => (
-                  <span key={i} className="line-number-cell">{i + 1}</span>
-                ))}
+            {editorMode === 'interactive' ? (
+              <div className="interactive-embed-wrapper">
+                <InteractiveCodeEditor
+                  initialCode={programCode}
+                  defaultOutput={outputText}
+                  language="python"
+                  filename={`exp_${subCode}_program.py`}
+                  onOpenInEditor={onOpenInEditor ? () => onOpenInEditor(programCode, `exp_${subCode}_program.py`) : undefined}
+                />
               </div>
-              <div className="code-source-cell">
-                <pre className="code-syntax-pre-block">
-                  <code>{programCode}</code>
-                </pre>
+            ) : (
+              <div className="code-editor-container-grid">
+                <div className="code-line-numbers-gutter" aria-hidden="true">
+                  {codeLines.map((_, i) => (
+                    <span key={i} className="line-number-cell">{i + 1}</span>
+                  ))}
+                </div>
+                <div className="code-source-cell">
+                  <pre className="code-syntax-pre-block">
+                    <code>{programCode}</code>
+                  </pre>
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* SECTION 8: KERNEL EXECUTION OUTPUT */}

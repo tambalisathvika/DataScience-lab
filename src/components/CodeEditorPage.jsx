@@ -5,11 +5,16 @@ import {
   FileCode, Sparkles, BookOpen, Clock, Settings,
   Maximize2, Minimize2 
 } from 'lucide-react';
+import { 
+  SUPPORTED_LANGUAGES, 
+  LANGUAGE_STARTERS, 
+  simulateCodeExecution 
+} from '../data/supportedLanguages';
 
-// Sample pre-built templates for Data Science
-const CODE_TEMPLATES = {
+// Pre-built domain-specific Data Science templates
+const DS_SPECIALIZED_TEMPLATES = {
   timeseries: {
-    name: 'Pandas Time Series Analysis',
+    name: 'Pandas Time Series Analysis (Python)',
     filename: 'timeseries_analysis.py',
     language: 'python',
     code: `# Time Series Analysis in Pandas
@@ -32,7 +37,7 @@ print(f"Mean Temperature:  {ts.mean():.2f} °C")
 print(f"Peak Temperature:  {ts.max():.2f} °C on {ts.idxmax().strftime('%Y-%m-%d')}")`
   },
   iqr_outliers: {
-    name: 'Data Preprocessing: Outlier Detection (IQR)',
+    name: 'Outlier Detection - Tukey IQR (Python)',
     filename: 'outlier_iqr_cleaner.py',
     language: 'python',
     code: `# Outlier Detection using Interquartile Range (IQR)
@@ -61,7 +66,7 @@ print(f"\\nDetected Outliers: {outliers['Readings'].tolist()}")
 print(f"Cleaned Inlier Count: {len(clean)} / {len(df)}")`
   },
   linear_regression: {
-    name: 'Scikit-Learn: Linear Regression Modeling',
+    name: 'Scikit-Learn: Linear Regression (Python)',
     filename: 'linear_regression.py',
     language: 'python',
     code: `# Ordinary Least Squares (OLS) Linear Regression
@@ -84,86 +89,70 @@ print(f"Equation: Score = {model.coef_[0]:.2f} * Hours + {model.intercept_:.2f}"
 print(f"\\nR² Score: {r2_score(y, predictions):.4f}")
 print(f"MSE:      {mean_squared_error(y, predictions):.4f}")`
   },
-  matrix_math: {
-    name: 'NumPy: Linear Algebra & Matrix Math',
-    filename: 'matrix_algebra.py',
-    language: 'python',
-    code: `# Linear Algebra Vector & Matrix Operations
-import numpy as np
-
-# Define 2x2 Matrix A and Vector b
-A = np.array([[4, 2], [1, 3]])
-b = np.array([10, 5])
-
-# Matrix Determinant and Eigenvalues
-det_A = np.linalg.det(A)
-eigenvals, eigenvecs = np.linalg.eig(A)
-
-# Solve linear system A * x = b
-x = np.linalg.solve(A, b)
-
-print("=== Matrix Algebra Computations ===")
-print("Matrix A:\\n", A)
-print(f"\\nDeterminant of A: {det_A:.2f}")
-print("Eigenvalues:", eigenvals)
-print(f"Solution vector x (where A*x = b): {x}")`
+  r_statistical: {
+    name: 'Statistical Modeling & Data Frames (R)',
+    filename: 'statistical_model.R',
+    language: 'r',
+    code: LANGUAGE_STARTERS.r.code
   },
-  resampling: {
-    name: 'Pandas Time Series Resampling & Downsampling',
-    filename: 'timeseries_resampling.py',
-    language: 'python',
-    code: `# Time Series Resampling, Downsampling & Aggregation
-import pandas as pd
-import numpy as np
-
-# 1. 14-day daily temperature series
-dates = pd.date_range(start='2026-10-01', periods=14, freq='D')
-temps = [24.5, 25.0, 26.2, 25.8, 27.1, 28.0, 29.2, 28.5, 27.9, 26.4, 25.8, 26.0, 27.5, 28.1]
-ts = pd.Series(temps, index=dates, name="Daily_Temp_C")
-
-print("=== [1] Daily Time Series (First 5 Days) ===")
-print(ts.head(5))
-
-# 2. Downsampling to Weekly Frequency (Mean Aggregation)
-weekly_mean = ts.resample('W').mean()
-print("\n=== [2] Weekly Downsampled Series (Mean) ===")
-print(weekly_mean)
-
-# 3. Weekly Maximum Temperature
-weekly_max = ts.resample('W').max()
-print("\n=== [3] Weekly Peak Temperatures (Max) ===")
-print(weekly_max)`
+  sql_relational: {
+    name: 'Relational Schema & Aggregations (SQL)',
+    filename: 'laboratory_queries.sql',
+    language: 'sql',
+    code: LANGUAGE_STARTERS.sql.code
+  },
+  js_analytics: {
+    name: 'Vectorized Stream Processing (JavaScript)',
+    filename: 'data_processor.js',
+    language: 'javascript',
+    code: LANGUAGE_STARTERS.javascript.code
+  },
+  ts_telemetry: {
+    name: 'Strongly Typed Data Models (TypeScript)',
+    filename: 'telemetry_model.ts',
+    language: 'typescript',
+    code: LANGUAGE_STARTERS.typescript.code
+  },
+  java_kernel: {
+    name: 'Statistical Array Computing (Java)',
+    filename: 'Main.java',
+    language: 'java',
+    code: LANGUAGE_STARTERS.java.code
+  },
+  cpp_highperf: {
+    name: 'High-Performance Numerical Kernel (C++)',
+    filename: 'main.cpp',
+    language: 'cpp',
+    code: LANGUAGE_STARTERS.cpp.code
+  },
+  julia_numerical: {
+    name: 'Scientific Computing & Statistics (Julia)',
+    filename: 'analysis.jl',
+    language: 'julia',
+    code: LANGUAGE_STARTERS.julia.code
+  },
+  bash_stream: {
+    name: 'Unix Stream Processing & Awk (Bash)',
+    filename: 'pipeline.sh',
+    language: 'bash',
+    code: LANGUAGE_STARTERS.bash.code
+  },
+  html_dashboard: {
+    name: 'Interactive Analytics Dashboard (HTML/CSS)',
+    filename: 'dashboard.html',
+    language: 'html',
+    code: LANGUAGE_STARTERS.html.code
   }
 };
 
 export default function CodeEditorPage({ initialCode, initialFilename }) {
   const [selectedTemplateKey, setSelectedTemplateKey] = useState('timeseries');
-  const [filename, setFilename] = useState(initialFilename || CODE_TEMPLATES.timeseries.filename);
+  const [filename, setFilename] = useState(initialFilename || DS_SPECIALIZED_TEMPLATES.timeseries.filename);
   const [language, setLanguage] = useState('python');
-  const [code, setCode] = useState(initialCode || CODE_TEMPLATES.timeseries.code);
+  const [code, setCode] = useState(initialCode || DS_SPECIALIZED_TEMPLATES.timeseries.code);
   const [fontSize, setFontSize] = useState(14);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [cursorPos, setCursorPos] = useState({ line: 1, col: 1 });
-
-  useEffect(() => {
-    if (initialCode) {
-      setCode(initialCode);
-      if (initialFilename) setFilename(initialFilename);
-      setStdout('# Ready to run. Press "Run Code" to execute this script in the virtual Python environment.\n');
-      setStderr('');
-    }
-  }, [initialCode, initialFilename]);
-
-  // Keyboard shortcut for ESC to exit fullscreen
-  useEffect(() => {
-    const handleGlobalEsc = (e) => {
-      if (e.key === 'Escape' && isFullscreen) {
-        setIsFullscreen(false);
-      }
-    };
-    window.addEventListener('keydown', handleGlobalEsc);
-    return () => window.removeEventListener('keydown', handleGlobalEsc);
-  }, [isFullscreen]);
 
   const [stdout, setStdout] = useState(`=== Pandas Timestamped Time Series ===
 2026-10-01    24.5
@@ -191,6 +180,26 @@ Peak Temperature:  29.00 °C on 2026-10-05
 
   const lineNumbersRef = useRef(null);
   const textareaRef = useRef(null);
+
+  useEffect(() => {
+    if (initialCode) {
+      setCode(initialCode);
+      if (initialFilename) setFilename(initialFilename);
+      setStdout('# Ready to run. Press "Run Code" to execute this script in the virtual execution kernel.\n');
+      setStderr('');
+    }
+  }, [initialCode, initialFilename]);
+
+  // Keyboard shortcut for ESC to exit fullscreen
+  useEffect(() => {
+    const handleGlobalEsc = (e) => {
+      if (e.key === 'Escape' && isFullscreen) {
+        setIsFullscreen(false);
+      }
+    };
+    window.addEventListener('keydown', handleGlobalEsc);
+    return () => window.removeEventListener('keydown', handleGlobalEsc);
+  }, [isFullscreen]);
 
   // Synchronize line scroll
   const handleScroll = (e) => {
@@ -231,10 +240,25 @@ Peak Temperature:  29.00 °C on 2026-10-05
     }
   };
 
+  // Change Language from Dropdown
+  const handleLanguageChange = (newLangId) => {
+    setLanguage(newLangId);
+    const starter = LANGUAGE_STARTERS[newLangId];
+    if (starter) {
+      setCode(starter.code);
+      setFilename(starter.filename);
+      setStdout(starter.output);
+      setStderr('');
+      setActiveConsoleTab('stdout');
+      setEditorStatus(`Switched to ${starter.filename}`);
+      setTimeout(() => setEditorStatus('Ready'), 2000);
+    }
+  };
+
   // Change Template
   const handleSelectTemplate = (key) => {
     setSelectedTemplateKey(key);
-    const tmpl = CODE_TEMPLATES[key];
+    const tmpl = DS_SPECIALIZED_TEMPLATES[key];
     if (tmpl) {
       setCode(tmpl.code);
       setFilename(tmpl.filename);
@@ -242,6 +266,10 @@ Peak Temperature:  29.00 °C on 2026-10-05
       setStderr('');
       setActiveConsoleTab('stdout');
       setCursorPos({ line: 1, col: 1 });
+      const starter = LANGUAGE_STARTERS[tmpl.language];
+      if (starter && starter.output) {
+        setStdout(starter.output);
+      }
     }
   };
 
@@ -279,15 +307,20 @@ Peak Temperature:  29.00 °C on 2026-10-05
 
   // Reset code to current template
   const handleResetCode = () => {
-    const tmpl = CODE_TEMPLATES[selectedTemplateKey];
+    const tmpl = DS_SPECIALIZED_TEMPLATES[selectedTemplateKey];
     if (tmpl) {
       setCode(tmpl.code);
+      setEditorStatus('Code reset');
+      setTimeout(() => setEditorStatus('Ready'), 2000);
+    } else {
+      const starter = LANGUAGE_STARTERS[language] || LANGUAGE_STARTERS.python;
+      setCode(starter.code);
       setEditorStatus('Code reset');
       setTimeout(() => setEditorStatus('Ready'), 2000);
     }
   };
 
-  // Modular execution layer simulator
+  // Universal execution layer for all 12 languages
   const handleRunCode = () => {
     setIsExecuting(true);
     setEditorStatus('Executing...');
@@ -298,162 +331,27 @@ Peak Temperature:  29.00 °C on 2026-10-05
       const elapsed = ((performance.now() - startTime) / 1000).toFixed(3) + 's';
       setExecutionTime(elapsed);
 
-      // Check for simple syntax errors (e.g. unclosed string)
-      const lines = code.split('\n');
-      let syntaxError = null;
+      const res = simulateCodeExecution(language, code, stdout);
 
-      for (let i = 0; i < lines.length; i++) {
-        const line = lines[i].trim();
-        // Check mismatched double or single quotes
-        const doubleCount = (line.match(/"/g) || []).length;
-        const singleCount = (line.match(/'/g) || []).length;
-        if (doubleCount % 2 !== 0 && !line.includes("'") && !line.startsWith('#')) {
-          syntaxError = `SyntaxError: EOL while scanning string literal (line ${i + 1})\n  --> ${line}`;
-          break;
-        }
-      }
-
-      if (syntaxError) {
-        setStderr(syntaxError);
+      if (res.stderr) {
+        setStderr(res.stderr);
         setExitCode(1);
         setActiveConsoleTab('stderr');
         setEditorStatus('Error detected');
-        return;
-      }
-
-      // Safe execution parser for custom statements
-      const outputLines = [];
-      const scope = {};
-      let foundPrints = false;
-
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (trimmed.startsWith('#') || !trimmed) continue;
-
-        // Simple assignment: var = value
-        const assignMatch = trimmed.match(/^([a-zA-Z_]\w*)\s*=\s*(.+)$/);
-        if (assignMatch && !trimmed.startsWith('print') && !trimmed.startsWith('if')) {
-          const varName = assignMatch[1];
-          const valExpr = assignMatch[2];
-          try {
-            if (/^[\d.\s+\-*/()]+$/.test(valExpr)) {
-              scope[varName] = Function('"use strict"; return (' + valExpr + ');')();
-            } else if (/^['"].*['"]$/.test(valExpr)) {
-              scope[varName] = valExpr.slice(1, -1);
-            }
-          } catch (e) {}
-        }
-
-        // Print match
-        const printMatch = trimmed.match(/print\s*\((.*)\)/);
-        if (printMatch) {
-          foundPrints = true;
-          const arg = printMatch[1].trim();
-          if (/^f['"](.*)['"]$/.test(arg)) {
-            const inner = arg.slice(2, -1);
-            const evaluated = inner.replace(/\{([^}]+)\}/g, (m, expr) => {
-              return scope[expr.trim()] !== undefined ? scope[expr.trim()] : expr;
-            });
-            outputLines.push(evaluated);
-          } else if (/^['"].*['"]$/.test(arg)) {
-            outputLines.push(arg.slice(1, -1));
-          } else if (scope[arg] !== undefined) {
-            outputLines.push(String(scope[arg]));
-          } else {
-            outputLines.push(arg.replace(/['"]/g, ''));
-          }
-        }
-      }
-
-      // Check template match
-      const tmpl = CODE_TEMPLATES[selectedTemplateKey];
-      const isOriginal = tmpl && code.replace(/\s+/g, '') === tmpl.code.replace(/\s+/g, '');
-
-      if (isOriginal) {
-        if (selectedTemplateKey === 'timeseries') {
-          setStdout(`=== Pandas Timestamped Time Series ===
-2026-10-01    24.5
-2026-10-02    26.1
-2026-10-03    25.8
-2026-10-04    28.2
-2026-10-05    29.0
-2026-10-06    27.4
-2026-10-07    26.8
-Freq: D, Name: Daily_Temp_C, dtype: float64
-
-Observations Count: 7
-Mean Temperature:  26.83 °C
-Peak Temperature:  29.00 °C on 2026-10-05
-
-[Execution completed in ${elapsed} with exit code 0]`);
-        } else if (selectedTemplateKey === 'iqr_outliers') {
-          setStdout(`=== Outlier Diagnostics (Tukey IQR) ===
-Q1 (25%): 48.0 | Q3 (75%): 58.0 | IQR: 10.0
-Acceptable Boundaries: [33.0, 73.0]
-
-Detected Outliers: [210, 12, 280]
-Cleaned Inlier Count: 10 / 13
-
-[Execution completed in ${elapsed} with exit code 0]`);
-        } else if (selectedTemplateKey === 'linear_regression') {
-          setStdout(`=== Regression Model Parameters ===
-Slope (w1):     7.4812
-Intercept (w0): 34.6210
-Equation: Score = 7.48 * Hours + 34.62
-
-R² Score: 0.9882
-MSE:      4.2150
-
-[Execution completed in ${elapsed} with exit code 0]`);
-        } else if (selectedTemplateKey === 'matrix_math') {
-          setStdout(`=== Matrix Algebra Computations ===
-Matrix A:
- [[4 2]
- [1 3]]
-
-Determinant of A: 10.00
-Eigenvalues: [5. 2.]
-Solution vector x (where A*x = b): [2. 1.]
-
-[Execution completed in ${elapsed} with exit code 0]`);
-        } else if (selectedTemplateKey === 'resampling') {
-          setStdout(`=== [1] Daily Time Series (First 5 Days) ===
-2026-10-01    24.5
-2026-10-02    25.0
-2026-10-03    26.2
-2026-10-04    25.8
-2026-10-05    27.1
-Freq: D, Name: Daily_Temp_C, dtype: float64
-
-=== [2] Weekly Downsampled Series (Mean) ===
-2026-10-04    25.375
-2026-10-11    27.143
-2026-10-18    27.800
-Freq: W-SUN, Name: Daily_Temp_C, dtype: float64
-
-=== [3] Weekly Peak Temperatures (Max) ===
-2026-10-04    26.2
-2026-10-11    29.2
-2026-10-18    28.1
-Freq: W-SUN, Name: Daily_Temp_C, dtype: float64
-
-[Execution completed in ${elapsed} with exit code 0]`);
-        }
-      } else if (foundPrints && outputLines.length > 0) {
-        setStdout(outputLines.join('\n') + `\n\n[Execution completed in ${elapsed} with exit code 0]`);
       } else {
-        setStdout(`[Process executed successfully with 0 output in ${elapsed}]`);
+        setStdout(res.stdout);
+        setStderr('');
+        setExitCode(0);
+        setActiveConsoleTab('stdout');
+        setEditorStatus('Finished');
       }
 
-      setStderr('');
-      setExitCode(0);
-      setActiveConsoleTab('stdout');
-      setEditorStatus('Finished');
       setTimeout(() => setEditorStatus('Ready'), 2500);
-    }, 400);
+    }, 350);
   };
 
   const lineCount = code.split('\n').length;
+  const currentLangObj = SUPPORTED_LANGUAGES.find(l => l.id === language) || SUPPORTED_LANGUAGES[0];
 
   return (
     <div className={`pro-code-editor-page ${isFullscreen ? 'is-fullscreen' : ''}`}>
@@ -471,16 +369,18 @@ Freq: W-SUN, Name: Daily_Temp_C, dtype: float64
             />
           </div>
 
-          {/* Language Selector */}
+          {/* All 12 Languages Selector */}
           <select 
             className="ide-lang-select" 
             value={language}
-            onChange={(e) => setLanguage(e.target.value)}
+            onChange={(e) => handleLanguageChange(e.target.value)}
+            title="Switch Language"
           >
-            <option value="python">Python 3.11</option>
-            <option value="r">R 4.3</option>
-            <option value="sql">SQL (SQLite / Postgres)</option>
-            <option value="javascript">JavaScript (Node.js)</option>
+            {SUPPORTED_LANGUAGES.map((lang) => (
+              <option key={lang.id} value={lang.id}>
+                {lang.name}
+              </option>
+            ))}
           </select>
 
           {/* Pre-built Templates */}
@@ -488,12 +388,24 @@ Freq: W-SUN, Name: Daily_Temp_C, dtype: float64
             className="ide-template-select"
             value={selectedTemplateKey}
             onChange={(e) => handleSelectTemplate(e.target.value)}
+            title="Load Pre-built Algorithm Template"
           >
-            <option value="timeseries">Template: Pandas Time Series</option>
-            <option value="resampling">Template: Time Series Resampling</option>
-            <option value="iqr_outliers">Template: Outlier Detection (IQR)</option>
-            <option value="linear_regression">Template: Linear Regression</option>
-            <option value="matrix_math">Template: Matrix Algebra</option>
+            <optgroup label="Python Data Science">
+              <option value="timeseries">Pandas Time Series Analysis</option>
+              <option value="iqr_outliers">Outlier Detection (Tukey IQR)</option>
+              <option value="linear_regression">Linear Regression Modeling</option>
+            </optgroup>
+            <optgroup label="Multi-Language Kernels">
+              <option value="r_statistical">R 4.3 Statistical Modeling</option>
+              <option value="sql_relational">SQL Relational Aggregations</option>
+              <option value="js_analytics">JavaScript Vector Stream</option>
+              <option value="ts_telemetry">TypeScript Typed Models</option>
+              <option value="java_kernel">Java 21 Analytics Kernel</option>
+              <option value="cpp_highperf">C++20 High-Performance Math</option>
+              <option value="julia_numerical">Julia 1.10 Scientific Computing</option>
+              <option value="bash_stream">Bash Unix Data Processing</option>
+              <option value="html_dashboard">HTML5 Analytics Dashboard</option>
+            </optgroup>
           </select>
         </div>
 
@@ -505,6 +417,7 @@ Freq: W-SUN, Name: Daily_Temp_C, dtype: float64
           </span>
 
           <button
+            type="button"
             className="editor-btn-secondary"
             onClick={handleResetCode}
             title="Reset code to original template"
@@ -514,6 +427,7 @@ Freq: W-SUN, Name: Daily_Temp_C, dtype: float64
           </button>
 
           <button
+            type="button"
             className="editor-btn-secondary"
             onClick={handleCopyCode}
             title="Copy code to clipboard"
@@ -532,15 +446,17 @@ Freq: W-SUN, Name: Daily_Temp_C, dtype: float64
           </button>
 
           <button
+            type="button"
             className="editor-btn-secondary"
             onClick={handleDownloadScript}
-            title="Download script file (.py)"
+            title={`Download script file (${filename})`}
           >
             <Download size={13} />
             <span>Export</span>
           </button>
 
           <button
+            type="button"
             className="editor-btn-run"
             onClick={handleRunCode}
             disabled={isExecuting}
@@ -642,7 +558,7 @@ Freq: W-SUN, Name: Daily_Temp_C, dtype: float64
                 autoComplete="off"
                 autoCorrect="off"
                 style={{ fontSize: `${fontSize}px`, lineHeight: 1.6 }}
-                placeholder="# Write your Python or Data Science algorithm here..."
+                placeholder={`# Write your ${currentLangObj.name} algorithm here...`}
               />
             </div>
           </div>
@@ -658,7 +574,7 @@ Freq: W-SUN, Name: Daily_Temp_C, dtype: float64
               <span>Spaces: 4</span>
             </div>
             <div className="status-right">
-              <span>Python 3.11 Virtual Env</span>
+              <span>{currentLangObj.name} Kernel</span>
               <span>•</span>
               <span><kbd>Ctrl + Enter</kbd> to Run</span>
             </div>
@@ -670,6 +586,7 @@ Freq: W-SUN, Name: Daily_Temp_C, dtype: float64
           <div className="ide-console-header">
             <div className="console-tab-pills">
               <button
+                type="button"
                 className={`console-tab-btn ${activeConsoleTab === 'stdout' ? 'active' : ''}`}
                 onClick={() => setActiveConsoleTab('stdout')}
               >
@@ -678,6 +595,7 @@ Freq: W-SUN, Name: Daily_Temp_C, dtype: float64
               </button>
 
               <button
+                type="button"
                 className={`console-tab-btn ${activeConsoleTab === 'stderr' ? 'active' : ''}`}
                 onClick={() => setActiveConsoleTab('stderr')}
                 style={{ color: stderr ? '#ef4444' : undefined }}
@@ -694,6 +612,7 @@ Freq: W-SUN, Name: Daily_Temp_C, dtype: float64
               </span>
 
               <button
+                type="button"
                 className="console-clear-btn"
                 onClick={handleClearConsole}
                 title="Clear console output"
@@ -710,7 +629,7 @@ Freq: W-SUN, Name: Daily_Temp_C, dtype: float64
               <div className="console-screen">
                 <div className="console-prompt-line">
                   <span className="term-green-prompt">student@mbu-dslab:~$</span>
-                  <span className="term-command">python3 {filename}</span>
+                  <span className="term-command">{currentLangObj.runner} {filename}</span>
                 </div>
                 <pre className="console-stdout-text">
                   {stdout || '[Console is clear. Press Run Code to execute.]'}

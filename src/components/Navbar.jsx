@@ -9,18 +9,18 @@ export default function Navbar({ activeTab, onSelectTab, student, onEditStudent 
   return (
     <header className="pro-header-bar">
       <div className="pro-header-inner">
-        {/* Left: Small MBU Logo + DS LAB Branding */}
+        {/* Left: Small MBU Logo + DATA SCIENCE DIGITAL LABORATORY Branding */}
         <div 
           className="header-brand-group" 
           onClick={() => onSelectTab('experiments')} 
           style={{ cursor: 'pointer' }}
-          title="Mohan Babu University — DS LAB"
+          title="Mohan Babu University — DATA SCIENCE DIGITAL LABORATORY"
         >
           <MbuLogo size={28} />
           <div className="header-brand-divider" />
           <div className="header-brand-text">
-            <span className="header-brand-title">DS LAB</span>
-            <span className="header-brand-subtitle">Data Science Laboratory</span>
+            <span className="header-brand-title">DATA SCIENCE DIGITAL LABORATORY</span>
+            <span className="header-brand-subtitle">Interactive Computational Studio</span>
           </div>
         </div>
 

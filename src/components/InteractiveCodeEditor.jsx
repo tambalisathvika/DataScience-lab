@@ -1,29 +1,65 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, RotateCcw, Copy, Check, Terminal, FileCode, Sparkles, CheckCircle2 } from 'lucide-react';
+import { 
+  Play, RotateCcw, Copy, Check, Terminal, FileCode, 
+  ExternalLink, CheckCircle2, AlertTriangle, Sparkles 
+} from 'lucide-react';
+import { 
+  SUPPORTED_LANGUAGES, 
+  LANGUAGE_STARTERS, 
+  simulateCodeExecution 
+} from '../data/supportedLanguages';
 
 export default function InteractiveCodeEditor({ 
   initialCode, 
   defaultOutput = '', 
   language = 'python', 
-  filename = 'solution.py' 
+  filename,
+  onOpenInEditor
 }) {
-  const [code, setCode] = useState(initialCode || '');
-  const [output, setOutput] = useState(defaultOutput);
+  const [selectedLang, setSelectedLang] = useState(language || 'python');
+  const [code, setCode] = useState(initialCode || LANGUAGE_STARTERS.python.code);
+  const [output, setOutput] = useState(defaultOutput || LANGUAGE_STARTERS.python.output);
+  const [currentFilename, setCurrentFilename] = useState(filename || 'solution.py');
   const [isRunning, setIsRunning] = useState(false);
   const [copied, setCopied] = useState(false);
   const [statusMsg, setStatusMsg] = useState('');
+  const [activeTab, setActiveTab] = useState('stdout'); // stdout | stderr
+  const [stderr, setStderr] = useState('');
+
   const lineNumbersRef = useRef(null);
   const textareaRef = useRef(null);
 
-  // Sync initialCode changes
+  // Sync initialCode & filename changes when props change
   useEffect(() => {
-    setCode(initialCode || '');
-    setOutput(defaultOutput || '');
-  }, [initialCode, defaultOutput]);
+    if (initialCode) {
+      setCode(initialCode);
+    }
+    if (defaultOutput) {
+      setOutput(defaultOutput);
+    }
+    if (filename) {
+      setCurrentFilename(filename);
+    }
+  }, [initialCode, defaultOutput, filename]);
+
+  // Handle language change
+  const handleLanguageChange = (newLangId) => {
+    setSelectedLang(newLangId);
+    const starter = LANGUAGE_STARTERS[newLangId];
+    if (starter) {
+      // If user is switching away from the initial code, prompt or switch to the starter
+      setCode(starter.code);
+      setOutput(starter.output);
+      setStderr('');
+      setCurrentFilename(starter.filename);
+      setStatusMsg(`Switched to ${starter.filename}`);
+      setTimeout(() => setStatusMsg(''), 2000);
+    }
+  };
 
   const lines = code.split('\n');
 
-  // Handle Tab key inside editor
+  // Handle Tab key inside editor & Ctrl+Enter to run
   const handleKeyDown = (e) => {
     if (e.key === 'Tab') {
       e.preventDefault();
@@ -63,98 +99,46 @@ export default function InteractiveCodeEditor({
 
   // Reset to original code
   const handleReset = () => {
-    setCode(initialCode || '');
-    setOutput(defaultOutput || '');
-    setStatusMsg('Code reset to default');
+    if (initialCode && selectedLang === (language || 'python')) {
+      setCode(initialCode);
+      setOutput(defaultOutput || '');
+      setCurrentFilename(filename || 'solution.py');
+    } else {
+      const starter = LANGUAGE_STARTERS[selectedLang] || LANGUAGE_STARTERS.python;
+      setCode(starter.code);
+      setOutput(starter.output);
+      setCurrentFilename(starter.filename);
+    }
+    setStderr('');
+    setStatusMsg('Code reset to template');
     setTimeout(() => setStatusMsg(''), 2000);
   };
 
-  // Execute / Simulate Python code
+  // Execute / Simulate Code for any selected language
   const handleRunCode = () => {
     setIsRunning(true);
-    setStatusMsg('Executing Python script...');
+    setStatusMsg(`Compiling & Executing in ${selectedLang}...`);
 
     setTimeout(() => {
       setIsRunning(false);
-
-      // Check if user has custom print statements or modifications
-      const customOutputLines = [];
-      const codeLines = code.split('\n');
-
-      // Simple Python execution emulator for common statements
-      let foundCustomPrints = false;
-      const printRegex = /print\s*\((.*)\)/;
-
-      // Variables dictionary
-      const scope = {};
-
-      for (const line of codeLines) {
-        const trimmed = line.trim();
-        if (trimmed.startsWith('#') || !trimmed) continue;
-
-        // Simple variable assignments (e.g. x = 10, name = "Data")
-        const assignMatch = trimmed.match(/^([a-zA-Z_]\w*)\s*=\s*(.+)$/);
-        if (assignMatch && !trimmed.startsWith('print') && !trimmed.startsWith('if') && !trimmed.startsWith('for')) {
-          const varName = assignMatch[1];
-          const valExpr = assignMatch[2];
-          try {
-            // Safe evaluation of simple mathematical expressions or numbers
-            if (/^[\d.\s+\-*/()]+$/.test(valExpr)) {
-              scope[varName] = Function('"use strict"; return (' + valExpr + ');')();
-            } else if (/^['"].*['"]$/.test(valExpr)) {
-              scope[varName] = valExpr.slice(1, -1);
-            }
-          } catch (e) {
-            // ignore complex expressions
-          }
-        }
-
-        // Print statements
-        const match = trimmed.match(printRegex);
-        if (match) {
-          foundCustomPrints = true;
-          const arg = match[1].trim();
-
-          // Handle formatted strings f"..." or f'...'
-          if (/^f['"](.*)['"]$/.test(arg)) {
-            const inner = arg.slice(2, -1);
-            const evaluated = inner.replace(/\{([^}]+)\}/g, (m, expr) => {
-              if (scope[expr.trim()] !== undefined) return scope[expr.trim()];
-              return expr;
-            });
-            customOutputLines.push(evaluated);
-          } else if (/^['"].*['"]$/.test(arg)) {
-            // Direct string literal
-            customOutputLines.push(arg.slice(1, -1));
-          } else if (scope[arg] !== undefined) {
-            // Known variable
-            customOutputLines.push(String(scope[arg]));
-          } else {
-            // Fallback for expression
-            customOutputLines.push(arg.replace(/['"]/g, ''));
-          }
-        }
-      }
-
-      // If code was essentially unchanged, show full default output
-      const cleanInput = code.replace(/\s+/g, '');
-      const cleanOriginal = (initialCode || '').replace(/\s+/g, '');
-
-      if (cleanInput === cleanOriginal || !foundCustomPrints) {
-        setOutput(defaultOutput || 'Script executed successfully with 0 errors.');
+      const res = simulateCodeExecution(selectedLang, code, defaultOutput);
+      
+      if (res.stderr) {
+        setStderr(res.stderr);
+        setActiveTab('stderr');
+        setStatusMsg('Error detected');
       } else {
-        // Output custom execution
-        setOutput(
-          `--- Custom Python Execution Output ---\n` +
-          customOutputLines.join('\n') +
-          `\n\n[Execution completed successfully in 0.22s with exit code 0]`
-        );
+        setOutput(res.stdout);
+        setStderr('');
+        setActiveTab('stdout');
+        setStatusMsg(`Success (${res.elapsed})`);
       }
 
-      setStatusMsg('Execution complete');
       setTimeout(() => setStatusMsg(''), 2500);
-    }, 400);
+    }, 350);
   };
+
+  const currentLangObj = SUPPORTED_LANGUAGES.find(l => l.id === selectedLang) || SUPPORTED_LANGUAGES[0];
 
   return (
     <div className="pro-interactive-editor-card">
@@ -166,11 +150,26 @@ export default function InteractiveCodeEditor({
             <span className="dot dot-yellow" />
             <span className="dot dot-green" />
           </div>
+
           <div className="editor-file-tab">
             <FileCode size={14} style={{ color: 'var(--primary-teal)' }} />
-            <span>{filename}</span>
-            <span className="file-lang-tag">Python 3.11</span>
+            <span>{currentFilename}</span>
           </div>
+
+          {/* All 12 Languages Dropdown */}
+          <select
+            className="ide-lang-select-compact"
+            value={selectedLang}
+            onChange={(e) => handleLanguageChange(e.target.value)}
+            title="Choose Programming Language"
+            aria-label="Language selector"
+          >
+            {SUPPORTED_LANGUAGES.map((lang) => (
+              <option key={lang.id} value={lang.id}>
+                {lang.name}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="editor-actions-group">
@@ -210,12 +209,24 @@ export default function InteractiveCodeEditor({
             )}
           </button>
 
+          {onOpenInEditor && (
+            <button
+              type="button"
+              className="editor-btn-secondary"
+              onClick={() => onOpenInEditor(code, currentFilename)}
+              title="Launch full-screen Online Compiler"
+            >
+              <ExternalLink size={13} />
+              <span>Full IDE</span>
+            </button>
+          )}
+
           <button 
             type="button" 
             className="editor-btn-run" 
             onClick={handleRunCode}
             disabled={isRunning}
-            title="Run Python script (Ctrl + Enter)"
+            title="Run Code (Ctrl + Enter)"
           >
             <Play size={13} fill="#ffffff" />
             <span>{isRunning ? 'Running...' : 'Run Code'}</span>
@@ -223,7 +234,7 @@ export default function InteractiveCodeEditor({
         </div>
       </div>
 
-      {/* Editor Code Area */}
+      {/* Editor Code Body with Line Numbers */}
       <div className="editor-code-body">
         <div className="editor-line-gutter" ref={lineNumbersRef}>
           {lines.map((_, i) => (
@@ -243,7 +254,7 @@ export default function InteractiveCodeEditor({
             autoCapitalize="off"
             autoComplete="off"
             autoCorrect="off"
-            placeholder="# Write or edit Python code here..."
+            placeholder={`# Write or edit ${currentLangObj.name} code here...`}
           />
         </div>
       </div>
@@ -251,21 +262,45 @@ export default function InteractiveCodeEditor({
       {/* Live Output Terminal Bar */}
       <div className="editor-terminal-container">
         <div className="terminal-header-bar">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Terminal size={14} style={{ color: 'var(--primary-teal)' }} />
-            <span className="term-bar-title">Interactive Terminal Execution Output</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            <button
+              type="button"
+              className={`console-tab-mini ${activeTab === 'stdout' ? 'active' : ''}`}
+              onClick={() => setActiveTab('stdout')}
+            >
+              <Terminal size={13} />
+              <span>Terminal Output (stdout)</span>
+            </button>
+
+            {stderr && (
+              <button
+                type="button"
+                className={`console-tab-mini error ${activeTab === 'stderr' ? 'active' : ''}`}
+                onClick={() => setActiveTab('stderr')}
+              >
+                <AlertTriangle size={13} />
+                <span>Errors (!)</span>
+              </button>
+            )}
           </div>
           <span className="term-shortcut-hint">Ctrl + Enter to Run</span>
         </div>
 
         <div className="terminal-screen">
           <div className="terminal-prompt-line">
-            <span className="term-green-prompt">student@dslab-box:~$</span>
-            <span className="term-command">python3 {filename}</span>
+            <span className="term-green-prompt">student@mbu-dslab:~$</span>
+            <span className="term-command">{currentLangObj.runner} {currentFilename}</span>
           </div>
-          <pre className="terminal-output-text">
-            {output}
-          </pre>
+
+          {activeTab === 'stdout' ? (
+            <pre className="terminal-output-text">
+              {output || '[Process exited with 0 output. Click Run Code to execute.]'}
+            </pre>
+          ) : (
+            <pre className="terminal-output-text error" style={{ color: '#f87171' }}>
+              {stderr}
+            </pre>
+          )}
         </div>
       </div>
     </div>
