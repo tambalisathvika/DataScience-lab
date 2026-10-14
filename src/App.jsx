@@ -17,7 +17,7 @@ import ConfirmDialog from './components/ConfirmDialog';
 import { defaultStudent, defaultExperiments } from './data/defaultData';
 import { loadStorage, saveStorage } from './utils/storage';
 
-const APP_VERSION = 'v8.0-all-experiments-official-videos';
+const APP_VERSION = 'v10.0-verified-active-videos';
 
 export default function App() {
   // Clear old cached experiments and synchronize student credentials
@@ -55,15 +55,15 @@ export default function App() {
         if (!found) return defExp;
         return {
           ...found,
-          youtubeUrl: found.youtubeUrl || defExp.youtubeUrl,
-          videoUrl: found.videoUrl || defExp.videoUrl,
+          youtubeUrl: defExp.youtubeUrl || found.youtubeUrl,
+          videoUrl: defExp.videoUrl || found.videoUrl,
           subExperiments: defExp.subExperiments?.map((defSub) => {
             const foundSub = found.subExperiments?.find((fs) => fs.id === defSub.id || fs.letter === defSub.letter);
             if (!foundSub) return defSub;
             return {
               ...foundSub,
-              youtubeUrl: foundSub.youtubeUrl || defSub.youtubeUrl,
-              videoUrl: foundSub.videoUrl || defSub.videoUrl
+              youtubeUrl: defSub.youtubeUrl || foundSub.youtubeUrl,
+              videoUrl: defSub.videoUrl || foundSub.videoUrl
             };
           })
         };
