@@ -17,7 +17,7 @@ import ConfirmDialog from './components/ConfirmDialog';
 import { defaultStudent, defaultExperiments } from './data/defaultData';
 import { loadStorage, saveStorage } from './utils/storage';
 
-const APP_VERSION = 'v5.0-all-6-experiments';
+const APP_VERSION = 'v8.0-all-experiments-official-videos';
 
 export default function App() {
   // Clear old cached experiments and synchronize student credentials
@@ -50,7 +50,24 @@ export default function App() {
     }
     const saved = loadStorage('ds_lab_experiments', null);
     if (saved && Array.isArray(saved) && saved.length >= 6) {
-      return saved;
+      return defaultExperiments.map((defExp) => {
+        const found = saved.find((s) => s.id === defExp.id || s.number === defExp.number);
+        if (!found) return defExp;
+        return {
+          ...found,
+          youtubeUrl: found.youtubeUrl || defExp.youtubeUrl,
+          videoUrl: found.videoUrl || defExp.videoUrl,
+          subExperiments: defExp.subExperiments?.map((defSub) => {
+            const foundSub = found.subExperiments?.find((fs) => fs.id === defSub.id || fs.letter === defSub.letter);
+            if (!foundSub) return defSub;
+            return {
+              ...foundSub,
+              youtubeUrl: foundSub.youtubeUrl || defSub.youtubeUrl,
+              videoUrl: foundSub.videoUrl || defSub.videoUrl
+            };
+          })
+        };
+      });
     }
     saveStorage('ds_lab_experiments', defaultExperiments);
     return defaultExperiments;
