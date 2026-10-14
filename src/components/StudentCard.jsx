@@ -1,6 +1,6 @@
 import React from 'react';
 import MbuLogo from './MbuLogo';
-import { Pencil, Github, ExternalLink, GraduationCap, ShieldCheck, Award, Linkedin } from 'lucide-react';
+import { Pencil, Github, ExternalLink, GraduationCap, ShieldCheck, Award, Linkedin, Globe, Code2, FileText } from 'lucide-react';
 
 export default function StudentCard({ student, onEdit }) {
   return (
@@ -64,31 +64,76 @@ export default function StudentCard({ student, onEdit }) {
             </div>
           </div>
 
-          {/* GitHub & LinkedIn action buttons */}
-          <div className="student-footer-action" style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
-            <a 
-              href={student.githubRepo || 'https://github.com/tambalisathvika'} 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="student-gh-button"
-              title="Open Student's GitHub Repository"
-            >
-              <Github size={14} />
-              <span>View Repository</span>
-              <ExternalLink size={12} style={{ opacity: 0.7 }} />
-            </a>
+          {/* Profile Links & Quick Actions */}
+          <div className="student-footer-action" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.6rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.35rem' }}>
+              <a 
+                href={student.portfolioUrl || 'https://portfolio-indol-omega-hu7kdhu3ks.vercel.app'} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="student-gh-button"
+                style={{ background: '#f0fdfa', color: '#0f766e', borderColor: '#ccfbf1', padding: '0.35rem 0.6rem', fontSize: '0.78rem' }}
+                title="Open Personal Portfolio"
+              >
+                <Globe size={13} style={{ color: '#0f766e' }} />
+                <span>Portfolio</span>
+                <ExternalLink size={10} style={{ opacity: 0.7 }} />
+              </a>
+
+              <a 
+                href={student.leetcodeUrl || 'https://leetcode.com/u/tambalisathvika/'} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="student-gh-button"
+                style={{ background: '#fffbeb', color: '#b45309', borderColor: '#fef3c7', padding: '0.35rem 0.6rem', fontSize: '0.78rem' }}
+                title="Open LeetCode Profile"
+              >
+                <Code2 size={13} style={{ color: '#f59e0b' }} />
+                <span>LeetCode</span>
+                <ExternalLink size={10} style={{ opacity: 0.7 }} />
+              </a>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.35rem' }}>
+              <a 
+                href={student.githubRepo || 'https://github.com/tambalisathvika'} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="student-gh-button"
+                style={{ padding: '0.35rem 0.6rem', fontSize: '0.78rem' }}
+                title="Open Student's GitHub Repository"
+              >
+                <Github size={13} />
+                <span>GitHub</span>
+                <ExternalLink size={10} style={{ opacity: 0.7 }} />
+              </a>
+
+              <a 
+                href={student.linkedinUrl || 'https://www.linkedin.com/in/tambali-sathvika'} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="student-gh-button"
+                style={{ background: '#f0f7fd', color: '#0a66c2', borderColor: '#cbe4f9', padding: '0.35rem 0.6rem', fontSize: '0.78rem' }}
+                title="Open Student's LinkedIn Profile"
+              >
+                <Linkedin size={13} />
+                <span>LinkedIn</span>
+                <ExternalLink size={10} style={{ opacity: 0.7 }} />
+              </a>
+            </div>
 
             <a 
-              href={student.linkedinUrl || 'https://www.linkedin.com/in/tambali-sathvika'} 
+              href={student.resumeUrl || '/Tambali_Sathvika_Resume.pdf'} 
               target="_blank" 
               rel="noopener noreferrer" 
+              download="Tambali_Sathvika_Resume.pdf"
               className="student-gh-button"
-              style={{ background: '#f0f7fd', color: '#0a66c2', borderColor: '#cbe4f9' }}
-              title="Open Student's LinkedIn Profile"
+              style={{ background: '#f8fafc', color: '#334155', borderColor: '#e2e8f0', padding: '0.4rem 0.6rem', fontSize: '0.8rem', justifyContent: 'center' }}
+              title="Download Student Resume (PDF)"
             >
-              <Linkedin size={14} />
-              <span>LinkedIn Profile</span>
-              <ExternalLink size={12} style={{ opacity: 0.7 }} />
+              <FileText size={13} style={{ color: '#0f766e' }} />
+              <span>Download Resume (PDF)</span>
+              <ExternalLink size={10} style={{ opacity: 0.7 }} />
             </a>
           </div>
         </div>

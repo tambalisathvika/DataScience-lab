@@ -177,6 +177,30 @@ export default function EditStudentModal({ isOpen, onClose, student, onSave }) {
                 placeholder="https://www.linkedin.com/in/username"
               />
             </div>
+
+            <div className="form-group">
+              <label className="form-label">Personal Portfolio Website URL</label>
+              <input 
+                type="url" 
+                name="portfolioUrl" 
+                className="form-input" 
+                value={formData.portfolioUrl || ''} 
+                onChange={handleInputChange} 
+                placeholder="https://yourportfolio.vercel.app"
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">LeetCode Profile URL</label>
+              <input 
+                type="url" 
+                name="leetcodeUrl" 
+                className="form-input" 
+                value={formData.leetcodeUrl || ''} 
+                onChange={handleInputChange} 
+                placeholder="https://leetcode.com/u/username/"
+              />
+            </div>
           </div>
 
           <div className="modal-footer">

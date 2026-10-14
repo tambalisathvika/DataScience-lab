@@ -17,7 +17,7 @@ import ConfirmDialog from './components/ConfirmDialog';
 import { defaultStudent, defaultExperiments } from './data/defaultData';
 import { loadStorage, saveStorage } from './utils/storage';
 
-const APP_VERSION = 'v10.0-verified-active-videos';
+const APP_VERSION = 'v11.0-student-portfolio-leetcode-resume';
 
 export default function App() {
   // Clear old cached experiments and synchronize student credentials
@@ -28,7 +28,14 @@ export default function App() {
       saveStorage('ds_lab_experiments', defaultExperiments);
       setExperiments(defaultExperiments);
       const currentStudent = loadStorage('ds_lab_student', defaultStudent);
-      const updatedStudent = { ...defaultStudent, ...currentStudent, linkedinUrl: currentStudent.linkedinUrl || defaultStudent.linkedinUrl };
+      const updatedStudent = { 
+        ...defaultStudent, 
+        ...currentStudent, 
+        linkedinUrl: currentStudent.linkedinUrl || defaultStudent.linkedinUrl,
+        portfolioUrl: currentStudent.portfolioUrl || defaultStudent.portfolioUrl,
+        leetcodeUrl: currentStudent.leetcodeUrl || defaultStudent.leetcodeUrl,
+        resumeUrl: currentStudent.resumeUrl || defaultStudent.resumeUrl
+      };
       saveStorage('ds_lab_student', updatedStudent);
       setStudent(updatedStudent);
     }
@@ -37,7 +44,14 @@ export default function App() {
   // 1. Persistent Student State
   const [student, setStudent] = useState(() => {
     const current = loadStorage('ds_lab_student', defaultStudent);
-    return { ...defaultStudent, ...current, linkedinUrl: current.linkedinUrl || defaultStudent.linkedinUrl };
+    return { 
+      ...defaultStudent, 
+      ...current, 
+      linkedinUrl: current?.linkedinUrl || defaultStudent.linkedinUrl,
+      portfolioUrl: current?.portfolioUrl || defaultStudent.portfolioUrl,
+      leetcodeUrl: current?.leetcodeUrl || defaultStudent.leetcodeUrl,
+      resumeUrl: current?.resumeUrl || defaultStudent.resumeUrl
+    };
   });
 
   // 2. Persistent Experiments State (Synchronized with Experiments 1 through 6)

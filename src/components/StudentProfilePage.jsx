@@ -3,7 +3,8 @@ import MbuLogo from './MbuLogo';
 import { 
   User, Edit3, Github, ExternalLink, Printer, 
   CheckCircle2, Award, Calendar, BookOpen, ShieldCheck, 
-  GraduationCap, Mail, Phone, MapPin, Linkedin
+  GraduationCap, Mail, Phone, MapPin, Linkedin,
+  Globe, Code2, FileText, Download
 } from 'lucide-react';
 
 export default function StudentProfilePage({ 
@@ -64,6 +65,19 @@ export default function StudentProfilePage({
           </div>
 
           <div className="profile-hero-actions">
+            <a
+              href={student.resumeUrl || '/Tambali_Sathvika_Resume.pdf'}
+              download="Tambali_Sathvika_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-secondary"
+              style={{ textDecoration: 'none', background: '#f0fdfa', borderColor: '#99f6e4', color: '#0f766e', fontWeight: 600 }}
+              title="Download Student Resume (PDF)"
+            >
+              <FileText size={14} />
+              <span>Download Resume</span>
+            </a>
+
             <button
               className="btn-secondary"
               onClick={() => window.print()}
@@ -138,8 +152,38 @@ export default function StudentProfilePage({
               </div>
             </div>
 
-            {/* ID Card Footer */}
-            <div className="id-card-footer">
+            {/* ID Card Footer Links */}
+            <div className="id-card-footer" style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+              <a
+                href={student.portfolioUrl || 'https://portfolio-indol-omega-hu7kdhu3ks.vercel.app'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="id-github-link"
+                style={{ background: '#f0fdfa', borderColor: '#ccfbf1', color: '#0f766e' }}
+                title="Open Candidate's Personal Developer Portfolio"
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                  <Globe size={14} style={{ color: '#0f766e' }} />
+                  <span>Personal Portfolio Website</span>
+                </div>
+                <ExternalLink size={12} />
+              </a>
+
+              <a
+                href={student.leetcodeUrl || 'https://leetcode.com/u/tambalisathvika/'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="id-github-link"
+                style={{ background: '#fffbeb', borderColor: '#fef3c7', color: '#b45309' }}
+                title="Open Candidate's LeetCode Profile"
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                  <Code2 size={14} style={{ color: '#f59e0b' }} />
+                  <span>LeetCode Coding Profile</span>
+                </div>
+                <ExternalLink size={12} />
+              </a>
+
               <a
                 href={student.githubRepo || 'https://github.com/tambalisathvika'}
                 target="_blank"
@@ -149,7 +193,7 @@ export default function StudentProfilePage({
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
                   <Github size={14} />
-                  <span>View Candidate Repository</span>
+                  <span>GitHub Code Repository</span>
                 </div>
                 <ExternalLink size={12} />
               </a>
@@ -163,7 +207,23 @@ export default function StudentProfilePage({
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
                   <Linkedin size={14} style={{ color: '#0a66c2' }} />
-                  <span>View LinkedIn Profile</span>
+                  <span>LinkedIn Professional Profile</span>
+                </div>
+                <ExternalLink size={12} />
+              </a>
+
+              <a
+                href={student.resumeUrl || '/Tambali_Sathvika_Resume.pdf'}
+                target="_blank"
+                rel="noopener noreferrer"
+                download="Tambali_Sathvika_Resume.pdf"
+                className="id-github-link"
+                style={{ background: '#f8fafc', borderColor: '#e2e8f0', color: '#334155' }}
+                title="Download / View Resume Curriculum Vitae (PDF)"
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                  <FileText size={14} style={{ color: '#0f766e' }} />
+                  <span>Download Resume (PDF)</span>
                 </div>
                 <ExternalLink size={12} />
               </a>

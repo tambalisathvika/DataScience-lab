@@ -6,7 +6,10 @@ export const defaultStudent = {
   branch: 'Data Science',
   assistantProfessor: 'Mr. S Bosu Babu',
   githubRepo: 'https://github.com/tambalisathvika',
-  linkedinUrl: 'https://www.linkedin.com/in/tambali-sathvika'
+  linkedinUrl: 'https://www.linkedin.com/in/tambali-sathvika',
+  portfolioUrl: 'https://portfolio-indol-omega-hu7kdhu3ks.vercel.app',
+  leetcodeUrl: 'https://leetcode.com/u/tambalisathvika/',
+  resumeUrl: '/Tambali_Sathvika_Resume.pdf'
 };
 
 export const defaultExperiments = [
