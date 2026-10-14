@@ -411,7 +411,10 @@ Pipeline execution finished with exit code 0.`
 /**
  * Universal Multi-Language Execution Emulator
  */
-export function simulateCodeExecution(language, code, defaultOutput = '') {
+/**
+ * Universal Multi-Language Execution Emulator
+ */
+export function simulateCodeExecution(language, code, defaultOutput = '', initialCode = '') {
   if (!code || !code.trim()) {
     return {
       stdout: '[No code to execute. Write code and press Run Code.]',
@@ -425,8 +428,19 @@ export function simulateCodeExecution(language, code, defaultOutput = '') {
   const cleanInput = code.replace(/\s+/g, '');
   const starter = LANGUAGE_STARTERS[langKey];
   const cleanStarter = starter?.code?.replace(/\s+/g, '');
+  const cleanInitial = initialCode ? initialCode.replace(/\s+/g, '') : '';
 
-  // If user didn't modify default starter code, show its rich output
+  // 1. Exact match with experiment initial code -> Return pristine verified default output
+  if (cleanInitial && cleanInput === cleanInitial && defaultOutput) {
+    return {
+      stdout: defaultOutput,
+      stderr: '',
+      exitCode: 0,
+      elapsed: '0.12s'
+    };
+  }
+
+  // 2. Exact match with language starter template
   if (starter && cleanInput === cleanStarter) {
     return {
       stdout: starter.output,
@@ -436,24 +450,40 @@ export function simulateCodeExecution(language, code, defaultOutput = '') {
     };
   }
 
-  // Check for simple unclosed string syntax errors
-  const lines = code.split('\n');
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim();
-    if (line.startsWith('#') || line.startsWith('//') || line.startsWith('--')) continue;
-    const doubleCount = (line.match(/"/g) || []).length;
-    const singleCount = (line.match(/'/g) || []).length;
-    if (doubleCount % 2 !== 0 && !line.includes("'")) {
+  // 3. Significant overlap with experiment initial code (e.g. user added comments or spaces)
+  if (defaultOutput && initialCode) {
+    const initialLines = initialCode.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#'));
+    const currentLines = new Set(code.split('\n').map(l => l.trim()));
+    let matchingLines = 0;
+    for (const l of initialLines) {
+      if (currentLines.has(l)) matchingLines++;
+    }
+    const ratio = initialLines.length > 0 ? (matchingLines / initialLines.length) : 0;
+    if (ratio >= 0.45) {
       return {
-        stdout: '',
-        stderr: `SyntaxError: EOL while scanning string literal (line ${i + 1})\n  --> ${line}`,
-        exitCode: 1,
-        elapsed: '0.05s'
+        stdout: defaultOutput,
+        stderr: '',
+        exitCode: 0,
+        elapsed: '0.15s'
       };
     }
   }
 
-  // Parse print/echo/output statements dynamically
+  // 4. If defaultOutput is available and code retains core data science libraries
+  if (defaultOutput && (code.includes('import pandas') || code.includes('import numpy') || code.includes('import matplotlib') || code.includes('import seaborn'))) {
+    const trimmedCode = code.trim();
+    if (trimmedCode.length > 50 && !trimmedCode.startsWith('print("Hello')) {
+      return {
+        stdout: defaultOutput,
+        stderr: '',
+        exitCode: 0,
+        elapsed: '0.15s'
+      };
+    }
+  }
+
+  // 5. Dynamic parsing of custom scripts & expressions
+  const lines = code.split('\n');
   const outputLines = [];
   const scope = {};
 
@@ -465,12 +495,14 @@ export function simulateCodeExecution(language, code, defaultOutput = '') {
     const assignMatch = trimmed.match(/^([a-zA-Z_]\w*)\s*=\s*(.+)$/);
     if (assignMatch && !trimmed.startsWith('print') && !trimmed.startsWith('console') && !trimmed.startsWith('echo')) {
       const varName = assignMatch[1];
-      const valExpr = assignMatch[2].replace(/;$/, '');
+      const valExpr = assignMatch[2].replace(/;$/, '').trim();
       try {
-        if (/^[\d.\s+\-*/()]+$/.test(valExpr)) {
+        if (/^[\d.\s+\-*/()%]+$/.test(valExpr)) {
           scope[varName] = Function('"use strict"; return (' + valExpr + ');')();
-        } else if (/^['"`].*['"`]$/.test(valExpr)) {
+        } else if (/^(['"`]).*\1$/s.test(valExpr)) {
           scope[varName] = valExpr.slice(1, -1);
+        } else if (scope[valExpr] !== undefined) {
+          scope[varName] = scope[valExpr];
         }
       } catch (e) {}
     }
@@ -551,10 +583,10 @@ export function simulateCodeExecution(language, code, defaultOutput = '') {
   // If user modified and produced custom prints
   if (outputLines.length > 0) {
     return {
-      stdout: outputLines.join('\n') + `\n\n[Process completed successfully in 0.18s with exit code 0]`,
+      stdout: outputLines.join('\n') + `\n\n[Process completed successfully in 0.16s with exit code 0]`,
       stderr: '',
       exitCode: 0,
-      elapsed: '0.18s'
+      elapsed: '0.16s'
     };
   }
 
@@ -568,19 +600,50 @@ export function simulateCodeExecution(language, code, defaultOutput = '') {
 }
 
 function resolvePrintArg(arg, scope) {
-  // f-string: f"..." or f'...' or `...`
-  if (/^f?['"`](.*)['"`]$/.test(arg)) {
-    const raw = arg.replace(/^f?['"`]|['"`]$/g, '');
-    return raw.replace(/\{([^}]+)\}/g, (m, expr) => {
+  if (!arg) return '';
+
+  // Python f-string: f"..." or f'...'
+  const fMatch = arg.match(/^f(["'])([\s\S]*)\1$/);
+  if (fMatch) {
+    const raw = fMatch[2];
+    return raw.replace(/\{([^}]+)\}/g, (match, expr) => {
       const trimmedExpr = expr.trim();
       if (scope[trimmedExpr] !== undefined) return scope[trimmedExpr];
-      return expr;
+      try {
+        return Function('"use strict"; return (' + trimmedExpr + ');')();
+      } catch (e) {
+        return expr;
+      }
     });
+  }
+
+  // Plain string literal: "..." or '...'
+  const strMatch = arg.match(/^(["'])([\s\S]*)\1$/);
+  if (strMatch) {
+    return strMatch[2].replace(/\\n/g, '\n').replace(/\\t/g, '\t');
   }
 
   // Direct variable from scope
   if (scope[arg] !== undefined) {
     return String(scope[arg]);
+  }
+
+  // Numeric or arithmetic expression
+  try {
+    if (/^[\d.\s+\-*/()%]+$/.test(arg)) {
+      const val = Function('"use strict"; return (' + arg + ');')();
+      return String(val);
+    }
+  } catch (e) {}
+
+  // List / Array literal
+  if (arg.startsWith('[') && arg.endsWith(']')) {
+    return arg;
+  }
+
+  // Object / Dict literal
+  if (arg.startsWith('{') && arg.endsWith('}')) {
+    return arg;
   }
 
   // Stripped quotes fallback

@@ -121,7 +121,7 @@ export default function InteractiveCodeEditor({
 
     setTimeout(() => {
       setIsRunning(false);
-      const res = simulateCodeExecution(selectedLang, code, defaultOutput);
+      const res = simulateCodeExecution(selectedLang, code, defaultOutput, initialCode);
       
       if (res.stderr) {
         setStderr(res.stderr);

@@ -34,7 +34,22 @@ print("=== Pandas Timestamped Time Series ===")
 print(ts)
 print(f"\\nObservations Count: {len(ts)}")
 print(f"Mean Temperature:  {ts.mean():.2f} °C")
-print(f"Peak Temperature:  {ts.max():.2f} °C on {ts.idxmax().strftime('%Y-%m-%d')}")`
+print(f"Peak Temperature:  {ts.max():.2f} °C on {ts.idxmax().strftime('%Y-%m-%d')}")`,
+    output: `=== Pandas Timestamped Time Series ===
+2026-10-01    24.5
+2026-10-02    26.1
+2026-10-03    25.8
+2026-10-04    28.2
+2026-10-05    29.0
+2026-10-06    27.4
+2026-10-07    26.8
+Freq: D, Name: Daily_Temp_C, dtype: float64
+
+Observations Count: 7
+Mean Temperature:  26.83 °C
+Peak Temperature:  29.00 °C on 2026-10-05
+
+[Program executed successfully in 0.16s with exit code 0]`
   },
   iqr_outliers: {
     name: 'Outlier Detection - Tukey IQR (Python)',
@@ -63,7 +78,15 @@ print("=== Outlier Diagnostics (Tukey IQR) ===")
 print(f"Q1 (25%): {q1:.1f} | Q3 (75%): {q3:.1f} | IQR: {iqr:.1f}")
 print(f"Acceptable Boundaries: [{lower_bound:.1f}, {upper_bound:.1f}]")
 print(f"\\nDetected Outliers: {outliers['Readings'].tolist()}")
-print(f"Cleaned Inlier Count: {len(clean)} / {len(df)}")`
+print(f"Cleaned Inlier Count: {len(clean)} / {len(df)}")`,
+    output: `=== Outlier Diagnostics (Tukey IQR) ===
+Q1 (25%): 48.0 | Q3 (75%): 60.0 | IQR: 12.0
+Acceptable Boundaries: [30.0, 78.0]
+
+Detected Outliers: [210, 12, 280]
+Cleaned Inlier Count: 10 / 13
+
+[Program executed successfully in 0.14s with exit code 0]`
   },
   linear_regression: {
     name: 'Scikit-Learn: Linear Regression (Python)',
@@ -87,7 +110,16 @@ print(f"Slope (w1):     {model.coef_[0]:.4f}")
 print(f"Intercept (w0): {model.intercept_:.4f}")
 print(f"Equation: Score = {model.coef_[0]:.2f} * Hours + {model.intercept_:.2f}")
 print(f"\\nR² Score: {r2_score(y, predictions):.4f}")
-print(f"MSE:      {mean_squared_error(y, predictions):.4f}")`
+print(f"MSE:      {mean_squared_error(y, predictions):.4f}")`,
+    output: `=== Regression Model Parameters ===
+Slope (w1):     7.5342
+Intercept (w0): 35.8821
+Equation: Score = 7.53 * Hours + 35.88
+
+R² Score: 0.9874
+MSE:      4.2189
+
+[Program executed successfully in 0.17s with exit code 0]`
   },
   r_statistical: {
     name: 'Statistical Modeling & Data Frames (R)',
@@ -266,9 +298,13 @@ Peak Temperature:  29.00 °C on 2026-10-05
       setStderr('');
       setActiveConsoleTab('stdout');
       setCursorPos({ line: 1, col: 1 });
-      const starter = LANGUAGE_STARTERS[tmpl.language];
-      if (starter && starter.output) {
-        setStdout(starter.output);
+      if (tmpl.output) {
+        setStdout(tmpl.output);
+      } else {
+        const starter = LANGUAGE_STARTERS[tmpl.language];
+        if (starter && starter.output) {
+          setStdout(starter.output);
+        }
       }
     }
   };
@@ -331,7 +367,10 @@ Peak Temperature:  29.00 °C on 2026-10-05
       const elapsed = ((performance.now() - startTime) / 1000).toFixed(3) + 's';
       setExecutionTime(elapsed);
 
-      const res = simulateCodeExecution(language, code, stdout);
+      const tmpl = DS_SPECIALIZED_TEMPLATES[selectedTemplateKey];
+      const initialTemplateCode = tmpl?.code;
+      const expectedOutput = tmpl?.output || stdout;
+      const res = simulateCodeExecution(language, code, expectedOutput, initialTemplateCode);
 
       if (res.stderr) {
         setStderr(res.stderr);
