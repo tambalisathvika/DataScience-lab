@@ -1,6 +1,6 @@
 import React from 'react';
 import MbuLogo from './MbuLogo';
-import { Pencil, Github, ExternalLink, GraduationCap, ShieldCheck, Award, Linkedin, Globe, Code2, FileText } from 'lucide-react';
+import { Github, ExternalLink, GraduationCap, ShieldCheck, Award, Linkedin, Globe, Code2, FileText } from 'lucide-react';
 
 export default function StudentCard({ student, onEdit }) {
   return (
@@ -30,14 +30,6 @@ export default function StudentCard({ student, onEdit }) {
                 e.target.src = '/student-default.jpg';
               }}
             />
-            <button 
-              className="student-quick-edit-btn" 
-              onClick={onEdit} 
-              aria-label="Edit Student Profile"
-              title="Edit Student Information"
-            >
-              <Pencil size={13} />
-            </button>
           </div>
           <div className="student-roll-chip">{student.rollNo}</div>
         </div>

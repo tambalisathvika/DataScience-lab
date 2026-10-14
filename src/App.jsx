@@ -17,7 +17,7 @@ import ConfirmDialog from './components/ConfirmDialog';
 import { defaultStudent, defaultExperiments } from './data/defaultData';
 import { loadStorage, saveStorage } from './utils/storage';
 
-const APP_VERSION = 'v11.0-student-portfolio-leetcode-resume';
+const APP_VERSION = 'v12.0-resume-viewer-no-edits';
 
 export default function App() {
   // Clear old cached experiments and synchronize student credentials

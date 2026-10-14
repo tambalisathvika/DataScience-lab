@@ -7,7 +7,7 @@ import {
   Target, Code2, FileText, ChevronRight, CheckCircle2, 
   HelpCircle, Printer, Copy, Check, Sparkles, ListOrdered, 
   Clock, Play, Award, BarChart3, ShieldCheck, Download,
-  TrendingUp, PlayCircle, Edit3, MoreVertical
+  TrendingUp, PlayCircle
 } from 'lucide-react';
 
 export default function SubExperimentDetails({
@@ -130,18 +130,6 @@ export default function SubExperimentDetails({
           </div>
 
           <div className="practical-actions-row">
-            {onEditExperiment && (
-              <button
-                className="btn-secondary"
-                onClick={() => onEditExperiment(parentExperiment)}
-                title="Edit YouTube Video & GitHub URLs"
-                style={{ borderColor: 'var(--primary-teal)', color: 'var(--primary-teal)', fontWeight: 600 }}
-              >
-                <Edit3 size={13} />
-                <span>Edit URLs &amp; Details</span>
-              </button>
-            )}
-
             {githubUrl && (
               <a
                 href={githubUrl}
@@ -173,24 +161,6 @@ export default function SubExperimentDetails({
               <Printer size={13} />
               <span>Print Record</span>
             </button>
-
-            {onEditExperiment && (
-              <button
-                className="pro-exp-menu-btn"
-                onClick={() => onEditExperiment(parentExperiment)}
-                title="Options: Edit URLs & Details"
-                aria-label="Options"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.95)',
-                  border: '1px solid var(--border-light)',
-                  padding: '0.4rem 0.55rem',
-                  borderRadius: 'var(--radius-sm)',
-                  cursor: 'pointer'
-                }}
-              >
-                <MoreVertical size={16} />
-              </button>
-            )}
 
             {downloadSuccess && (
               <span className="download-feedback-pill">
@@ -253,25 +223,6 @@ export default function SubExperimentDetails({
                 <p className="video-pending-desc">
                   Set <code>youtubeUrl</code> or <code>videoUrl</code> in this sub-task data to automatically render an interactive HD laboratory video walkthrough.
                 </p>
-                {onEditExperiment && (
-                  <button
-                    className="btn-primary"
-                    onClick={() => onEditExperiment(parentExperiment)}
-                    style={{
-                      marginTop: '0.85rem',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.45rem',
-                      padding: '0.55rem 1.15rem',
-                      fontSize: '0.85rem',
-                      borderRadius: 'var(--radius-md)'
-                    }}
-                    title="Open editor to paste YouTube URL"
-                  >
-                    <Edit3 size={14} />
-                    <span>Add YouTube URL Now</span>
-                  </button>
-                )}
               </div>
             )}
           </div>

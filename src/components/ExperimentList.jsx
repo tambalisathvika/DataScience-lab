@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ExperimentCard from './ExperimentCard';
 import SearchBar from './SearchBar';
-import { Plus, FlaskConical, SearchX, CheckCircle, Sparkles, Filter } from 'lucide-react';
+import { FlaskConical, SearchX, CheckCircle, Sparkles, Filter } from 'lucide-react';
 
 export default function ExperimentList({
   experiments,
@@ -85,12 +85,6 @@ export default function ExperimentList({
               <span className="progress-label">Experiments</span>
             </div>
           </div>
-
-          {/* Add Experiment Button */}
-          <button className="pro-btn-add-exp" onClick={onAddClick} title="Add New Laboratory Experiment">
-            <Plus size={18} />
-            <span>Add Experiment</span>
-          </button>
         </div>
       </div>
 

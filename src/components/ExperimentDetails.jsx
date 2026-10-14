@@ -6,8 +6,7 @@ import {
   Layers, CheckCircle2, ChevronRight, Code2, Sparkles, 
   FileText, Download, Printer, Copy, Check, Clock, 
   Award, ShieldCheck, Terminal, Wrench, ArrowRight,
-  Database, HelpCircle, Youtube, FileCheck, Cpu, Edit3,
-  MoreVertical, PlayCircle
+  Database, HelpCircle, Youtube, FileCheck, Cpu, PlayCircle
 } from 'lucide-react';
 
 export default function ExperimentDetails({
@@ -132,31 +131,6 @@ Executed successfully in 0.18s`;
               <CheckCircle2 size={14} style={{ color: '#10b981' }} />
               <span>{experiment.status || 'Curriculum Approved'}</span>
             </div>
-
-            {onEdit && (
-              <button
-                className="pro-exp-menu-btn"
-                onClick={() => onEdit(experiment)}
-                title="Options: Edit URLs (YouTube / GitHub) & Experiment Details"
-                aria-label="Experiment Options"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.95)',
-                  border: '1px solid var(--border-light)',
-                  padding: '0.35rem 0.6rem',
-                  borderRadius: 'var(--radius-md)',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.35rem',
-                  cursor: 'pointer',
-                  fontWeight: 600,
-                  fontSize: '0.8rem',
-                  color: 'var(--text-primary)'
-                }}
-              >
-                <MoreVertical size={16} />
-                <span>Options</span>
-              </button>
-            )}
           </div>
         </div>
 
@@ -224,16 +198,6 @@ Executed successfully in 0.18s`;
             </button>
           )}
 
-          {onEdit && (
-            <button
-              className="btn-secondary-large"
-              onClick={() => onEdit(experiment)}
-              title="Edit Experiment Details, YouTube Video, and GitHub URLs"
-            >
-              <Edit3 size={16} style={{ color: 'var(--primary-teal)' }} />
-              <span>Edit URLs &amp; Details</span>
-            </button>
-          )}
 
           <button
             className="btn-secondary-large"
@@ -299,17 +263,7 @@ Executed successfully in 0.18s`;
             <p className="video-pending-desc">
               Configure <code>youtubeUrl</code> or <code>videoUrl</code> in this experiment's metadata to display an interactive laboratory video lecture.
             </p>
-            {onEdit && (
-              <button
-                type="button"
-                className="btn-primary"
-                onClick={() => onEdit(experiment)}
-                style={{ marginTop: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}
-              >
-                <Edit3 size={14} />
-                <span>Configure Video Link Now</span>
-              </button>
-            )}
+
           </div>
         )}
       </section>
@@ -595,17 +549,6 @@ Executed successfully in 0.18s`;
                   <span className="resource-pending-tag">
                     Repository URL pending
                   </span>
-                  {onEdit && (
-                    <button
-                      className="resource-item-btn-action"
-                      onClick={() => onEdit(experiment)}
-                      title="Add GitHub URL"
-                      style={{ fontSize: '0.78rem', padding: '0.35rem 0.65rem' }}
-                    >
-                      <Edit3 size={12} />
-                      <span>Configure GitHub Link</span>
-                    </button>
-                  )}
                 </div>
               )}
             </div>
@@ -637,17 +580,6 @@ Executed successfully in 0.18s`;
                   <span className="resource-pending-tag">
                     Lecture video pending
                   </span>
-                  {onEdit && (
-                    <button
-                      className="resource-item-btn-action"
-                      onClick={() => onEdit(experiment)}
-                      title="Add YouTube URL"
-                      style={{ fontSize: '0.78rem', padding: '0.35rem 0.65rem' }}
-                    >
-                      <Edit3 size={12} />
-                      <span>Configure YouTube Video</span>
-                    </button>
-                  )}
                 </div>
               )}
             </div>

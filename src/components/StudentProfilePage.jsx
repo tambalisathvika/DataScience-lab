@@ -1,7 +1,7 @@
 import React from 'react';
 import MbuLogo from './MbuLogo';
 import { 
-  User, Edit3, Github, ExternalLink, Printer, 
+  User, Github, ExternalLink, Printer, 
   CheckCircle2, Award, Calendar, BookOpen, ShieldCheck, 
   GraduationCap, Mail, Phone, MapPin, Linkedin,
   Globe, Code2, FileText, Download
@@ -34,13 +34,6 @@ export default function StudentProfilePage({
                 e.target.src = '/student-default.jpg';
               }}
             />
-            <button
-              className="profile-avatar-edit-fab"
-              onClick={onEditStudent}
-              title="Edit Profile Information"
-            >
-              <Edit3 size={15} />
-            </button>
           </div>
 
           <div className="profile-header-meta">
@@ -70,11 +63,11 @@ export default function StudentProfilePage({
               download="Tambali_Sathvika_Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-secondary"
-              style={{ textDecoration: 'none', background: '#f0fdfa', borderColor: '#99f6e4', color: '#0f766e', fontWeight: 600 }}
+              className="btn-primary"
+              style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}
               title="Download Student Resume (PDF)"
             >
-              <FileText size={14} />
+              <Download size={15} />
               <span>Download Resume</span>
             </a>
 
@@ -85,15 +78,6 @@ export default function StudentProfilePage({
             >
               <Printer size={14} />
               <span>Print Credentials</span>
-            </button>
-
-            <button
-              className="btn-primary"
-              onClick={onEditStudent}
-              title="Edit Student Information"
-            >
-              <Edit3 size={14} />
-              <span>Edit Profile</span>
             </button>
           </div>
         </div>
@@ -306,6 +290,67 @@ export default function StudentProfilePage({
               </table>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Visual Curriculum Vitae / Resume Section */}
+      <div className="pro-card resume-viewer-card" style={{ marginTop: '1.5rem', padding: '1.25rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', paddingBottom: '1rem', borderBottom: '1px solid #e2e8f0' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            <div className="section-icon-badge" style={{ width: '36px', height: '36px', borderRadius: '8px', background: 'rgba(15, 118, 110, 0.1)', color: '#0f766e', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <FileText size={20} />
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, margin: 0, color: '#0f172a' }}>
+                Curriculum Vitae &amp; Professional Resume
+              </h3>
+              <span style={{ fontSize: '0.8rem', color: '#64748b' }}>
+                ATS-Optimized • Interactive PDF Preview &amp; Direct Export
+              </span>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <a
+              href={student.resumeUrl || '/Tambali_Sathvika_Resume.pdf'}
+              download="Tambali_Sathvika_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary"
+              style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.45rem', padding: '0.5rem 1rem', fontSize: '0.85rem' }}
+              title="Download Resume PDF"
+            >
+              <Download size={15} />
+              <span>Download Resume (PDF)</span>
+            </a>
+
+            <a
+              href={student.resumeUrl || '/Tambali_Sathvika_Resume.pdf'}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-secondary"
+              style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.45rem', padding: '0.5rem 0.9rem', fontSize: '0.85rem' }}
+              title="Open Resume in New Tab"
+            >
+              <ExternalLink size={14} />
+              <span>Open in New Tab</span>
+            </a>
+          </div>
+        </div>
+
+        {/* Embedded Interactive PDF Viewer */}
+        <div style={{ marginTop: '1rem', background: '#f8fafc', borderRadius: 'var(--radius-sm)', padding: '0.4rem', border: '1px solid #e2e8f0' }}>
+          <iframe
+            src={`${student.resumeUrl || '/Tambali_Sathvika_Resume.pdf'}#toolbar=1&navpanes=0`}
+            title="Tambali Sathvika - Resume PDF Preview"
+            style={{
+              width: '100%',
+              height: '900px',
+              border: 'none',
+              borderRadius: 'var(--radius-sm)',
+              boxShadow: '0 4px 14px rgba(0,0,0,0.05)'
+            }}
+          />
         </div>
       </div>
     </div>

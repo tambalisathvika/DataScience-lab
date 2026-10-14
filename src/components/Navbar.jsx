@@ -1,8 +1,7 @@
 import React from 'react';
 import MbuLogo from './MbuLogo';
 import { 
-  FlaskConical, Layers, Wrench, Code2, User, 
-  Pencil 
+  FlaskConical, Layers, Wrench, Code2, User 
 } from 'lucide-react';
 
 export default function Navbar({ activeTab, onSelectTab, student, onEditStudent }) {
@@ -92,18 +91,6 @@ export default function Navbar({ activeTab, onSelectTab, student, onEditStudent 
               <span className="header-student-meta">{student.rollNo} • {student.section}</span>
             </div>
           </div>
-
-          <button
-            className="header-student-edit-btn"
-            onClick={(e) => {
-              e.stopPropagation();
-              onEditStudent();
-            }}
-            title="Edit Student Information"
-            aria-label="Edit Profile"
-          >
-            <Pencil size={12} />
-          </button>
         </div>
       </div>
     </header>

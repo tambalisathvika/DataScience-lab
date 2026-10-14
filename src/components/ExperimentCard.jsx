@@ -1,30 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { MoreVertical, Edit2, Trash2, ArrowRight, Play, BookOpen, Layers, CheckCircle2, Clock } from 'lucide-react';
+import React from 'react';
+import { ArrowRight, Play, BookOpen, Layers, CheckCircle2, Clock } from 'lucide-react';
 
 export default function ExperimentCard({ 
   experiment, 
   onReadMore, 
-  onOpenSubExpModal, 
-  onEdit, 
-  onDelete 
+  onOpenSubExpModal 
 }) {
-  const [showMenu, setShowMenu] = useState(false);
-  const menuRef = useRef(null);
-
-  // Close menu on outside click
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setShowMenu(false);
-      }
-    };
-    if (showMenu) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [showMenu]);
 
   const subCount = experiment.subExperiments?.length || 0;
   const topicsCount = experiment.topics?.length || 0;
@@ -53,46 +34,7 @@ export default function ExperimentCard({
             </span>
           )}
 
-          {/* Three-dot dropdown menu */}
-          <div ref={menuRef} style={{ position: 'relative' }}>
-            <button
-              className="pro-exp-menu-btn"
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowMenu(!showMenu);
-              }}
-              aria-label="Experiment options"
-              title="Options"
-            >
-              <MoreVertical size={16} />
-            </button>
 
-            {showMenu && (
-              <div className="pro-menu-dropdown">
-                <button 
-                  className="pro-menu-item"
-                  onClick={() => {
-                    setShowMenu(false);
-                    onEdit(experiment);
-                  }}
-                >
-                  <Edit2 size={14} style={{ color: 'var(--primary-teal)' }} />
-                  <span>Edit Experiment</span>
-                </button>
-                <div className="pro-menu-divider" />
-                <button 
-                  className="pro-menu-item delete"
-                  onClick={() => {
-                    setShowMenu(false);
-                    onDelete(experiment);
-                  }}
-                >
-                  <Trash2 size={14} />
-                  <span>Delete Experiment</span>
-                </button>
-              </div>
-            )}
-          </div>
         </div>
 
         {/* Card Thumbnail Image */}
