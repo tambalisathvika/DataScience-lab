@@ -20,7 +20,6 @@ export default function Navbar({ activeTab, onSelectTab, student, onEditStudent 
           <div className="header-brand-divider" />
           <div className="header-brand-text">
             <span className="header-brand-title">DATA SCIENCE DIGITAL LABORATORY</span>
-            <span className="header-brand-subtitle">Interactive Computational Studio</span>
           </div>
         </div>
 
