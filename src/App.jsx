@@ -17,7 +17,7 @@ import ConfirmDialog from './components/ConfirmDialog';
 import { defaultStudent, defaultExperiments } from './data/defaultData';
 import { loadStorage, saveStorage } from './utils/storage';
 
-const APP_VERSION = 'v13.0-clean-code-execution-verified';
+const APP_VERSION = 'v14.0-modules-3-4-5-complete';
 
 export default function App() {
   // Clear old cached experiments and synchronize student credentials

@@ -139,11 +139,44 @@ Mohan Babu University — Continuous Academic Evaluation Series (AY 2026–2027)
     }
   };
 
+  const getThemeClass = (modId) => {
+    switch (modId) {
+      case 'mod-1': return 'theme-teal';
+      case 'mod-2': return 'theme-indigo';
+      case 'mod-3': return 'theme-emerald';
+      case 'mod-4': return 'theme-amber';
+      case 'mod-5': return 'theme-purple';
+      default: return 'theme-indigo';
+    }
+  };
+
+  const getThemeButtonClass = (modId) => {
+    switch (modId) {
+      case 'mod-1': return 'teal';
+      case 'mod-2': return 'indigo';
+      case 'mod-3': return 'emerald';
+      case 'mod-4': return 'amber';
+      case 'mod-5': return 'purple';
+      default: return 'indigo';
+    }
+  };
+
+  const getModuleIcon = (modId, primaryColor) => {
+    switch (modId) {
+      case 'mod-1': return <BookOpen size={24} style={{ color: primaryColor }} />;
+      case 'mod-2': return <Cpu size={24} style={{ color: primaryColor }} />;
+      case 'mod-3': return <FlaskConical size={24} style={{ color: primaryColor }} />;
+      case 'mod-4': return <Sparkles size={24} style={{ color: primaryColor }} />;
+      case 'mod-5': return <Database size={24} style={{ color: primaryColor }} />;
+      default: return <Layers size={24} style={{ color: primaryColor }} />;
+    }
+  };
+
   // ==========================================================================
   // VIEW A: DEDICATED MODULE DETAIL PAGE
   // ==========================================================================
   if (activeModule) {
-    const isTealTheme = activeModule.id === 'mod-1';
+    const themeClass = getThemeClass(activeModule.id);
 
     return (
       <div className="pro-modules-page">
@@ -179,7 +212,7 @@ Mohan Babu University — Continuous Academic Evaluation Series (AY 2026–2027)
         </div>
 
         {/* 1. MODULE HERO HEADER */}
-        <header className={`module-hero-banner ${isTealTheme ? 'theme-teal' : 'theme-indigo'}`}>
+        <header className={`module-hero-banner ${themeClass}`}>
           <div className="module-hero-glow-layer" />
           
           <div className="module-hero-content">
@@ -638,17 +671,12 @@ Mohan Babu University — Continuous Academic Evaluation Series (AY 2026–2027)
       <section className="modules-cards-container">
         <div className="modules-cards-grid">
           {filteredModules.map((module) => {
-            const isTeal = module.id === 'mod-1';
-            const iconComponent = isTeal ? (
-              <BookOpen size={24} style={{ color: module.theme.primaryColor }} />
-            ) : (
-              <Cpu size={24} style={{ color: module.theme.primaryColor }} />
-            );
+            const iconComponent = getModuleIcon(module.id, module.theme.primaryColor);
 
             return (
               <article 
                 key={module.id} 
-                className={`pro-card module-overview-card ${isTeal ? 'theme-teal' : 'theme-indigo'}`}
+                className={`pro-card module-overview-card ${getThemeClass(module.id)}`}
               >
                 {/* Top Subtle Identity Accent Line */}
                 <div 
@@ -733,7 +761,7 @@ Mohan Babu University — Continuous Academic Evaluation Series (AY 2026–2027)
                     </div>
 
                     <button 
-                      className={`module-explore-btn ${isTeal ? 'teal' : 'indigo'}`}
+                      className={`module-explore-btn ${getThemeButtonClass(module.id)}`}
                       onClick={() => {
                         setSelectedModuleId(module.id);
                         window.scrollTo({ top: 0, behavior: 'smooth' });

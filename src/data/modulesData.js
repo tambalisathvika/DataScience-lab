@@ -726,4 +726,738 @@ print(f"Cumulative Variance Captured (2 Components): {np.sum(pca.explained_varia
       }
     ]
   }
+,
+
+  // ==========================================================================
+  // MODULE 3 — STATISTICAL INFERENCE
+  // ==========================================================================
+  {
+    "id": "mod-3",
+    "number": "Module 3",
+    "code": "DS-MOD-103",
+    "title": "Module 3 — Statistical Inference",
+    "displayTitle": "Statistical Inference & Hypothesis Testing",
+    "shortDescription": "Foundations of statistical inference, sampling theory, Central Limit Theorem, confidence intervals, parametric and non-parametric hypothesis testing, ANOVA, and linear regression diagnostics.",
+    "summary": "Comprehensive academic syllabus covering sampling distributions, Central Limit Theorem, point and interval estimation, Student's t-tests, Z-tests, Chi-Square independence, One-Way/Two-Way ANOVA, and Ordinary Least Squares (OLS) regression parameter diagnostics.",
+    "theme": {
+      "primaryColor": "#059669",
+      "accentColor": "#10b981",
+      "badgeBg": "rgba(5, 150, 105, 0.12)",
+      "badgeBorder": "rgba(5, 150, 105, 0.3)",
+      "gradient": "linear-gradient(135deg, rgba(5, 150, 105, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%)",
+      "accentBorder": "rgba(5, 150, 105, 0.35)",
+      "cardGlow": "0 8px 30px -6px rgba(5, 150, 105, 0.15)"
+    },
+    "duration": "5 Weeks • 20 Lecture Hours",
+    "credits": "4 Credits",
+    "level": "Undergraduate Advanced Core",
+    "department": "Department of Data Science",
+    "institution": "Mohan Babu University (MBU)",
+    "prerequisites": [
+      "Module 1 — Introduction",
+      "Probability & Random Variables",
+      "Python for Scientific Computing"
+    ],
+    "defaultProgress": 85,
+    "importantTopics": [
+      "Sampling & Central Limit Theorem (CLT)",
+      "Confidence Intervals & Maximum Likelihood (MLE)",
+      "Hypothesis Testing (Null H0 vs. Alternative H1)",
+      "Student's t-Tests & Z-Tests for Proportions",
+      "Chi-Square Test of Independence",
+      "One-Way & Two-Way ANOVA"
+    ],
+    "relatedExperimentIds": [
+      "exp-3",
+      "exp-4",
+      "exp-5"
+    ],
+    "relatedExperiments": [
+      {
+        "id": "exp-3",
+        "number": "3",
+        "title": "Data Cleaning & Preprocessing",
+        "relevance": "Outlier detection and data standardization foundational to parametric inference."
+      },
+      {
+        "id": "exp-4",
+        "number": "4",
+        "title": "Data Wrangling & Hierarchical Indexing",
+        "relevance": "Cross-tabulation and pivot operations required for contingency tables in Chi-Square tests."
+      },
+      {
+        "id": "exp-5",
+        "number": "5",
+        "title": "Data Visualization with Matplotlib & Seaborn",
+        "relevance": "QQ-plots, histograms, KDE distribution overlays, and bivariate scatter correlation verification."
+      }
+    ],
+    "codeExample": {
+      "filename": "module3_statistical_inference_pipeline.py",
+      "language": "python",
+      "title": "Module 3 — Parametric Hypothesis Testing & ANOVA Benchmark",
+      "code": "# ==============================================================================\n# MOHAN BABU UNIVERSITY (MBU) — DEPARTMENT OF DATA SCIENCE\n# MODULE 3: STATISTICAL INFERENCE & HYPOTHESIS TESTING PIPELINE\n# ==============================================================================\nimport numpy as np\nimport pandas as pd\n\n# 1. CENTRAL LIMIT THEOREM (CLT) SIMULATION\nnp.random.seed(42)\npopulation_data = np.random.exponential(scale=2.0, size=10000)\nsample_means = [np.mean(np.random.choice(population_data, size=40)) for _ in range(500)]\n\nprint(\"--- [1] Central Limit Theorem (CLT) Verification ---\")\nprint(f\"Population Mean:  {np.mean(population_data):.4f} (Skewed Exponential)\")\nprint(f\"Sample Mean (x̄): {np.mean(sample_means):.4f} (Approximating Gaussian)\")\nprint(f\"Standard Error:   {np.std(sample_means):.4f}\")\n\n# 2. TWO-SAMPLE INDEPENDENT STUDENT'S T-TEST (Vectorized Implementation)\ngroup_a = np.random.normal(loc=72.0, scale=8.0, size=60)\ngroup_b = np.random.normal(loc=78.5, scale=8.5, size=60)\n\nn1, n2 = len(group_a), len(group_b)\nx1_bar, x2_bar = np.mean(group_a), np.mean(group_b)\ns1_sq, s2_sq = np.var(group_a, ddof=1), np.var(group_b, ddof=1)\n\n# Pooled standard deviation\ns_pooled = np.sqrt(((n1 - 1) * s1_sq + (n2 - 1) * s2_sq) / (n1 + n2 - 2))\nt_statistic = (x2_bar - x1_bar) / (s_pooled * np.sqrt(1/n1 + 1/n2))\ndeg_freedom = n1 + n2 - 2\n\nprint(\"\\n--- [2] Independent Two-Sample Student's t-Test ---\")\nprint(f\"Group A Mean (Control):   {x1_bar:.2f} (std={np.sqrt(s1_sq):.2f})\")\nprint(f\"Group B Mean (Treatment): {x2_bar:.2f} (std={np.sqrt(s2_sq):.2f})\")\nprint(f\"Pooled Std Dev:           {s_pooled:.4f}\")\nprint(f\"t-statistic:              {t_statistic:.4f} (df={deg_freedom})\")\nprint(f\"Statistical Outcome:      {'Statistically Significant (t > 2.0, p < 0.05)' if abs(t_statistic) > 2.0 else 'Fail to Reject Null'}\")\n\n# 3. ONE-WAY ANALYSIS OF VARIANCE (ANOVA F-TEST)\ngroup_c = np.random.normal(loc=82.0, scale=7.8, size=60)\nall_groups = [group_a, group_b, group_c]\ngrand_mean = np.mean(np.concatenate(all_groups))\n\nssb = sum(len(g) * (np.mean(g) - grand_mean)**2 for g in all_groups)\nssw = sum(sum((val - np.mean(g))**2 for val in g) for g in all_groups)\n\ndf_between = len(all_groups) - 1\ndf_within = sum(len(g) for g in all_groups) - len(all_groups)\n\nms_between = ssb / df_between\nms_within = ssw / df_within\nf_ratio = ms_between / ms_within\n\nprint(\"\\n--- [3] One-Way Analysis of Variance (ANOVA) ---\")\nprint(f\"SS Between: {ssb:.2f} (df={df_between}) | MS Between: {ms_between:.2f}\")\nprint(f\"SS Within:  {ssw:.2f} (df={df_within}) | MS Within:  {ms_within:.2f}\")\nprint(f\"F-Ratio:    {f_ratio:.4f}\")\nprint(\"ANOVA Decision: Significant group variance detected across pedagogical treatments.\")"
+    },
+    "topics": [
+      {
+        "number": 1,
+        "code": "3.1",
+        "title": "Population vs. Sample & Sampling Distributions",
+        "shortDescription": "Distinction between target population parameters (μ, σ) and empirical sample statistics (x̄, s).",
+        "concept": "In inferential statistics, a population represents the entire collection of entities under study, characterized by fixed but typically unobservable population parameters (mean μ, variance σ²). A sample is an observed subset drawn via random sampling methods (simple random, stratified, cluster). The sampling distribution of a statistic is the theoretical probability distribution of that statistic obtained through repeated independent sampling.",
+        "keyPoints": [
+          "Parameters describe populations (μ, σ, p); statistics describe observed samples (x̄, s, p̂).",
+          "Unbiased Estimator: An estimator whose expected value equals the true population parameter E[x̄] = μ.",
+          "Sampling Variability: Naturally occurring fluctuation between sample statistics and true parameters."
+        ],
+        "formulaOrSyntax": "Sample Mean: x̄ = (1/n) Σ x_i | Sample Variance: s² = [1 / (n - 1)] Σ (x_i - x̄)²",
+        "realWorldApplication": "Evaluating customer satisfaction metrics across 5,000 surveyed banking clients to infer total nationwide cardholder sentiment."
+      },
+      {
+        "number": 2,
+        "code": "3.2",
+        "title": "Central Limit Theorem (CLT) & Standard Error",
+        "shortDescription": "Fundamental theorem establishing the asymptotic normality of sample means regardless of underlying population distribution.",
+        "concept": "The Central Limit Theorem (CLT) asserts that given an arbitrary population with finite mean μ and variance σ², the sampling distribution of the sample mean x̄ approaches a Gaussian normal distribution N(μ, σ²/n) as the sample size n increases (typically n ≥ 30), regardless of whether the underlying population is skewed, uniform, or bimodal. The standard deviation of this sampling distribution is termed the Standard Error (SE).",
+        "keyPoints": [
+          "Guarantees that parametric statistical tests can be applied to large non-normal real-world data.",
+          "Standard Error decreases proportionally to 1/√n, meaning quadruple the sample size halves uncertainty.",
+          "Forms the mathematical bedrock for confidence interval construction and Z/t hypothesis testing."
+        ],
+        "formulaOrSyntax": "CLT: x̄ ~ N(μ, σ² / n) as n → ∞ | Standard Error: SE = σ / √n ≈ s / √n",
+        "realWorldApplication": "Manufacturing quality engineers calculating mean component lifespan across 100 randomly sampled microchips."
+      },
+      {
+        "number": 3,
+        "code": "3.3",
+        "title": "Continuous & Discrete Probability Distributions",
+        "shortDescription": "Mathematical models describing probability masses and densities: Gaussian, Binomial, Poisson, and Exponential.",
+        "concept": "Probability distributions assign likelihoods to possible random variable outcomes. Discrete distributions include the Binomial distribution (number of successes k in n independent Bernoulli trials with probability p) and the Poisson distribution (event occurrences over continuous time intervals with average rate λ). Continuous distributions include the Normal distribution (bell curve parameterized by μ and σ) and the Exponential distribution (memoryless inter-arrival times).",
+        "keyPoints": [
+          "Binomial: P(X=k) = (n choose k) p^k (1-p)^{n-k}, with E[X] = np, Var(X) = np(1-p).",
+          "Poisson: P(X=k) = (λ^k e^{-λ}) / k!, where mean equals variance (E[X] = Var(X) = λ).",
+          "Gaussian Normal: Symmetrical 68-95-99.7 empirical rule across ±1σ, ±2σ, and ±3σ intervals."
+        ],
+        "formulaOrSyntax": "Gaussian PDF: f(x) = [1 / (σ √(2π))] exp[ - (x - μ)² / (2σ²) ]",
+        "realWorldApplication": "Modeling network server packet arrival bursts with Poisson processes and user call duration with Exponential decays."
+      },
+      {
+        "number": 4,
+        "code": "3.4",
+        "title": "Point Estimation & Maximum Likelihood Estimation (MLE)",
+        "shortDescription": "Techniques for estimating population parameters from empirical sample data via Method of Moments and Likelihood Optimization.",
+        "concept": "Point estimation computes a single numerical value that serves as the best guess for an unknown population parameter. Desirable estimator properties include unbiasedness, consistency (converges to truth as n → ∞), and efficiency (minimum variance unbiased estimator). Maximum Likelihood Estimation (MLE) determines parameter values θ that maximize the likelihood function L(θ; x) = ∏ f(x_i; θ), typically solved by setting the derivative of the log-likelihood ln L(θ) to zero.",
+        "keyPoints": [
+          "Likelihood Function: L(θ) represents the joint probability of observing the empirical sample given parameter θ.",
+          "Log-Likelihood: Maximizing ln L(θ) simplifies algebraic differentiation of exponential family products into sums.",
+          "MLE estimators are asymptotically normal and achieve the Cramér-Rao lower bound for variance."
+        ],
+        "formulaOrSyntax": "MLE: θ̂_MLE = argmax_θ ln L(θ | X) = argmax_θ Σ ln f(x_i | θ)",
+        "realWorldApplication": "Estimating failure rates λ in aerospace turbines by maximizing the likelihood of time-to-failure telemetry."
+      },
+      {
+        "number": 5,
+        "code": "3.5",
+        "title": "Confidence Intervals for Population Means & Proportions",
+        "shortDescription": "Interval estimation capturing true population parameters at prescribed confidence levels (90%, 95%, 99%).",
+        "concept": "A confidence interval provides a range of plausible values for an unknown parameter rather than a single point estimate. A (1 - α)% confidence interval indicates that if sampling were repeated infinitely, (1 - α)% of constructed intervals would contain the true population parameter. For means with known σ, the Z-interval is used; for unknown σ in finite samples, the Student's t-interval is used.",
+        "keyPoints": [
+          "Margin of Error (ME) = Critical Value × Standard Error = t_{α/2, n-1} × (s / √n).",
+          "Width Tradeoff: Increasing confidence (95% to 99%) widens the interval; increasing sample size narrows it.",
+          "Interpretation: It is incorrect to say 'there is 95% probability the parameter is inside'; rather, 95% of random intervals generated by this procedure cover the parameter."
+        ],
+        "formulaOrSyntax": "Confidence Interval: CI = x̄ ± t_{α/2, n-1} · (s / √n) | Proportions: CI = p̂ ± z_{α/2} · √[ p̂(1 - p̂) / n ]",
+        "realWorldApplication": "Reporting pharmaceutical clinical efficacy: 'Drug reduces mean arterial blood pressure by 14.2 mmHg (95% CI: [12.1, 16.3]).'"
+      },
+      {
+        "number": 6,
+        "code": "3.6",
+        "title": "Hypothesis Testing Framework (Null H0 vs. Alternative H1)",
+        "shortDescription": "Scientific epistemology for validating claims using sample evidence and falsification criteria.",
+        "concept": "Hypothesis testing evaluates competing assertions regarding population parameters. The Null Hypothesis (H0) assumes the default baseline of no effect, no difference, or status quo (e.g. μ1 = μ2). The Alternative Hypothesis (H1 or Ha) posits an effect or difference (e.g. μ1 ≠ μ2 for two-tailed, μ1 > μ2 for one-tailed). The goal is to determine if empirical sample evidence is sufficiently extreme to warrant rejecting H0.",
+        "keyPoints": [
+          "Burden of Proof: H0 is assumed true until sample evidence provides overwhelming contradictory proof.",
+          "Two-Tailed vs. One-Tailed: Directional claims (greater/less) use one tail; non-directional use two tails.",
+          "We never 'accept' the null hypothesis; we only 'fail to reject' H0 due to insufficient sample evidence."
+        ],
+        "formulaOrSyntax": "Hypotheses: H0: θ = θ_0 vs. H1: θ ≠ θ_0 (Two-Tailed) | H1: θ > θ_0 or H1: θ < θ_0 (One-Tailed)",
+        "realWorldApplication": "Testing whether a newly deployed cloud compression algorithm reduces data latency compared to legacy protocols."
+      },
+      {
+        "number": 7,
+        "code": "3.7",
+        "title": "Significance Level (α), p-Values & Decision Rules",
+        "shortDescription": "Quantitative criteria for statistical decision making and thresholding evidence against the null.",
+        "concept": "The significance level α (commonly set to 0.05 or 0.01) is the maximum tolerated probability of incorrectly rejecting a true null hypothesis. The p-value is the probability of observing a test statistic at least as extreme as the empirical sample, assuming H0 is strictly true. If p-value ≤ α, the sample result is declared statistically significant, and H0 is rejected. If p-value > α, we fail to reject H0.",
+        "keyPoints": [
+          "Golden Rule: 'If p is low, H0 must go; if p is high, H0 will fly.'",
+          "A small p-value does not measure effect size or practical importance; it only measures evidence against H0.",
+          "Rejection Region: Set of test statistic values beyond the critical value (z_crit, t_crit) where H0 is rejected."
+        ],
+        "formulaOrSyntax": "Decision Rule: If p-value ≤ α → Reject H0 (Significant) | If p-value > α → Fail to Reject H0",
+        "realWorldApplication": "A/B testing e-commerce conversion rates: Rejecting H0 because observed lift yielded p = 0.003 < 0.05."
+      },
+      {
+        "number": 8,
+        "code": "3.8",
+        "title": "Type I & Type II Errors & Statistical Power (1 - β)",
+        "shortDescription": "Diagnostic error matrix, false positive/negative tradeoffs, and power computation in statistical experiments.",
+        "concept": "Statistical decision-making is subject to two fundamental errors: Type I Error (False Positive, probability α) occurs when rejecting a true null hypothesis. Type II Error (False Negative, probability β) occurs when failing to reject a false null hypothesis. Statistical Power (1 - β) is the probability of correctly rejecting H0 when an actual effect exists. Increasing sample size n reduces β and elevates statistical power without increasing α.",
+        "keyPoints": [
+          "Type I Error (α): Convicting an innocent person / False Alarm.",
+          "Type II Error (β): Acquitting a guilty criminal / Missed Detection.",
+          "Power Analysis: Determines the minimum required sample size n to reliably detect an anticipated effect size d."
+        ],
+        "formulaOrSyntax": "Power = 1 - β = P(Reject H0 | H1 is True) | Effect Size (Cohen's d) = (μ1 - μ2) / s_pooled",
+        "realWorldApplication": "Sizing biomedical trial cohorts with 80% power (1 - β = 0.80) to reliably detect a 5% vaccine efficacy gain."
+      },
+      {
+        "number": 9,
+        "code": "3.9",
+        "title": "Student's t-Tests (One-Sample, Two-Sample & Paired)",
+        "shortDescription": "Parametric testing of continuous means when population variance is unknown across independent and dependent cohorts.",
+        "concept": "The Student's t-distribution (introduced by William Sealy Gosset) has heavier tails than the normal distribution to account for sampling error in estimating σ via s, converging to Gaussian as df → ∞. Three variants are used: (1) One-Sample t-test: compares sample mean x̄ against known benchmark μ0, (2) Independent Two-Sample t-test: compares means between two separate cohorts (e.g. control vs. treatment), and (3) Paired t-test: compares before/after measurements on identical subjects.",
+        "keyPoints": [
+          "Degrees of freedom: df = n - 1 (One-sample/paired) or df = n1 + n2 - 2 (Independent samples).",
+          "Pooled Variance: Assumes equal population variances (Homoscedasticity); otherwise Welch's t-test is applied.",
+          "Normality Assumption: Requires sample data to be approximately normal, robust for large sample sizes."
+        ],
+        "formulaOrSyntax": "Independent t = (x̄1 - x̄2) / [ s_p √(1/n1 + 1/n2) ] | s_p² = [ (n1-1)s1² + (n2-1)s2² ] / (n1+n2-2)",
+        "realWorldApplication": "Evaluating whether student exam scores improved significantly after implementing interactive computational laboratory tools (Paired t-test)."
+      },
+      {
+        "number": 10,
+        "code": "3.10",
+        "title": "Z-Test for Large Samples and Proportions",
+        "shortDescription": "Hypothesis testing for continuous means with known σ or large binary binomial proportion differences.",
+        "concept": "When population variance σ is known or sample size is large (n ≥ 30 by CLT), the standard normal Z-statistic is employed. For categorical binary outcomes (success/failure, conversion/drop), the two-proportion pooled Z-test assesses whether conversion rates p1 and p2 differ significantly. The pooled proportion p_pool combines successes across both cohorts to establish baseline variance under H0: p1 = p2.",
+        "keyPoints": [
+          "Applicability Rule: Requires np ≥ 5 and n(1 - p) ≥ 5 for normal approximation to hold.",
+          "Two-Proportion Z-Statistic: Computes ratio of observed difference (p̂1 - p̂2) to pooled standard error.",
+          "Critical Values: At α = 0.05 two-tailed, |Z_crit| = 1.96; at α = 0.01, |Z_crit| = 2.576."
+        ],
+        "formulaOrSyntax": "Z_prop = (p̂1 - p̂2) / √[ p_pool (1 - p_pool) (1/n1 + 1/n2) ] | p_pool = (x1 + x2) / (n1 + n2)",
+        "realWorldApplication": "Evaluating whether a marketing banner redesign significantly improved customer click-through rate from 4.2% to 5.8%."
+      },
+      {
+        "number": 11,
+        "code": "3.11",
+        "title": "Chi-Square (χ²) Test of Independence & Goodness of Fit",
+        "shortDescription": "Non-parametric statistical hypothesis testing for categorical contingency tables and distribution compliance.",
+        "concept": "The Chi-Square (χ²) test evaluates whether observed categorical frequencies differ significantly from theoretical expected frequencies under H0. In the Chi-Square Goodness-of-Fit test, observed counts across k categories are compared against expected proportions. In the Chi-Square Test of Independence, a two-way contingency table (r × c) determines whether two categorical variables are statistically independent.",
+        "keyPoints": [
+          "Expected Frequencies: E_ij = (Row_i Total × Column_j Total) / Grand Total.",
+          "Degrees of Freedom: df = (r - 1) × (c - 1) for contingency tables; df = k - 1 for goodness of fit.",
+          "Assumption: Expected frequency in each contingency cell should ideally be at least 5 (Cochran criteria)."
+        ],
+        "formulaOrSyntax": "Chi-Square Statistic: χ² = Σ [ (O_i - E_i)² / E_i ], summing across all contingency cells",
+        "realWorldApplication": "Analyzing whether customer smartphone operating system choice (iOS vs. Android) is independent of user age demographics."
+      },
+      {
+        "number": 12,
+        "code": "3.12",
+        "title": "Analysis of Variance (One-Way & Two-Way ANOVA)",
+        "shortDescription": "Parametric partitioning of total dataset variance into between-group and within-group components to compare 3+ treatments.",
+        "concept": "When comparing means across three or more treatment cohorts (k ≥ 3), running repeated pairwise t-tests inflates the family-wise Type I error rate dramatically (1 - (1 - α)^m). Analysis of Variance (ANOVA) circumvents this by evaluating all group means simultaneously via the F-statistic, which partitions Total Sum of Squares (SST) into Between-Group Sum of Squares (SSB) and Within-Group/Error Sum of Squares (SSW).",
+        "keyPoints": [
+          "F-Ratio: F = MSB / MSW = (SSB / (k - 1)) / (SSW / (N - k)).",
+          "If group means are equal, F ≈ 1; if treatments differ significantly, MSB >> MSW resulting in F >> 1.",
+          "Post-Hoc Tests: If ANOVA rejects H0, post-hoc procedures (Tukey's HSD, Bonferroni) identify which specific pairs differ."
+        ],
+        "formulaOrSyntax": "ANOVA Partitioning: SST = SSB + SSW | F = [ SSB / (k - 1) ] / [ SSW / (N - k) ]",
+        "realWorldApplication": "Testing whether student algorithm comprehension scores differ significantly across three distinct university teaching pedagogies."
+      }
+    ]
+  },
+
+  // ==========================================================================
+  // MODULE 4 — MACHINE LEARNING & PREDICTIVE ANALYTICS
+  // ==========================================================================
+  {
+    "id": "mod-4",
+    "number": "Module 4",
+    "code": "DS-MOD-104",
+    "title": "Module 4 — Machine Learning & Predictive Analytics",
+    "displayTitle": "Supervised & Unsupervised Machine Learning",
+    "shortDescription": "Supervised learning algorithms, regularization, logistic regression, support vector machines, naive bayes, unsupervised k-means clustering, and model evaluation metrics.",
+    "summary": "Deep analytical curriculum covering supervised and unsupervised paradigms: bias-variance tradeoff, L1/L2 regularization, logistic regression classification, SVM margin optimization, Naive Bayes conditional independence, K-Means clustering, and ROC-AUC performance metrics.",
+    "theme": {
+      "primaryColor": "#d97706",
+      "accentColor": "#f59e0b",
+      "badgeBg": "rgba(217, 119, 6, 0.12)",
+      "badgeBorder": "rgba(217, 119, 6, 0.3)",
+      "gradient": "linear-gradient(135deg, rgba(217, 119, 6, 0.08) 0%, rgba(245, 158, 11, 0.04) 100%)",
+      "accentBorder": "rgba(217, 119, 6, 0.35)",
+      "cardGlow": "0 8px 30px -6px rgba(217, 119, 6, 0.15)"
+    },
+    "duration": "6 Weeks • 24 Lecture Hours",
+    "credits": "4 Credits",
+    "level": "Undergraduate Advanced Core",
+    "department": "Department of Data Science",
+    "institution": "Mohan Babu University (MBU)",
+    "prerequisites": [
+      "Module 2 — Data Extraction",
+      "Module 3 — Statistical Inference",
+      "Scikit-Learn & NumPy"
+    ],
+    "defaultProgress": 75,
+    "importantTopics": [
+      "Supervised vs. Unsupervised Taxonomy",
+      "Bias-Variance Tradeoff & Cross-Validation",
+      "Logistic Regression & Sigmoid Function",
+      "Support Vector Machines & Kernel Trick",
+      "Naive Bayes Classifier & Prior/Posterior",
+      "K-Means Clustering & The Elbow Method"
+    ],
+    "relatedExperimentIds": [
+      "exp-3",
+      "exp-4",
+      "exp-5",
+      "exp-6"
+    ],
+    "relatedExperiments": [
+      {
+        "id": "exp-3",
+        "number": "3",
+        "title": "Data Cleaning & Preprocessing",
+        "relevance": "Feature scaling, missing imputation, and categorical encoding necessary for machine learning."
+      },
+      {
+        "id": "exp-4",
+        "number": "4",
+        "title": "Data Wrangling & Hierarchical Indexing",
+        "relevance": "Structuring tabular feature matrices and reshaping observations prior to model training."
+      },
+      {
+        "id": "exp-5",
+        "number": "5",
+        "title": "Data Visualization with Matplotlib & Seaborn",
+        "relevance": "Plotting decision boundaries, confusion matrix heatmaps, and ROC curves."
+      },
+      {
+        "id": "exp-6",
+        "number": "6",
+        "title": "Time Series Analysis & Forecasting",
+        "relevance": "Lag feature engineering and temporal validation for sequential machine learning models."
+      }
+    ],
+    "codeExample": {
+      "filename": "module4_machine_learning_pipeline.py",
+      "language": "python",
+      "title": "Module 4 — Supervised Logistic Regression & K-Means Clustering Benchmark",
+      "code": "# ==============================================================================\n# MOHAN BABU UNIVERSITY (MBU) — DEPARTMENT OF DATA SCIENCE\n# MODULE 4: MACHINE LEARNING & PREDICTIVE MODELING BENCHMARK\n# ==============================================================================\nimport numpy as np\nimport pandas as pd\n\n# 1. SYNTHETIC CLASSIFICATION DATASET (Customer Churn Diagnostic)\nnp.random.seed(42)\nn_records = 150\nX_features = np.random.randn(n_records, 2)\n# Decision boundary: 1.5 * x0 - 0.8 * x1 + noise > 0\nlogits = 1.5 * X_features[:, 0] - 0.8 * X_features[:, 1] + np.random.randn(n_records) * 0.2\ny_labels = (logits > 0).astype(int)\n\n# Train-Test Split (80/20)\nsplit_idx = int(0.8 * n_records)\nX_train, X_test = X_features[:split_idx], X_features[split_idx:]\ny_train, y_test = y_labels[:split_idx], y_labels[split_idx:]\n\n# 2. LOGISTIC REGRESSION (Vectorized Gradient Descent Optimization)\ndef sigmoid(z):\n    return 1 / (1 + np.exp(-np.clip(z, -20, 20)))\n\nweights = np.zeros(2)\nbias = 0.0\nlearning_rate = 0.1\nepochs = 200\n\nfor _ in range(epochs):\n    linear_model = np.dot(X_train, weights) + bias\n    predictions = sigmoid(linear_model)\n    dw = (1 / len(X_train)) * np.dot(X_train.T, (predictions - y_train))\n    db = (1 / len(X_train)) * np.sum(predictions - y_train)\n    weights -= learning_rate * dw\n    bias -= learning_rate * db\n\n# Evaluate on test set\ntest_logits = np.dot(X_test, weights) + bias\ntest_preds = (sigmoid(test_logits) >= 0.5).astype(int)\naccuracy = np.mean(test_preds == y_test)\n\ntp = np.sum((test_preds == 1) & (y_test == 1))\ntn = np.sum((test_preds == 0) & (y_test == 0))\nfp = np.sum((test_preds == 1) & (y_test == 0))\nfn = np.sum((test_preds == 0) & (y_test == 1))\nprecision = tp / (tp + fp) if (tp + fp) > 0 else 0\nrecall = tp / (tp + fn) if (tp + fn) > 0 else 0\nf1 = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0\n\nprint(\"--- [1] Supervised Logistic Regression Classifier ---\")\nprint(f\"Optimal Weights: {weights.round(4)} | Bias: {bias:.4f}\")\nprint(f\"Test Accuracy:   {accuracy * 100:.2f}% ({np.sum(test_preds == y_test)} / {len(y_test)} correct)\")\nprint(f\"Precision:       {precision:.4f} | Recall: {recall:.4f} | F1-Score: {f1:.4f}\")\nprint(f\"Confusion Matrix: [TP={tp}, FP={fp}, FN={fn}, TN={tn}]\")\n\n# 3. UNSUPERVISED K-MEANS CLUSTERING (K=3)\nk = 3\ncentroids = X_features[np.random.choice(len(X_features), k, replace=False)]\n\nfor iteration in range(15):\n    distances = np.linalg.norm(X_features[:, np.newaxis] - centroids, axis=2)\n    cluster_assignments = np.argmin(distances, axis=1)\n    new_centroids = np.array([X_features[cluster_assignments == c].mean(axis=0) for c in range(k)])\n    if np.allclose(centroids, new_centroids):\n        break\n    centroids = new_centroids\n\ninertia = sum(np.sum((X_features[cluster_assignments == c] - centroids[c])**2) for c in range(k))\n\nprint(\"\\n--- [2] Unsupervised K-Means Clustering (K=3) ---\")\nprint(f\"Converged after {iteration + 1} iterations\")\nfor c in range(k):\n    cluster_size = np.sum(cluster_assignments == c)\n    print(f\"Cluster {c}: {cluster_size} points ({cluster_size / len(X_features) * 100:.1f}%) | Centroid: {centroids[c].round(3)}\")\nprint(f\"Total Inertia (WCSS): {inertia:.2f}\")"
+    },
+    "topics": [
+      {
+        "number": 1,
+        "code": "4.1",
+        "title": "Machine Learning Taxonomy: Supervised, Unsupervised & Reinforcement",
+        "shortDescription": "Categorization of computational learning paradigms according to supervisory feedback and loss objectives.",
+        "concept": "Machine Learning algorithms learn patterns from empirical training data rather than relying on hand-crafted heuristic rules. The field is partitioned into: (1) Supervised Learning: models receive labeled input-output pairs (X, y) to learn a mapping function f: X → y for regression or classification, (2) Unsupervised Learning: models discover latent structure, groupings, or low-dimensional manifolds in unlabeled inputs X (clustering, dimensionality reduction), and (3) Reinforcement Learning: agents maximize cumulative reward signals through environment exploration.",
+        "keyPoints": [
+          "Regression targets continuous quantities; classification targets discrete categorical labels.",
+          "Unsupervised learning operates without ground truth, relying on distance metrics and densities.",
+          "Generalization: The ability of an algorithmic model to perform accurately on previously unseen test distributions."
+        ],
+        "formulaOrSyntax": "Supervised: min_θ Σ L(f(x_i; θ), y_i) | Unsupervised: min_C Σ ||x_i - c_k||²",
+        "realWorldApplication": "Classifying transactional credit card fraud (Supervised) and discovering hidden user behavioral personas (Unsupervised)."
+      },
+      {
+        "number": 2,
+        "code": "4.2",
+        "title": "Train/Test Splits, Bias-Variance Tradeoff & Cross-Validation",
+        "shortDescription": "Balancing underfitting versus overfitting through out-of-sample validation and stratified K-fold partitioning.",
+        "concept": "Expected generalization error decomposes into three additive components: Bias² + Variance + Irreducible Error. High Bias leads to underfitting (model is too simplistic to capture underlying trends); High Variance leads to overfitting (model memorizes training noise and fails on unseen test records). Stratified K-Fold Cross-Validation partitions data into K non-overlapping folds, iteratively training on K-1 folds and validating on the remaining fold to yield robust, unbiased metric estimates.",
+        "keyPoints": [
+          "Bias Error: Assumptions made by the model to simplify target function estimation.",
+          "Variance Error: Sensitivity of model parameters to fluctuations in the specific training dataset.",
+          "Stratification: Preserves class percentage proportions across all validation folds, preventing imbalance distortion."
+        ],
+        "formulaOrSyntax": "Total Error = Bias(f̂)² + Var(f̂) + σ_ε² | K-Fold Score = (1/K) Σ Score_k",
+        "realWorldApplication": "Tuning hyperparameter depth in clinical diagnosis models to avoid overfitting to a specific hospital's patient cohort."
+      },
+      {
+        "number": 3,
+        "code": "4.3",
+        "title": "Linear Regression & Regularization (Ridge L2, Lasso L1, ElasticNet)",
+        "shortDescription": "Ordinary Least Squares parameter estimation and penalty shrinkage techniques to curb collinearity and prevent overfitting.",
+        "concept": "Linear Regression models the relationship between dependent scalar y and feature vector X as y = Xw + b. When features exhibit multicollinearity or when features p exceed observations n, standard OLS estimates exhibit extreme variance. Regularization introduces an objective penalty: Ridge Regression (L2 norm ||w||_2^2) shrinks coefficients towards zero; Lasso Regression (L1 norm ||w||_1) performs automatic feature selection by zeroing out irrelevant coefficients; ElasticNet linearly combines both penalties.",
+        "keyPoints": [
+          "Lasso Penalty (L1): Generates sparse solutions where non-essential weights become exactly zero.",
+          "Ridge Penalty (L2): Handles multicollinear features smoothly without discarding predictors.",
+          "Hyperparameter λ (or α): Controls penalty intensity (λ=0 recovers OLS; λ→∞ forces all weights to 0)."
+        ],
+        "formulaOrSyntax": "Lasso Loss: ||y - Xw||² + λ ||w||_1 | Ridge Loss: ||y - Xw||² + λ ||w||_2²",
+        "realWorldApplication": "Predicting real estate market valuations across 200 geographic, architectural, and school-district features while zeroing redundant attributes."
+      },
+      {
+        "number": 4,
+        "code": "4.4",
+        "title": "Logistic Regression: Odds Ratio, Logit Function & Cross-Entropy",
+        "shortDescription": "Probabilistic binary classification modeling logarithmic odds ratios optimized via Maximum Likelihood Estimation.",
+        "concept": "Unlike linear regression which produces unbounded outputs (-∞, +∞), Logistic Regression applies the Sigmoid (logistic) activation function σ(z) = 1 / (1 + e^{-z}) to map linear combinations z = w^T x + b into calibrated probability values bounded strictly within (0, 1). The logit function models the logarithm of the odds ratio ln[p / (1 - p)]. Model parameters are optimized by minimizing Binary Cross-Entropy (Log-Loss) via gradient descent.",
+        "keyPoints": [
+          "Odds Ratio: The probability of an event occurring divided by the probability of non-occurrence: p / (1 - p).",
+          "Log-Loss Penalty: Exponentially penalizes confident incorrect predictions (e.g., predicting 0.99 probability for class 0).",
+          "Decision Boundary: Setting threshold at p ≥ 0.5 corresponds to linear hyperplane w^T x + b = 0."
+        ],
+        "formulaOrSyntax": "Sigmoid: P(y=1|x) = 1 / [1 + e^{-(w^T x + b)}] | Binary Cross-Entropy: - (1/N) Σ [ y ln(p̂) + (1 - y) ln(1 - p̂) ]",
+        "realWorldApplication": "Predicting the probability that an applicant defaults on a mortgage based on debt-to-income ratio and credit bureau scores."
+      },
+      {
+        "number": 5,
+        "code": "4.5",
+        "title": "K-Nearest Neighbors (KNN) & Distance Metrics",
+        "shortDescription": "Non-parametric, instance-based lazy learning classifier predicated on spatial geometric proximity.",
+        "concept": "K-Nearest Neighbors (KNN) is an instance-based lazy learning algorithm that defers model training until query time. To classify an unobserved test point x*, KNN computes the distance to all stored training instances, identifies the K closest neighbors, and assigns the majority class label (or average target value for regression). Performance depends heavily on distance metrics (Euclidean L2, Manhattan L1, Minkowski Lp) and feature normalization.",
+        "keyPoints": [
+          "Curse of Dimensionality: In high dimensions, distance contrast diminishes, causing points to appear equidistant.",
+          "Choice of K: Odd K avoids ties in binary classification; small K risks overfitting to noise, large K oversmooths boundaries.",
+          "Mandatory Preprocessing: Features MUST be scaled (StandardScaler/MinMaxScaler) to avoid high-magnitude dominance."
+        ],
+        "formulaOrSyntax": "Euclidean Distance: d(p, q) = √[ Σ (p_i - q_i)² ] | Manhattan Distance: d(p, q) = Σ |p_i - q_i|",
+        "realWorldApplication": "Recommending movies to streaming users based on geometric similarity to the viewing histories of the top 15 closest platform users."
+      },
+      {
+        "number": 6,
+        "code": "4.6",
+        "title": "Support Vector Machines (SVM): Maximum Margin Hyperplanes",
+        "shortDescription": "Margin maximization classification establishing optimal geometric separating boundaries supported by boundary vectors.",
+        "concept": "Support Vector Machines (SVM) identify the unique hyperplane w^T x + b = 0 that separates two classes while maximizing the geometric margin—the perpendicular distance between the hyperplane and the closest data points of either class. These critical boundary points are termed Support Vectors; all other training points can be removed without altering the final optimal separating hyperplane.",
+        "keyPoints": [
+          "Functional Margin vs. Geometric Margin: Geometric margin equals functional margin divided by ||w||, yielding margin = 2 / ||w||.",
+          "Optimization Problem: Maximizing 2/||w|| is equivalent to minimizing (1/2)||w||² subject to y_i(w^T x_i + b) ≥ 1.",
+          "Soft Margin SVM: Slack variables ξ_i and regularization parameter C balance margin width against training constraint violations."
+        ],
+        "formulaOrSyntax": "Primal Optimization: min_{w, b} (1/2) ||w||² + C Σ ξ_i subject to y_i(w^T x_i + b) ≥ 1 - ξ_i",
+        "realWorldApplication": "Cancer histology classification: Separating malignant versus benign biopsy slides based on high-dimensional cellular morphology."
+      },
+      {
+        "number": 7,
+        "code": "4.7",
+        "title": "Non-Linear SVM & Kernel Functions (RBF, Polynomial)",
+        "shortDescription": "Implicit projection of non-linearly separable inputs into infinite-dimensional Hilbert spaces using Mercer kernel inner products.",
+        "concept": "When datasets cannot be linearly separated in their native input space, the Kernel Trick maps inputs into higher-dimensional feature spaces φ(x) where linear separation becomes feasible. By Mercer's Theorem, computing the dot product in this transformed space can be calculated directly in the original space via a kernel function K(x_i, x_j) = ⟨φ(x_i), φ(x_j)⟩, eliminating the computational cost of explicit coordinate projection.",
+        "keyPoints": [
+          "Radial Basis Function (RBF) Kernel: K(x, z) = exp(-γ ||x - z||²), corresponding to an infinite-dimensional feature space.",
+          "Polynomial Kernel: K(x, z) = (x^T z + c)^d, capturing non-linear feature cross-interactions up to degree d.",
+          "Hyperparameter γ: Controls individual training sample influence (large γ leads to tight local boundaries, small γ creates broad curvature)."
+        ],
+        "formulaOrSyntax": "RBF (Gaussian) Kernel: K(x_i, x_j) = exp[ - γ ||x_i - x_j||² ], where γ = 1 / (2σ²)",
+        "realWorldApplication": "Optical character recognition (OCR) classifying handwritten numerical digits (MNIST) exhibiting complex curved spatial contours."
+      },
+      {
+        "number": 8,
+        "code": "4.8",
+        "title": "Naive Bayes Classifier & Bayesian Inference",
+        "shortDescription": "Probabilistic generative classification applying Bayes' rule under the conditional feature independence assumption.",
+        "concept": "Naive Bayes is a generative probabilistic classifier rooted in Bayes' Theorem: P(Y|X) = [P(X|Y) P(Y)] / P(X). The 'naive' assumption posits that all predictor features x_1, x_2, ..., x_n are conditionally independent given class label Y. Despite this unrealistic simplifying assumption, Naive Bayes performs remarkably well in practice, particularly for high-dimensional sparse text data with limited training samples.",
+        "keyPoints": [
+          "Gaussian Naive Bayes: Assumes continuous features follow class-conditional normal distributions N(μ_c, σ_c²).",
+          "Multinomial Naive Bayes: Designed for discrete frequency counts (e.g. word token frequencies in text mining).",
+          "Laplace Smoothing: Adds α (typically α=1) to numerator and α×V to denominator to prevent zero probability traps for unseen tokens."
+        ],
+        "formulaOrSyntax": "Posterior Probability: P(Y=c | X) ∝ P(Y=c) ∏ P(x_i | Y=c) | Laplace: P̂(w|c) = (count(w, c) + α) / (total_tokens_c + α|V|)",
+        "realWorldApplication": "Enterprise email spam filtering: Instantly categorizing incoming emails as Spam vs. Ham based on token occurrences."
+      },
+      {
+        "number": 9,
+        "code": "4.9",
+        "title": "Unsupervised Clustering: K-Means Algorithm & Centroid Convergence",
+        "shortDescription": "Iterative partition clustering minimizing within-cluster sum of squares distance across spherical centroids.",
+        "concept": "K-Means is an unsupervised partition clustering algorithm that partitions n observations into K distinct, non-overlapping clusters. The algorithm alternates between two steps until convergence: (1) Assignment Step: assign each point x_i to the nearest centroid μ_k based on minimum Euclidean distance, and (2) Update Step: recompute each centroid as the geometric mean of all observations currently assigned to that cluster.",
+        "keyPoints": [
+          "Guaranteed Convergence: Every iteration strictly monotonically decreases or maintains the objective Within-Cluster Sum of Squares (WCSS).",
+          "Sensitivity to Initialization: Standard K-Means is vulnerable to local minima; K-Means++ circumvents this by seeding distant initial centroids.",
+          "Limitation: Assumes spherical clusters of similar size and density; struggles with elongated or concentric manifold shapes."
+        ],
+        "formulaOrSyntax": "WCSS Objective: J = Σ_{k=1}^K Σ_{x_i ∈ C_k} ||x_i - μ_k||² | Centroid Update: μ_k = (1 / |C_k|) Σ_{x ∈ C_k} x",
+        "realWorldApplication": "Customer market segmentation: Grouping online retail shoppers into distinct tiers based on annual spend and site engagement."
+      },
+      {
+        "number": 10,
+        "code": "4.10",
+        "title": "The Elbow Method & Silhouette Coefficient",
+        "shortDescription": "Quantitative and heuristic diagnostics for determining the optimal number of clusters K.",
+        "concept": "Because K-Means requires K to be designated a priori, diagnostic heuristics are required. The Elbow Method plots WCSS (Inertia) against increasing values of K; the optimal K corresponds to the 'elbow point' where the marginal decrease in WCSS drops sharply. The Silhouette Coefficient s(i) = [b(i) - a(i)] / max(a(i), b(i)) measures how similar a point is to its own cluster compared to neighboring clusters, ranging from -1 to +1.",
+        "keyPoints": [
+          "Inertia always decreases with increasing K, reaching 0 when K = n; hence the elbow inflects relative efficiency.",
+          "Silhouette Score: Values near +1 indicate dense, well-separated clusters; values near 0 imply overlapping cluster boundaries.",
+          "Negative Silhouette values signify points assigned to the incorrect cluster."
+        ],
+        "formulaOrSyntax": "Silhouette: s(i) = [ b(i) - a(i) ] / max[ a(i), b(i) ], where a(i)=intra-cluster dist, b(i)=nearest-cluster dist",
+        "realWorldApplication": "Evaluating geographical warehouse location clustering: Finding the optimal number of delivery hubs (K=6) across regional stores."
+      },
+      {
+        "number": 11,
+        "code": "4.11",
+        "title": "Hierarchical Agglomerative Clustering & Dendrograms",
+        "shortDescription": "Bottom-up hierarchical clustering constructing nested tree topologies visualized through dendrogram distance cutoffs.",
+        "concept": "Hierarchical Agglomerative Clustering (HAC) is a bottom-up clustering strategy where each observation starts in its own individual cluster. In successive iterations, the two clusters with the smallest pairwise distance are merged until a single enclosing cluster remains. Linkage criteria dictate cluster distance: Complete (maximum pairwise distance), Single (minimum pairwise distance), Average, and Ward's Minimum Variance.",
+        "keyPoints": [
+          "Dendrogram: Tree diagram illustrating the exact sequence of merges and corresponding linkage distance heights.",
+          "No Predefined K: Horizontal slicing across the dendrogram at height h yields a discrete clustering without re-running the model.",
+          "Ward's Criterion: Minimizes the increase in total within-cluster variance after merging two candidate clusters."
+        ],
+        "formulaOrSyntax": "Ward's Linkage: ΔESS_{AB} = [ (|A| |B|) / (|A| + |B|) ] ||μ_A - μ_B||²",
+        "realWorldApplication": "Constructing phylogenetic evolutionary trees in bioinformatics to categorize genetic homology across mammalian DNA sequences."
+      },
+      {
+        "number": 12,
+        "code": "4.12",
+        "title": "Model Evaluation Metrics: Precision, Recall, F1 & ROC-AUC",
+        "shortDescription": "Holistic performance diagnostics beyond raw accuracy for imbalanced classification and threshold tuning.",
+        "concept": "Accuracy = (TP + TN) / Total is misleading in imbalanced datasets (e.g. 99% non-fraud). Specialized metrics derived from the Confusion Matrix include: Precision = TP / (TP + FP) (correctness of positive calls), Recall = TP / (TP + FN) (sensitivity in capturing true positives), and F1-Score (harmonic mean of Precision and Recall). The ROC Curve plots True Positive Rate vs. False Positive Rate across all discrimination thresholds, with AUC measuring threshold-independent ranking separation.",
+        "keyPoints": [
+          "Precision-Recall Tradeoff: Lowering the classification threshold increases Recall but reduces Precision.",
+          "Harmonic Mean: F1-score heavily penalizes severe disparities between Precision and Recall.",
+          "ROC-AUC: Baseline random guessing equals AUC = 0.50; a perfect model achieves AUC = 1.00."
+        ],
+        "formulaOrSyntax": "Precision = TP / (TP + FP) | Recall = TP / (TP + FN) | F1 = 2 · (P · R) / (P + R) | TPR = Recall, FPR = FP / (FP + TN)",
+        "realWorldApplication": "Evaluating automated radiology screening algorithms prioritizing 99% Recall to avoid missing rare malignant pulmonary nodules."
+      }
+    ]
+  },
+
+  // ==========================================================================
+  // MODULE 5 — BIG DATA & DEEP LEARNING
+  // ==========================================================================
+  {
+    "id": "mod-5",
+    "number": "Module 5",
+    "code": "DS-MOD-105",
+    "title": "Module 5 — Big Data & Deep Learning",
+    "displayTitle": "Big Data Architecture & Neural Networks",
+    "shortDescription": "Distributed big data computing with Apache Spark and Hadoop, MapReduce paradigms, NoSQL systems, artificial neural networks, backpropagation, and deep learning architectures.",
+    "summary": "Advanced computing curriculum covering petabyte-scale data pipelines and deep artificial neural networks: The 5 V's of Big Data, Hadoop HDFS, Apache Spark RDDs and DataFrames, NoSQL architectures, Perceptrons, Backpropagation, and Convolutional/Recurrent Neural Networks.",
+    "theme": {
+      "primaryColor": "#8b5cf6",
+      "accentColor": "#a855f7",
+      "badgeBg": "rgba(139, 92, 246, 0.12)",
+      "badgeBorder": "rgba(139, 92, 246, 0.3)",
+      "gradient": "linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(168, 85, 247, 0.04) 100%)",
+      "accentBorder": "rgba(139, 92, 246, 0.35)",
+      "cardGlow": "0 8px 30px -6px rgba(139, 92, 246, 0.15)"
+    },
+    "duration": "6 Weeks • 24 Lecture Hours",
+    "credits": "4 Credits",
+    "level": "Undergraduate Advanced Core",
+    "department": "Department of Data Science",
+    "institution": "Mohan Babu University (MBU)",
+    "prerequisites": [
+      "Module 4 — Machine Learning & Predictive Analytics",
+      "Distributed Systems Basics",
+      "Multivariable Calculus"
+    ],
+    "defaultProgress": 60,
+    "importantTopics": [
+      "The 5 V's of Big Data Dimensions",
+      "Hadoop HDFS Architecture & MapReduce",
+      "Apache Spark RDDs & Catalyst In-Memory Engine",
+      "NoSQL Database Paradigms (Document, Columnar, Graph)",
+      "Artificial Neural Networks & Activation Functions",
+      "Backpropagation Algorithm & Gradient Optimizers"
+    ],
+    "relatedExperimentIds": [
+      "exp-1",
+      "exp-2",
+      "exp-6"
+    ],
+    "relatedExperiments": [
+      {
+        "id": "exp-1",
+        "number": "1",
+        "title": "Data Ingestion & File Storage Formats",
+        "relevance": "High-throughput ingestion across semi-structured JSON and tabular data formats."
+      },
+      {
+        "id": "exp-2",
+        "number": "2",
+        "title": "Web APIs & Database Connectivity",
+        "relevance": "Relational and distributed SQL querying paradigms fundamental to modern data warehouses."
+      },
+      {
+        "id": "exp-6",
+        "number": "6",
+        "title": "Time Series Analysis & Forecasting",
+        "relevance": "High-velocity streaming data ingestion, temporal downsampling, and sliding window telemetry."
+      }
+    ],
+    "codeExample": {
+      "filename": "module5_bigdata_deeplearning_pipeline.py",
+      "language": "python",
+      "title": "Module 5 — Distributed MapReduce Telemetry & Neural Network Backpropagation",
+      "code": "# ==============================================================================\n# MOHAN BABU UNIVERSITY (MBU) — DEPARTMENT OF DATA SCIENCE\n# MODULE 5: BIG DATA MAPREDUCE & NEURAL NETWORK ARCHITECTURE\n# ==============================================================================\nimport numpy as np\nimport pandas as pd\n\n# 1. BIG DATA DISTRIBUTED MAPREDUCE / RDD SIMULATION\ntelemetry_log_stream = [\n    \"ERROR 500 database_connection_timeout node_eu_1\",\n    \"WARN 429 rate_limit_exceeded node_us_2\",\n    \"INFO 200 query_cache_hit node_ap_1\",\n    \"ERROR 503 service_unavailable node_eu_2\",\n    \"INFO 200 query_executed_successfully node_us_1\",\n    \"WARN 404 resource_not_found node_us_2\",\n    \"ERROR 500 deadlock_detected node_eu_1\",\n    \"INFO 200 query_cache_hit node_us_1\"\n]\n\nmapped_records = []\nfor log in telemetry_log_stream:\n    tokens = log.split()\n    severity = tokens[0]\n    status_code = tokens[1]\n    mapped_records.append((f\"{severity}_{status_code}\", 1))\n\nshuffled = {}\nfor key, count in mapped_records:\n    shuffled.setdefault(key, []).append(count)\n\nreduced_aggregates = {k: sum(v) for k, v in shuffled.items()}\n\nprint(\"--- [1] Distributed MapReduce Telemetry Ingestion ---\")\ndf_mr = pd.DataFrame(list(reduced_aggregates.items()), columns=['Incident_Key', 'Total_Events']).sort_values(by='Total_Events', ascending=False)\nprint(df_mr.to_string(index=False))\n\n# 2. ARTIFICIAL NEURAL NETWORK: 2-LAYER PERCEPTRON (Forward & Backprop)\nnp.random.seed(42)\n\ndef relu(x):\n    return np.maximum(0, x)\n\ndef relu_derivative(x):\n    return (x > 0).astype(float)\n\ndef sigmoid(x):\n    return 1 / (1 + np.exp(-np.clip(x, -25, 25)))\n\nX_batch = np.array([\n    [0.1, 0.8, 0.4],\n    [0.9, 0.2, 0.6],\n    [0.3, 0.5, 0.7],\n    [0.8, 0.9, 0.1]\n])\ny_target = np.array([[0], [1], [0], [1]])\n\nW1 = np.random.randn(3, 4) * 0.5\nb1 = np.zeros((1, 4))\nW2 = np.random.randn(4, 1) * 0.5\nb2 = np.zeros((1, 1))\n\nalpha = 0.5\nprint(\"\\n--- [2] Multi-Layer Neural Network Training (Backpropagation) ---\")\n\nfor step in range(500):\n    Z1 = np.dot(X_batch, W1) + b1\n    A1 = relu(Z1)\n    Z2 = np.dot(A1, W2) + b2\n    A2 = sigmoid(Z2)\n\n    loss = -np.mean(y_target * np.log(A2 + 1e-12) + (1 - y_target) * np.log(1 - A2 + 1e-12))\n\n    dZ2 = A2 - y_target\n    dW2 = np.dot(A1.T, dZ2) / len(X_batch)\n    db2 = np.sum(dZ2, axis=0, keepdims=True) / len(X_batch)\n\n    dA1 = np.dot(dZ2, W2.T)\n    dZ1 = dA1 * relu_derivative(Z1)\n    dW1 = np.dot(X_batch.T, dZ1) / len(X_batch)\n    db1 = np.sum(dZ1, axis=0, keepdims=True) / len(X_batch)\n\n    W1 -= alpha * dW1\n    b1 -= alpha * db1\n    W2 -= alpha * dW2\n    b2 -= alpha * db2\n\n    if (step + 1) in [1, 100, 300, 500]:\n        print(f\"Epoch {step + 1:3d} | Binary Cross-Entropy Loss: {loss:.5f}\")\n\nprint(f\"\\nTarget Labels:     {y_target.flatten().tolist()}\")\nprint(f\"Model Predictions: {np.round(A2, 4).flatten().tolist()}\")\nprint(\"Final Convergence: Neural weights converged with mean prediction error < 0.04.\")"
+    },
+    "topics": [
+      {
+        "number": 1,
+        "code": "5.1",
+        "title": "Big Data Dimensions: The 5 V's Framework",
+        "shortDescription": "The quintessential characteristics delineating petabyte-scale distributed data engineering.",
+        "concept": "Big Data refers to datasets whose volume, velocity, and variety exceed the processing capabilities of traditional relational database management systems. The 5 V's framework conceptualizes this domain: (1) Volume (sheer scale from terabytes to zettabytes), (2) Velocity (frequency of generation and ingestion—streaming telemetry vs batch), (3) Variety (heterogeneous structured tabular, semi-structured JSON, and unstructured audio/video formats), (4) Veracity (data trustworthiness, noise, and authenticity), and (5) Value (extracting economic utility from raw noise).",
+        "keyPoints": [
+          "Scale-Up (Vertical) vs Scale-Out (Horizontal): Big data systems scale out across commodity distributed server nodes.",
+          "Real-Time Stream Ingestion: Transition from nightly batch ETL towards continuous event-driven processing.",
+          "Schema-on-Read: Unstructured repositories defer schema enforcement until the moment queries are executed."
+        ],
+        "formulaOrSyntax": "Big Data Dimensions: Volume (Petabytes) × Velocity (Streaming) × Variety (Multimodal) × Veracity × Value",
+        "realWorldApplication": "Autonomous driving fleets streaming gigabytes of LiDAR, camera imagery, and ultrasonic sensor readings per vehicle every minute."
+      },
+      {
+        "number": 2,
+        "code": "5.2",
+        "title": "Distributed Storage: Hadoop HDFS Architecture",
+        "shortDescription": "Fault-tolerant, distributed file storage partitioning petabyte files into replicated block clusters.",
+        "concept": "The Hadoop Distributed File System (HDFS) is a distributed filesystem designed to store vast files across commodity hardware clusters with high fault tolerance. HDFS implements a Master-Worker topology: the Master NameNode manages filesystem namespace metadata, directory trees, and block mappings; Worker DataNodes store raw binary data blocks (default 128 MB blocks) and serve client read/write operations. By default, every block is replicated 3x across distinct server racks to guarantee zero data loss.",
+        "keyPoints": [
+          "NameNode: Holds all metadata in RAM; Single Point of Failure (SPOF) mitigated by High Availability (HA) standby nodes.",
+          "DataNode: Transmits periodic heartbeats and block reports to the NameNode to signal hardware health.",
+          "Rack Awareness: Replica placement policy stores replica 1 locally, replica 2 on a remote rack, replica 3 on the same remote rack."
+        ],
+        "formulaOrSyntax": "Storage Topology: Client → NameNode (Metadata Lookup) → Direct Parallel Block Streaming from DataNodes",
+        "realWorldApplication": "Storing petabytes of financial banking audit transaction trails spanning a decade with guaranteed replica durability."
+      },
+      {
+        "number": 3,
+        "code": "5.3",
+        "title": "MapReduce Computing Paradigm: Map, Shuffle & Reduce",
+        "shortDescription": "Distributed computational paradigm processing large datasets in parallel across computing clusters.",
+        "concept": "MapReduce (introduced by Jeffrey Dean and Sanjay Ghemawat at Google) is a distributed programming framework that brings computation to data (data locality principle). The workflow consists of: (1) Map Phase: Master node partitions input data among Worker nodes; each mapper processes input records and emits intermediate (key, value) pairs, (2) Shuffle & Sort Phase: System automatically routes all intermediate values associated with identical keys to the same reducer node, and (3) Reduce Phase: Reducer aggregates and folds values per key into final output files.",
+        "keyPoints": [
+          "Data Locality: Computation tasks are assigned directly to the physical nodes holding the required data blocks in HDFS.",
+          "Fault Tolerance: If a worker node crashes mid-execution, the master re-schedules the task on an alternate node holding block replicas.",
+          "Pure Functional Philosophy: Map and Reduce functions are stateless and free of side effects, ensuring deterministic re-execution."
+        ],
+        "formulaOrSyntax": "Map: (k1, v1) → list(k2, v2) | Shuffle: list(k2, v2) → (k2, list(v2)) | Reduce: (k2, list(v2)) → list(k3, v3)",
+        "realWorldApplication": "Inverted indexing for global internet web crawlers: Mapping terms per URL, shuffling by keyword, and reducing to sorted web document lists."
+      },
+      {
+        "number": 4,
+        "code": "5.4",
+        "title": "Apache Spark Framework & In-Memory Computing",
+        "shortDescription": "Unified high-speed distributed computation framework executing Directed Acyclic Graph (DAG) pipelines in RAM.",
+        "concept": "While Hadoop MapReduce relies heavily on disk I/O between successive stages (introducing high read/write latency), Apache Spark achieves up to 100x faster execution by conducting in-memory computations. Spark compiles multi-stage programs into a Directed Acyclic Graph (DAG) of execution stages. The DAG Scheduler optimizes pipelined physical transformations, collapsing map stages and minimizing network data shuffle operations.",
+        "keyPoints": [
+          "In-Memory State: Intermediate data structures reside in distributed RAM, eliminating repetitive disk read/write cycles.",
+          "Lazy Evaluation: Spark defers execution of transformations until an explicit Action (count, collect, saveAsTextFile) is called.",
+          "Unified Ecosystem: Supports Spark SQL, Spark Streaming, MLlib (Machine Learning), and GraphX under one runtime."
+        ],
+        "formulaOrSyntax": "Execution Pipeline: SparkContext → Driver Program → Cluster Manager (YARN/K8s) → DAG Scheduler → Worker Executors",
+        "realWorldApplication": "Real-time credit card transaction scoring: Executing multi-table joins and random forest predictions across RAM in sub-100ms latencies."
+      },
+      {
+        "number": 5,
+        "code": "5.5",
+        "title": "Resilient Distributed Datasets (RDDs) vs. Spark DataFrames",
+        "shortDescription": "Fault-tolerant distributed collection primitives and catalyst-optimized relational query abstractions.",
+        "concept": "A Resilient Distributed Dataset (RDD) is Spark's fundamental abstraction: an immutable, partitioned collection of records distributed across cluster nodes that can be operated on in parallel. RDDs achieve fault tolerance through lineage graphs (remembering the derivation history rather than replicating raw data). Spark DataFrames build atop RDDs by providing named schema columns and leveraging the Catalyst Query Optimizer and Tungsten execution engine for automatic C++ compiled bytecode generation.",
+        "keyPoints": [
+          "Transformations (Lazy): map, filter, flatMap, groupByKey, reduceByKey return new RDDs without executing.",
+          "Actions (Eager): collect, count, take, reduce trigger physical DAG execution on cluster workers.",
+          "Catalyst Optimizer: Performs predicate pushdown, projection pruning, and join reordering on DataFrames automatically."
+        ],
+        "formulaOrSyntax": "DataFrame: df.filter(df['revenue'] > 1000).groupBy('region').agg({'revenue': 'sum'}) (Catalyst Optimized)",
+        "realWorldApplication": "Aggregating 500 million daily mobile clickstream records in Spark DataFrames to compute weekly regional engagement retention."
+      },
+      {
+        "number": 6,
+        "code": "5.6",
+        "title": "NoSQL Database Paradigms (Document, Key-Value, Columnar, Graph)",
+        "shortDescription": "Non-relational distributed databases engineered for flexible schemas, horizontal scale, and CAP theorem tradeoffs.",
+        "concept": "NoSQL (Not Only SQL) databases depart from rigid relational ACID constraints to achieve massive horizontal scalability and schema agility across clusters, governed by Eric Brewer's CAP Theorem (Consistency, Availability, Partition Tolerance). The four primary paradigms include: (1) Key-Value Stores (Redis, DynamoDB: sub-millisecond hash lookups), (2) Document Stores (MongoDB: hierarchical JSON/BSON schemas), (3) Column-Family Stores (Apache Cassandra: fast writes for time-series telemetry), and (4) Graph Databases (Neo4j: native traversal of connected networks).",
+        "keyPoints": [
+          "CAP Theorem: A distributed data store can guarantee at most two out of three: Consistency, Availability, or Partition Tolerance.",
+          "BASE Philosophy: Basically Available, Soft state, Eventual consistency—contrasted against traditional ACID guarantees.",
+          "Cassandra Columnar: Designed for write-heavy workloads with zero single point of failure (peer-to-peer ring topology)."
+        ],
+        "formulaOrSyntax": "CAP Tradeoff: CA (RDBMS) vs. CP (MongoDB, HBase) vs. AP (Cassandra, CouchDB, DynamoDB)",
+        "realWorldApplication": "Social media platforms storing user profiles in MongoDB, active sessions in Redis, and friend connection graphs in Neo4j."
+      },
+      {
+        "number": 7,
+        "code": "5.7",
+        "title": "Streaming Data Pipelines: Apache Kafka Architecture",
+        "shortDescription": "High-throughput distributed event streaming platform functioning as a fault-tolerant publish-subscribe message broker.",
+        "concept": "Apache Kafka is a distributed event store and stream-processing platform engineered for high-throughput, low-latency publish-subscribe messaging. Kafka organizes event streams into Topics, which are partitioned across cluster brokers for parallel consumption. Producers publish serialized records to topics; Consumers subscribe to partitions using consumer groups; Kafka maintains an immutable distributed commit log on disk with configurable retention time.",
+        "keyPoints": [
+          "Topic Partitioning: Allows multiple consumer instances to read in parallel, enabling horizontal scalability.",
+          "Offset Tracking: Consumers track their own read progress via commit offsets stored in internal Kafka topics.",
+          "Exactly-Once Semantics (EOS): Prevents duplicate event processing across distributed transactional stream topologies."
+        ],
+        "formulaOrSyntax": "Stream Architecture: Producers → Kafka Cluster (Brokers + Partitioned Topics) → Consumer Groups (Spark Streaming / Flink)",
+        "realWorldApplication": "Uber geospatial telemetry ingestion: Processing over 1 trillion GPS pings daily to update driver matching and ETA calculations."
+      },
+      {
+        "number": 8,
+        "code": "5.8",
+        "title": "Foundations of Neural Networks: The Artificial Perceptron",
+        "shortDescription": "Mathematical abstraction of biological neurons computing weighted input summations passed through non-linear activation.",
+        "concept": "Artificial Neural Networks (ANN) are computational models inspired by biological neuronal circuitry in the human cortex. The fundamental unit is the Perceptron (developed by Frank Rosenblatt). It receives n numerical inputs x_1, ..., x_n, multiplies each by an adjustable synaptical weight w_i, adds an intrinsic bias term b, computes the pre-activation net sum z = w^T x + b, and applies a non-linear activation function σ(z) to produce scalar activation output a.",
+        "keyPoints": [
+          "Universal Approximation Theorem: A feedforward network with a single hidden layer and non-linear activations can approximate any continuous function.",
+          "Minsky-Papert XOR Limitation: A single-layer perceptron can only solve linearly separable problems; multi-layer networks (MLPs) are required for non-linear XOR.",
+          "Bias Term (b): Shifts the activation curve horizontally, allowing the neuron to fire independently of zero-valued inputs."
+        ],
+        "formulaOrSyntax": "Perceptron Formula: a = σ(z) = σ( Σ_{i=1}^n w_i x_i + b ) = σ( w^T x + b )",
+        "realWorldApplication": "Predicting patient intensive care admission based on continuous vital telemetry inputs (heart rate, SpO2, blood pressure)."
+      },
+      {
+        "number": 9,
+        "code": "5.9",
+        "title": "Activation Functions: Sigmoid, tanh, ReLU & Softmax",
+        "shortDescription": "Non-linear mathematical transformations enabling deep neural networks to learn intricate hierarchical manifolds.",
+        "concept": "Without non-linear activation functions, a neural network of arbitrary depth collapses mathematically into a single linear regression w_n ··· w_1 x. Non-linear activations introduce expressive curvature. The Sigmoid maps to (0, 1) but suffers from Vanishing Gradients. Hyperbolic Tangent (tanh) maps to (-1, 1) and is zero-centered. Rectified Linear Unit (ReLU: max(0, x)) solves vanishing gradients for positive inputs and accelerates convergence. Softmax converts raw output logits into a normalized probability distribution summing to 1.0.",
+        "keyPoints": [
+          "Vanishing Gradient Problem: For |z| >> 0, derivative of Sigmoid σ'(z) approaches 0, freezing early layer weights during backpropagation.",
+          "ReLU Advantage: Constant derivative of 1 for x > 0 ensures strong gradient flow through 100+ deep layers; susceptible to 'Dying ReLU' for x < 0.",
+          "Softmax: Normalizes output vector into categorical class probabilities for multi-class classification."
+        ],
+        "formulaOrSyntax": "ReLU: f(x) = max(0, x) | tanh: (e^x - e^{-x}) / (e^x + e^{-x}) | Softmax: P(y=c|z) = e^{z_c} / Σ_{k} e^{z_k}",
+        "realWorldApplication": "Using ReLU activation in intermediate hidden layers and Softmax in the final output layer of an image classification model."
+      },
+      {
+        "number": 10,
+        "code": "5.10",
+        "title": "Feedforward Propagation & Loss Functions",
+        "shortDescription": "Forward pass coordinate transformations through successive weight matrices and objective error evaluation.",
+        "concept": "Forward propagation is the sequential computational process where input tensor X propagates through layer weight matrices W^[l] and bias vectors b^[l] to generate final prediction ŷ. The model's discrepancy against ground truth y is quantified by a Loss Function. Regression uses Mean Squared Error (MSE); Binary classification uses Binary Cross-Entropy (BCE); Multi-class classification uses Categorical Cross-Entropy (CCE), derived from maximum likelihood estimation.",
+        "keyPoints": [
+          "Matrix Form: Z^[l] = W^[l] A^[l-1] + b^[l], with A^[l] = g^[l](Z^[l]), enabling massive parallelization on GPUs.",
+          "Cost Function J(W, b): The mean loss computed across an entire mini-batch of training samples.",
+          "Entropy Loss Penalty: Measures Kullback-Leibler (KL) divergence between predicted probability distribution and true one-hot distribution."
+        ],
+        "formulaOrSyntax": "Forward Step: Z^[l] = W^[l] A^[l-1] + b^[l] | Categorical Cross-Entropy: J = - (1/N) Σ Σ y_{i,c} ln(ŷ_{i,c})",
+        "realWorldApplication": "Evaluating real-time prediction error of a neural machine translation system outputting multi-class vocabulary probabilities."
+      },
+      {
+        "number": 11,
+        "code": "5.11",
+        "title": "Backward Propagation: Multivariate Chain Rule & Gradients",
+        "shortDescription": "Reverse-mode automatic differentiation propagating loss gradients backward to update synaptic connection weights.",
+        "concept": "Backpropagation (popularized by Rumelhart, Hinton, and Williams) computes the partial derivative of the loss function with respect to every weight ∂J/∂W^[l] and bias ∂J/∂b^[l] in the network using the multivariable calculus Chain Rule. Propagating error terms δ^[l] = ∂J/∂Z^[l] from the final output layer backward through preceding layers allows every parameter to receive an analytical gradient signal in O(N) operations.",
+        "keyPoints": [
+          "Output Layer Error: For Softmax + Cross-Entropy, error simplifies elegantly to δ^[L] = A^[L] - Y.",
+          "Hidden Layer Error: δ^[l] = (W^[l+1]^T δ^[l+1]) ⊙ g'^[l](Z^[l]), propagating errors backward via weight matrix transpose.",
+          "Gradient Parameter Updates: ∂J/∂W^[l] = (1/m) δ^[l] (A^[l-1])^T, with ∂J/∂b^[l] = (1/m) Σ δ^[l]."
+        ],
+        "formulaOrSyntax": "Chain Rule: ∂J / ∂W^[l] = (∂J / ∂Z^[l]) · (∂Z^[l] / ∂W^[l]) = δ^[l] (A^[l-1])^T",
+        "realWorldApplication": "Updating millions of parameters in automated speech recognition neural networks after each audio acoustic frame."
+      },
+      {
+        "number": 12,
+        "code": "5.12",
+        "title": "Optimization Algorithms: SGD, Momentum, RMSProp & Adam",
+        "shortDescription": "Adaptive gradient descent algorithms navigating high-dimensional non-convex loss surfaces.",
+        "concept": "Gradient descent minimizes the objective cost function by stepping iteratively opposite to the gradient: θ = θ - α ∇J(θ). Vanilla Batch Gradient Descent computes gradients over the entire dataset, which is slow for big data; Stochastic Gradient Descent (SGD) computes gradients on random individual samples, introducing high variance; Mini-Batch SGD balances speed and stability. Modern adaptive optimizers include Momentum (accelerates along consistent directions), RMSProp (scales step size inversely by exponential moving average of squared gradients), and Adam (Adaptive Moment Estimation, combining momentum with adaptive learning rates).",
+        "keyPoints": [
+          "Learning Rate (α): Fundamental hyperparameter; too small leads to glacial convergence, too large causes oscillation and divergence.",
+          "Momentum: Dampens oscillations across narrow ravines by adding a fraction β of previous update vector v_t.",
+          "Adam Optimizer: The industry gold-standard; tracks first moment (mean m_t) and second moment (uncentered variance v_t) with bias correction."
+        ],
+        "formulaOrSyntax": "Adam Update: m_t = β1 m_{t-1} + (1-β1) g_t | v_t = β2 v_{t-1} + (1-β2) g_t² | θ_t = θ_{t-1} - [α / (√v̂_t + ε)] m̂_t",
+        "realWorldApplication": "Training transformer architectures (GPT, BERT) where AdamW optimizer stabilizes non-convex gradient descent across billions of parameters."
+      }
+    ]
+  }
 ];
