@@ -1837,6 +1837,280 @@ export default function VisualPlotPreview({ plotType, title }) {
     );
   }
 
+  // =========================================================================
+  // EXPERIMENT 7: DATA AGGREGATION & GROUPBY OPERATIONS
+  // =========================================================================
+
+  // 1. GroupBy Single & Multiple Key Splitting (7A)
+  if (plotType === 'groupby_single_multiple_split') {
+    return (
+      <div className="visual-plot-card">
+        <div className="plot-header-bar">
+          <div className="plot-title-group">
+            <Layers size={15} style={{ color: '#818cf8' }} />
+            <span className="plot-title-text">Visual Plot: Split-Apply-Combine Single & Multiple Key Pipeline</span>
+          </div>
+          <span className="plot-engine-tag">df.groupby(['Dept', 'Year'])</span>
+        </div>
+
+        <div className="svg-plot-container">
+          <svg viewBox="0 0 500 240" className="plot-svg-canvas" preserveAspectRatio="xMidYMid meet">
+            {/* Background Grid */}
+            <rect x="15" y="15" width="470" height="205" rx="8" fill="#0f172a" stroke="#334155" strokeWidth="1" />
+
+            {/* Split Stage (Left) */}
+            <rect x="25" y="28" width="130" height="175" rx="6" fill="#1e1b4b" stroke="#6366f1" strokeWidth="1.2" />
+            <rect x="25" y="28" width="130" height="24" rx="6" fill="#312e81" />
+            <text x="90" y="44" fontSize="9" fill="#e0e7ff" fontWeight="700" textAnchor="middle">1. INPUT DATA (N=8)</text>
+            
+            {/* Rows summary */}
+            <text x="35" y="68" fontSize="8" fill="#a855f7" fontFamily="monospace">CSE: Ravi (85), Sita (90)</text>
+            <text x="35" y="84" fontSize="8" fill="#a855f7" fontFamily="monospace">CSE: Kiran (75), Lakshmi (95)</text>
+            <text x="35" y="104" fontSize="8" fill="#38bdf8" fontFamily="monospace">ECE: Arun (78), Priya (88)</text>
+            <text x="35" y="120" fontSize="8" fill="#38bdf8" fontFamily="monospace">ECE: Anil (82), Rahul (70)</text>
+            
+            <rect x="35" y="145" width="110" height="42" rx="4" fill="#0f172a" stroke="#4338ca" strokeWidth="1" />
+            <text x="90" y="160" fontSize="8.5" fill="#c7d2fe" fontWeight="700" textAnchor="middle">Split By Keys</text>
+            <text x="90" y="176" fontSize="7.5" fill="#94a3b8" textAnchor="middle">Single: Dept | Multi: Dept+Yr</text>
+
+            {/* Transition Arrow 1 */}
+            <path d="M 160,115 L 180,115" stroke="#818cf8" strokeWidth="2" />
+            <polygon points="184,115 178,111 178,119" fill="#818cf8" />
+
+            {/* Partition Groups Stage (Middle) */}
+            <g transform="translate(190, 28)">
+              {/* CSE Box */}
+              <rect x="0" y="0" width="135" height="82" rx="6" fill="#1e1b4b" stroke="#a855f7" strokeWidth="1.2" />
+              <text x="67" y="16" fontSize="9" fill="#d8b4fe" fontWeight="700" textAnchor="middle">Cohort: CSE (Avg: 86.25)</text>
+              <line x1="8" y1="22" x2="127" y2="22" stroke="#4c1d95" />
+              <text x="12" y="38" fontSize="8" fill="#f5d0fe" fontFamily="monospace">Yr 2 (n=3): Mean 83.33</text>
+              <text x="12" y="52" fontSize="7.5" fill="#e9d5ff">Ravi(85), Sita(90), Kiran(75)</text>
+              <text x="12" y="68" fontSize="8" fill="#f5d0fe" fontFamily="monospace">Yr 3 (n=1): Mean 95.00</text>
+              <text x="12" y="78" fontSize="7.5" fill="#e9d5ff">Lakshmi (Marks: 95)</text>
+
+              {/* ECE Box */}
+              <rect x="0" y="93" width="135" height="82" rx="6" fill="#082f49" stroke="#38bdf8" strokeWidth="1.2" />
+              <text x="67" y="109" fontSize="9" fill="#7dd3fc" fontWeight="700" textAnchor="middle">Cohort: ECE (Avg: 79.50)</text>
+              <line x1="8" y1="115" x2="127" y2="115" stroke="#075985" />
+              <text x="12" y="131" fontSize="8" fill="#bae6fd" fontFamily="monospace">Yr 2 (n=1): Mean 70.00</text>
+              <text x="12" y="141" fontSize="7.5" fill="#e0f2fe">Rahul (Marks: 70)</text>
+              <text x="12" y="157" fontSize="8" fill="#bae6fd" fontFamily="monospace">Yr 3 (n=3): Mean 82.67</text>
+              <text x="12" y="167" fontSize="7.5" fill="#e0f2fe">Arun(78), Priya(88), Anil(82)</text>
+            </g>
+
+            {/* Transition Arrow 2 */}
+            <path d="M 330,115 L 350,115" stroke="#38bdf8" strokeWidth="2" />
+            <polygon points="354,115 348,111 348,119" fill="#38bdf8" />
+
+            {/* Combined Result Stage (Right) */}
+            <rect x="360" y="28" width="115" height="175" rx="6" fill="#022c22" stroke="#10b981" strokeWidth="1.2" />
+            <rect x="360" y="28" width="115" height="24" rx="6" fill="#065f46" />
+            <text x="417" y="44" fontSize="9" fill="#a7f3d0" fontWeight="700" textAnchor="middle">3. AGGREGATE</text>
+
+            <text x="370" y="72" fontSize="8.5" fill="#6ee7b7" fontWeight="700">Single Key Mean:</text>
+            <text x="370" y="88" fontSize="8" fill="#ffffff" fontFamily="monospace">CSE: 86.25</text>
+            <text x="370" y="102" fontSize="8" fill="#ffffff" fontFamily="monospace">ECE: 79.50</text>
+
+            <line x1="368" y1="112" x2="467" y2="112" stroke="#047857" strokeDasharray="2 2" />
+
+            <text x="370" y="128" fontSize="8.5" fill="#6ee7b7" fontWeight="700">Multi Key Mean:</text>
+            <text x="370" y="144" fontSize="7.5" fill="#e0e7ff" fontFamily="monospace">CSE, Y2: 83.33</text>
+            <text x="370" y="158" fontSize="7.5" fill="#e0e7ff" fontFamily="monospace">CSE, Y3: 95.00</text>
+            <text x="370" y="172" fontSize="7.5" fill="#e0e7ff" fontFamily="monospace">ECE, Y2: 70.00</text>
+            <text x="370" y="186" fontSize="7.5" fill="#e0e7ff" fontFamily="monospace">ECE, Y3: 82.67</text>
+          </svg>
+        </div>
+        <div className="plot-footer-note">
+          <span>Figure 7A.1: Split-Apply-Combine pipeline demonstrating partition of student records by single (Department) and multiple (Department, Year) keys into grouped aggregations.</span>
+        </div>
+      </div>
+    );
+  }
+
+  // 2. Multi-Metric Summary Statistics with aggregate() (7B)
+  if (plotType === 'aggregate_statistics_matrix') {
+    return (
+      <div className="visual-plot-card">
+        <div className="plot-header-bar">
+          <div className="plot-title-group">
+            <BarChart3 size={15} style={{ color: '#10b981' }} />
+            <span className="plot-title-text">Visual Plot: Multi-Column Summary Statistics Matrix (.aggregate)</span>
+          </div>
+          <span className="plot-engine-tag">.aggregate({'{\'Marks\': [...], \'Attendance\': [...]\'}'})</span>
+        </div>
+
+        <div className="svg-plot-container">
+          <svg viewBox="0 0 500 240" className="plot-svg-canvas" preserveAspectRatio="xMidYMid meet">
+            {/* Canvas Base */}
+            <rect x="15" y="15" width="470" height="205" rx="8" fill="#0b1329" stroke="#1e293b" strokeWidth="1" />
+
+            {/* Hierarchical Column Header */}
+            <rect x="25" y="25" width="450" height="30" rx="4" fill="#1e293b" />
+            <text x="70" y="44" fontSize="9" fill="#94a3b8" fontWeight="700" textAnchor="middle">Department</text>
+            
+            {/* Marks Header Group */}
+            <rect x="135" y="28" width="160" height="24" rx="3" fill="#312e81" stroke="#6366f1" strokeWidth="1" />
+            <text x="215" y="44" fontSize="9.5" fill="#c7d2fe" fontWeight="700" textAnchor="middle">Marks Metrics [sum, mean, std]</text>
+            
+            {/* Attendance Header Group */}
+            <rect x="305" y="28" width="160" height="24" rx="3" fill="#064e3b" stroke="#10b981" strokeWidth="1" />
+            <text x="385" y="44" fontSize="9.5" fill="#a7f3d0" fontWeight="700" textAnchor="middle">Attendance Metrics [sum, mean, std]</text>
+
+            {/* Row 1: CSE */}
+            <g transform="translate(25, 62)">
+              <rect width="450" height="38" rx="4" fill="#1e1b4b" stroke="#4338ca" strokeWidth="0.8" />
+              <text x="45" y="24" fontSize="11" fill="#a855f7" fontWeight="800" textAnchor="middle">CSE</text>
+              
+              {/* Marks metrics */}
+              <text x="140" y="24" fontSize="9" fill="#e0e7ff" fontFamily="monospace">Sum: 240</text>
+              <text x="195" y="24" fontSize="9" fill="#38bdf8" fontWeight="700" fontFamily="monospace">μ: 80.0</text>
+              <text x="255" y="24" fontSize="9" fill="#94a3b8" fontFamily="monospace">σ: 5.0</text>
+
+              {/* Attendance metrics */}
+              <text x="315" y="24" fontSize="9" fill="#e0e7ff" fontFamily="monospace">Sum: 270</text>
+              <text x="370" y="24" fontSize="9" fill="#34d399" fontWeight="700" fontFamily="monospace">μ: 90.0</text>
+              <text x="430" y="24" fontSize="9" fill="#94a3b8" fontFamily="monospace">σ: 5.0</text>
+            </g>
+
+            {/* Row 2: ECE */}
+            <g transform="translate(25, 106)">
+              <rect width="450" height="38" rx="4" fill="#082f49" stroke="#0284c7" strokeWidth="0.8" />
+              <text x="45" y="24" fontSize="11" fill="#38bdf8" fontWeight="800" textAnchor="middle">ECE</text>
+              
+              {/* Marks metrics */}
+              <text x="140" y="24" fontSize="9" fill="#e0e7ff" fontFamily="monospace">Sum: 210</text>
+              <text x="195" y="24" fontSize="9" fill="#38bdf8" fontWeight="700" fontFamily="monospace">μ: 70.0</text>
+              <text x="255" y="24" fontSize="9" fill="#94a3b8" fontFamily="monospace">σ: 5.0</text>
+
+              {/* Attendance metrics */}
+              <text x="315" y="24" fontSize="9" fill="#e0e7ff" fontFamily="monospace">Sum: 240</text>
+              <text x="370" y="24" fontSize="9" fill="#34d399" fontWeight="700" fontFamily="monospace">μ: 80.0</text>
+              <text x="430" y="24" fontSize="9" fill="#94a3b8" fontFamily="monospace">σ: 5.0</text>
+            </g>
+
+            {/* Row 3: EEE */}
+            <g transform="translate(25, 150)">
+              <rect width="450" height="38" rx="4" fill="#064e3b" stroke="#059669" strokeWidth="0.8" />
+              <text x="45" y="24" fontSize="11" fill="#34d399" fontWeight="800" textAnchor="middle">EEE</text>
+              
+              {/* Marks metrics */}
+              <text x="140" y="24" fontSize="9" fill="#e0e7ff" fontFamily="monospace">Sum: 270</text>
+              <text x="195" y="24" fontSize="9" fill="#38bdf8" fontWeight="700" fontFamily="monospace">μ: 90.0</text>
+              <text x="255" y="24" fontSize="9" fill="#94a3b8" fontFamily="monospace">σ: 5.0</text>
+
+              {/* Attendance metrics */}
+              <text x="315" y="24" fontSize="9" fill="#e0e7ff" fontFamily="monospace">Sum: 285</text>
+              <text x="370" y="24" fontSize="9" fill="#34d399" fontWeight="700" fontFamily="monospace">μ: 95.0</text>
+              <text x="430" y="24" fontSize="9" fill="#94a3b8" fontFamily="monospace">σ: 5.0</text>
+            </g>
+
+            {/* Bottom summary indicator */}
+            <text x="250" y="208" fontSize="8.5" fill="#64748b" textAnchor="middle" fontStyle="italic">
+              Simultaneous vectorized evaluation of Sum (Σ), Mean (μ), and Standard Deviation (σ) across cohorts.
+            </text>
+          </svg>
+        </div>
+        <div className="plot-footer-note">
+          <span>Figure 7B.1: Multi-column aggregation matrix comparing sum, mean, and standard deviation distributions across CSE, ECE, and EEE cohorts.</span>
+        </div>
+      </div>
+    );
+  }
+
+  // 3. Iris EDA & Grouped Distributions (7C)
+  if (plotType === 'iris_eda_distributions') {
+    return (
+      <div className="visual-plot-card">
+        <div className="plot-header-bar">
+          <div className="plot-title-group">
+            <Activity size={15} style={{ color: '#ec4899' }} />
+            <span className="plot-title-text">Visual Plot: Iris Species Exploratory Morphological Distributions</span>
+          </div>
+          <span className="plot-engine-tag">Iris Dataset EDA (N=150)</span>
+        </div>
+
+        <div className="svg-plot-container">
+          <svg viewBox="0 0 500 240" className="plot-svg-canvas" preserveAspectRatio="xMidYMid meet">
+            {/* Background Canvas */}
+            <rect x="15" y="15" width="470" height="205" rx="8" fill="#0f172a" stroke="#334155" strokeWidth="1" />
+
+            {/* Title / Info Bar */}
+            <text x="30" y="38" fontSize="9.5" fill="#e2e8f0" fontWeight="700">Species Class Morphological Separation (Mean Petal & Sepal Length):</text>
+
+            {/* Chart Area */}
+            {/* Y Axis */}
+            <line x1="95" y1="55" x2="95" y2="185" stroke="#475569" strokeWidth="1.5" />
+            <line x1="95" y1="185" x2="465" y2="185" stroke="#475569" strokeWidth="1.5" />
+            
+            {/* Grid Lines */}
+            <line x1="95" y1="145" x2="465" y2="145" stroke="#1e293b" strokeDasharray="3 3" />
+            <line x1="95" y1="105" x2="465" y2="105" stroke="#1e293b" strokeDasharray="3 3" />
+            <line x1="95" y1="65" x2="465" y2="65" stroke="#1e293b" strokeDasharray="3 3" />
+
+            <text x="85" y="188" fontSize="8" fill="#94a3b8" textAnchor="end">0.0 cm</text>
+            <text x="85" y="148" fontSize="8" fill="#94a3b8" textAnchor="end">2.5 cm</text>
+            <text x="85" y="108" fontSize="8" fill="#94a3b8" textAnchor="end">5.0 cm</text>
+            <text x="85" y="68" fontSize="8" fill="#94a3b8" textAnchor="end">7.5 cm</text>
+
+            {/* Group 1: Setosa */}
+            <g transform="translate(130, 0)">
+              {/* Sepal Length Bar: 5.006 cm */}
+              <rect x="0" y="105" width="28" height="80" rx="3" fill="#38bdf8" />
+              <text x="14" y="99" fontSize="8" fill="#7dd3fc" fontWeight="700" textAnchor="middle">5.01</text>
+
+              {/* Petal Length Bar: 1.462 cm */}
+              <rect x="34" y="161" width="28" height="24" rx="3" fill="#a855f7" />
+              <text x="48" y="156" fontSize="8" fill="#d8b4fe" fontWeight="700" textAnchor="middle">1.46</text>
+
+              <text x="31" y="200" fontSize="9" fill="#f8fafc" fontWeight="700" textAnchor="middle">setosa</text>
+              <text x="31" y="210" fontSize="7" fill="#64748b" textAnchor="middle">(n=50)</text>
+            </g>
+
+            {/* Group 2: Versicolor */}
+            <g transform="translate(245, 0)">
+              {/* Sepal Length Bar: 5.936 cm */}
+              <rect x="0" y="90" width="28" height="95" rx="3" fill="#38bdf8" />
+              <text x="14" y="84" fontSize="8" fill="#7dd3fc" fontWeight="700" textAnchor="middle">5.94</text>
+
+              {/* Petal Length Bar: 4.260 cm */}
+              <rect x="34" y="117" width="28" height="68" rx="3" fill="#a855f7" />
+              <text x="48" y="111" fontSize="8" fill="#d8b4fe" fontWeight="700" textAnchor="middle">4.26</text>
+
+              <text x="31" y="200" fontSize="9" fill="#f8fafc" fontWeight="700" textAnchor="middle">versicolor</text>
+              <text x="31" y="210" fontSize="7" fill="#64748b" textAnchor="middle">(n=50)</text>
+            </g>
+
+            {/* Group 3: Virginica */}
+            <g transform="translate(360, 0)">
+              {/* Sepal Length Bar: 6.588 cm */}
+              <rect x="0" y="79" width="28" height="106" rx="3" fill="#38bdf8" />
+              <text x="14" y="73" fontSize="8" fill="#7dd3fc" fontWeight="700" textAnchor="middle">6.59</text>
+
+              {/* Petal Length Bar: 5.552 cm */}
+              <rect x="34" y="96" width="28" height="89" rx="3" fill="#a855f7" />
+              <text x="48" y="90" fontSize="8" fill="#d8b4fe" fontWeight="700" textAnchor="middle">5.55</text>
+
+              <text x="31" y="200" fontSize="9" fill="#f8fafc" fontWeight="700" textAnchor="middle">virginica</text>
+              <text x="31" y="210" fontSize="7" fill="#64748b" textAnchor="middle">(n=50)</text>
+            </g>
+
+            {/* Legend */}
+            <g transform="translate(310, 32)">
+              <rect x="0" y="0" width="10" height="10" rx="2" fill="#38bdf8" />
+              <text x="15" y="9" fontSize="8" fill="#cbd5e1">Mean Sepal Length</text>
+
+              <rect x="95" y="0" width="10" height="10" rx="2" fill="#a855f7" />
+              <text x="110" y="9" fontSize="8" fill="#cbd5e1">Mean Petal Length</text>
+            </g>
+          </svg>
+        </div>
+        <div className="plot-footer-note">
+          <span>Figure 7C.1: Exploratory morphological feature comparison across Iris species (Setosa, Versicolor, Virginica) showcasing distinct petal length clusters.</span>
+        </div>
+      </div>
+    );
+  }
+
   // Fallback default plot
   return (
     <div className="visual-plot-card">

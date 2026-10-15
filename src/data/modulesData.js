@@ -39,7 +39,7 @@ export const dataScienceModules = [
       'Data Preprocessing Pipelines',
       'Descriptive Analysis & Metrics'
     ],
-    relatedExperimentIds: ['exp-1', 'exp-2', 'exp-3', 'exp-4', 'exp-5', 'exp-6'],
+    relatedExperimentIds: ['exp-1', 'exp-2', 'exp-3', 'exp-4', 'exp-5', 'exp-6', 'exp-7'],
     relatedExperiments: [
       {
         id: 'exp-1',
@@ -76,6 +76,12 @@ export const dataScienceModules = [
         number: '6',
         title: 'Time Series Analysis & Forecasting',
         relevance: 'Demonstrates timestamp data structures, pandas date_range, frequency conversion, period arithmetic, and temporal analytics.'
+      },
+      {
+        id: 'exp-7',
+        number: '7',
+        title: 'Data Aggregation & GroupBy Operations',
+        relevance: 'Demonstrates Split-Apply-Combine paradigms, single/multiple key groupby, aggregate() summary statistics, and exploratory analysis on Iris dataset.'
       }
     ],
     // Complete 11 Topics explicitly based on student notes
@@ -277,7 +283,7 @@ export const dataScienceModules = [
       'Singular Value Decomposition (SVD)',
       'Principal Component Analysis (PCA)'
     ],
-    relatedExperimentIds: ['exp-1', 'exp-2', 'exp-3', 'exp-4', 'exp-5', 'exp-6'],
+    relatedExperimentIds: ['exp-1', 'exp-2', 'exp-3', 'exp-4', 'exp-5', 'exp-6', 'exp-7'],
     relatedExperiments: [
       {
         id: 'exp-1',
@@ -314,6 +320,12 @@ export const dataScienceModules = [
         number: '6',
         title: 'Time Series Analysis & Forecasting',
         relevance: 'Practical time-series workflows, temporal resampling, lag features, and period transformations for analytics.'
+      },
+      {
+        id: 'exp-7',
+        number: '7',
+        title: 'Data Aggregation & GroupBy Operations',
+        relevance: 'Split-apply-combine data grouping, aggregate summary matrix, and exploratory feature profiling.'
       }
     ],
     // Complete 21 Topics explicitly based on student notes
@@ -897,7 +909,8 @@ export const dataScienceModules = [
       "exp-3",
       "exp-4",
       "exp-5",
-      "exp-6"
+      "exp-6",
+      "exp-7"
     ],
     "relatedExperiments": [
       {
@@ -923,6 +936,12 @@ export const dataScienceModules = [
         "number": "6",
         "title": "Time Series Analysis & Forecasting",
         "relevance": "Lag feature engineering and temporal validation for sequential machine learning models."
+      },
+      {
+        "id": "exp-7",
+        "number": "7",
+        "title": "Data Aggregation & GroupBy Operations",
+        "relevance": "Computing class-level summary statistics and exploratory analysis across feature sets like Iris."
       }
     ],
     "topics": [

@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 340" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg7" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e1b4b" />
+      <stop offset="50%" stop-color="#312e81" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="indigoGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#a855f7" />
+      <stop offset="100%" stop-color="#6366f1" />
+    </linearGradient>
+    <linearGradient id="cyanGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+    <filter id="glow7" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="340" fill="url(#bg7)" />
+
+  <!-- Grid overlay -->
+  <g opacity="0.08" stroke="#a855f7" stroke-width="1">
+    <line x1="0" y1="60" x2="600" y2="60" />
+    <line x1="0" y1="120" x2="600" y2="120" />
+    <line x1="0" y1="180" x2="600" y2="180" />
+    <line x1="0" y1="240" x2="600" y2="240" />
+    <line x1="120" y1="0" x2="120" y2="340" />
+    <line x1="240" y1="0" x2="240" y2="340" />
+    <line x1="360" y1="0" x2="360" y2="340" />
+    <line x1="480" y1="0" x2="480" y2="340" />
+  </g>
+
+  <circle cx="300" cy="135" r="90" fill="#6366f1" opacity="0.22" filter="url(#glow7)" />
+
+  <!-- Center Card: Split-Apply-Combine Architecture -->
+  <g transform="translate(100, 50)">
+    <rect width="400" height="170" rx="12" fill="#0f172a" opacity="0.75" stroke="#818cf8" stroke-width="1.8" filter="url(#glow7)" />
+
+    <!-- Split Stage (Left) -->
+    <g transform="translate(25, 25)">
+      <rect width="80" height="85" rx="6" fill="#1e1b4b" stroke="#6366f1" stroke-width="1.2" />
+      <rect width="80" height="20" rx="6" fill="#312e81" />
+      <text x="40" y="14" fill="#e0e7ff" font-size="8.5" font-weight="700" text-anchor="middle">DataFrame</text>
+      
+      <!-- Mini rows -->
+      <rect x="8" y="27" width="64" height="8" rx="2" fill="#a855f7" opacity="0.8" />
+      <rect x="8" y="40" width="64" height="8" rx="2" fill="#38bdf8" opacity="0.8" />
+      <rect x="8" y="53" width="64" height="8" rx="2" fill="#a855f7" opacity="0.8" />
+      <rect x="8" y="66" width="64" height="8" rx="2" fill="#38bdf8" opacity="0.8" />
+      
+      <text x="40" y="103" fill="#c7d2fe" font-size="8" font-family="monospace" text-anchor="middle">SPLIT</text>
+    </g>
+
+    <!-- Arrow 1 -->
+    <path d="M 120,68 L 145,68" stroke="#818cf8" stroke-width="2" marker-end="url(#arrow)" />
+    <polygon points="150,68 143,64 143,72" fill="#818cf8" />
+
+    <!-- Group Partitioning (Middle) -->
+    <g transform="translate(160, 20)">
+      <!-- Group A (CSE) -->
+      <rect x="0" y="5" width="95" height="42" rx="5" fill="#1e1b4b" stroke="#a855f7" stroke-width="1.2" />
+      <text x="47" y="18" fill="#d8b4fe" font-size="8" font-weight="700" text-anchor="middle">Group: CSE (n=4)</text>
+      <text x="47" y="32" fill="#f5d0fe" font-size="7.5" font-family="monospace" text-anchor="middle">Mean: 86.25</text>
+
+      <!-- Group B (ECE) -->
+      <rect x="0" y="55" width="95" height="42" rx="5" fill="#082f49" stroke="#38bdf8" stroke-width="1.2" />
+      <text x="47" y="68" fill="#7dd3fc" font-size="8" font-weight="700" text-anchor="middle">Group: ECE (n=4)</text>
+      <text x="47" y="82" fill="#bae6fd" font-size="7.5" font-family="monospace" text-anchor="middle">Mean: 79.50</text>
+
+      <text x="47" y="113" fill="#38bdf8" font-size="8" font-family="monospace" text-anchor="middle">APPLY</text>
+    </g>
+
+    <!-- Arrow 2 -->
+    <path d="M 270,68 L 295,68" stroke="#38bdf8" stroke-width="2" />
+    <polygon points="300,68 293,64 293,72" fill="#38bdf8" />
+
+    <!-- Aggregated Combined Result (Right) -->
+    <g transform="translate(310, 25)">
+      <rect width="75" height="85" rx="6" fill="#0f172a" stroke="#10b981" stroke-width="1.5" />
+      <rect width="75" height="20" rx="6" fill="#065f46" />
+      <text x="37" y="14" fill="#a7f3d0" font-size="8.5" font-weight="700" text-anchor="middle">.aggregate()</text>
+
+      <text x="37" y="38" fill="#34d399" font-size="7.5" font-family="monospace" text-anchor="middle">sum  mean  std</text>
+      <text x="37" y="52" fill="#ffffff" font-size="7" font-family="monospace" text-anchor="middle">CSE  86.2  5.0</text>
+      <text x="37" y="66" fill="#ffffff" font-size="7" font-family="monospace" text-anchor="middle">ECE  79.5  5.0</text>
+      <text x="37" y="80" fill="#ffffff" font-size="7" font-family="monospace" text-anchor="middle">EEE  90.0  5.0</text>
+
+      <text x="37" y="103" fill="#10b981" font-size="8" font-family="monospace" text-anchor="middle">COMBINE</text>
+    </g>
+
+    <!-- Bottom Code Ribbon inside card -->
+    <rect x="25" y="135" width="350" height="22" rx="4" fill="#020617" />
+    <text x="200" y="150" fill="#e0e7ff" font-size="9" font-family="monospace" text-anchor="middle">
+      df.groupby(['Department', 'Year'])['Marks'].agg(['mean', 'std'])
+    </text>
+  </g>
+
+  <!-- Title Badge & Typography -->
+  <g transform="translate(300, 260)" text-anchor="middle">
+    <!-- Lab Number Pill -->
+    <rect x="-65" y="-12" width="130" height="22" rx="11" fill="#6366f1" opacity="0.25" stroke="#818cf8" stroke-width="1" />
+    <text x="0" y="3" fill="#c7d2fe" font-size="9.5" font-weight="700" letter-spacing="2">EXPERIMENT 07</text>
+
+    <!-- Main Title -->
+    <text x="0" y="32" fill="#ffffff" font-size="19" font-weight="800" letter-spacing="0.5">
+      Data Aggregation &amp; GroupBy Operations
+    </text>
+
+    <!-- Subtitle / Lab Specs -->
+    <text x="0" y="52" fill="#94a3b8" font-size="11" font-weight="500">
+      Mohan Babu University • 22DS102006 • Split-Apply-Combine &amp; EDA Pipeline
+    </text>
+  </g>
+</svg>

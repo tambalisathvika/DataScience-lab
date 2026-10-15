@@ -1042,5 +1042,154 @@ export const defaultExperiments = [
         "explanation": "Downsampling summarizes volatile sensor telemetry into stable weekly trends. Upsampling expands temporal resolution from daily to 12-hour intervals using ffill to carry forward previous observations until new measurements arrive."
       }
     ]
+  },
+  {
+    "id": "exp-7",
+    "number": "7",
+    "category": "Data Aggregation",
+    "title": "Data Aggregation & GroupBy Operations",
+    "description": "Group tabular DataFrames using single and multiple categorical keys, compute multi-metric summary statistics with aggregate(), and execute exploratory data analysis on online datasets.",
+    "estimatedTime": "3 Hours",
+    "status": "Curriculum Approved",
+    "thumbnail": "/exp7-banner.svg",
+    "completed": true,
+    "moduleId": "mod-1",
+    "youtubeUrl": "https://www.youtube.com/watch?v=txMdrV1Ut64",
+    "videoUrl": "https://www.youtube.com/watch?v=txMdrV1Ut64",
+    "githubUrl": "https://github.com/tambalisathvika/DataScience-lab/tree/main/Experiment-7",
+    "summary": "Comprehensive laboratory implementation of data aggregation paradigms in Pandas: partitioning DataFrames using single and multiple grouping keys, extracting segmented groups, calculating multi-column summary statistics using .aggregate(), and conducting exploratory data analysis on the online Iris dataset.",
+    "topics": [
+      "7A. GroupBy Operations with Single and Multiple Key Splitting",
+      "7B. Compute Summary Statistics using the aggregate() Method",
+      "7C. Grouped Aggregations & Exploratory Data Analysis (EDA) on Iris Dataset"
+    ],
+    "subExperiments": [
+      {
+        "id": "7A",
+        "letter": "A",
+        "number": "7",
+        "title": "GroupBy Operations with Single and Multiple Key Splitting",
+        "description": "Create a tabular dataset as a DataFrame and split data into groups using groupby method including single key and multiple key values. Select group by considering single and multiple columns.",
+        "aim": "To create a tabular dataset as a DataFrame and split data into groups using groupby method with single key (Department) and multiple keys (Department, Year), and compute subgroup averages.",
+        "learningObjective": "Understand the Split-Apply-Combine paradigm, categorical grouping mechanics, and multi-key index hierarchy in Pandas.",
+        "syntax": "Single Key GroupBy:\ngroup1 = df.groupby('Department')\n\nMultiple Keys GroupBy:\ngroup2 = df.groupby(['Department', 'Year'])\n\nAggregated Column Mean:\ndf.groupby('Department')['Marks'].mean()",
+        "generalSyntax": "import pandas as pd\ngrouped = df.groupby('column_name')\ngrouped_multi = df.groupby(['col1', 'col2'])\navg = df.groupby('col1')['numeric_col'].mean()",
+        "aboutProgram": "Data aggregation involves grouping data based on one or more categories and applying aggregate functions (such as mean, sum, count) to extract meaningful insights. The groupby method implements the 'Split-Apply-Combine' paradigm: splitting the DataFrame into groups based on key values, applying an aggregation function independently to each subset, and combining the results into a unified indexed structure.",
+        "visualPlotType": "groupby_single_multiple_split",
+        "youtubeUrl": "https://www.youtube.com/watch?v=txMdrV1Ut64",
+        "videoUrl": "https://www.youtube.com/watch?v=txMdrV1Ut64",
+        "githubUrl": "https://github.com/tambalisathvika/DataScience-lab/tree/main/Experiment-7/7A_groupby_single_multiple_keys.py",
+        "procedure": [
+          "Import pandas module into the Python environment.",
+          "Create a dictionary containing student academic records: Name, Department, Year, and Marks.",
+          "Instantiate a pandas DataFrame from the dictionary and inspect the original structure.",
+          "Split the dataset by a single categorical key ('Department') using df.groupby('Department') and iterate over each subgroup.",
+          "Calculate the arithmetic mean marks for each individual department.",
+          "Split the dataset across multiple hierarchical keys (['Department', 'Year']) and inspect the compound tuple groups.",
+          "Compute the multi-index grouped mean marks for each Department and Year cohort."
+        ],
+        "vivaVoce": [
+          {
+            "question": "What design paradigm does the groupby() method in Pandas follow?",
+            "answer": "It follows Hadley Wickham's 'Split-Apply-Combine' strategy: splitting data into groups based on criteria, applying a function (aggregation, transformation, or filtration) to each group independently, and combining the outputs into a single data structure."
+          },
+          {
+            "question": "What type of object is returned when calling df.groupby('col') before applying an aggregation?",
+            "answer": "It returns a DataFrameGroupBy object (or SeriesGroupBy if applied to a single Series). It is a lazy evaluation object that does not compute anything until an aggregation function like .mean(), .sum(), or .agg() is called."
+          },
+          {
+            "question": "How does grouping by multiple keys affect the index of the resulting DataFrame or Series?",
+            "answer": "Grouping by multiple columns produces a MultiIndex (hierarchical index), where each level of the index corresponds to one of the grouping keys."
+          }
+        ],
+        "program": "import pandas as pd\n\n# Create a tabular dataset\ndata = {\n    'Name': ['Ravi', 'Sita', 'Arun', 'Priya', 'Kiran', 'Anil', 'Lakshmi', 'Rahul'],\n    'Department': ['CSE', 'CSE', 'ECE', 'ECE', 'CSE', 'ECE', 'CSE', 'ECE'],\n    'Year': [2, 2, 3, 3, 2, 3, 3, 2],\n    'Marks': [85, 90, 78, 88, 75, 82, 95, 70]\n}\n\n# Create DataFrame\ndf = pd.DataFrame(data)\nprint(\"Original DataFrame:\")\nprint(df)\n\n# 1. Group by a SINGLE KEY\nprint(\"\\n1. Group by Department:\")\ngroup1 = df.groupby('Department')\nfor name, group in group1:\n    print(\"\\nDepartment:\", name)\n    print(group)\n\n# Calculate average marks for each department\nprint(\"\\nAverage Marks by Department:\")\nprint(df.groupby('Department')['Marks'].mean())\n\n# 2. Group by MULTIPLE KEYS\nprint(\"\\n2. Group by Department and Year:\")\ngroup2 = df.groupby(['Department', 'Year'])\nfor name, group in group2:\n    print(\"\\nGroup:\", name)\n    print(group)\n\n# Calculate average marks for each Department and Year\nprint(\"\\nAverage Marks by Department and Year:\")\nprint(df.groupby(['Department', 'Year'])['Marks'].mean())",
+        "output": "Original DataFrame:\n      Name Department  Year  Marks\n0     Ravi        CSE     2     85\n1     Sita        CSE     2     90\n2     Arun        ECE     3     78\n3    Priya        ECE     3     88\n4    Kiran        CSE     2     75\n5     Anil        ECE     3     82\n6  Lakshmi        CSE     3     95\n7    Rahul        ECE     2     70\n\n1. Group by Department:\n\nDepartment: CSE\n      Name Department  Year  Marks\n0     Ravi        CSE     2     85\n1     Sita        CSE     2     90\n4    Kiran        CSE     2     75\n6  Lakshmi        CSE     3     95\n\nDepartment: ECE\n    Name Department  Year  Marks\n2   Arun        ECE     3     78\n3  Priya        ECE     3     88\n5   Anil        ECE     3     82\n7  Rahul        ECE     2     70\n\nAverage Marks by Department:\nDepartment\nCSE    86.25\nECE    79.50\nName: Marks, dtype: float64\n\n2. Group by Department and Year:\n\nGroup: ('CSE', 2)\n    Name Department  Year  Marks\n0   Ravi        CSE     2     85\n1   Sita        CSE     2     90\n4  Kiran        CSE     2     75\n\nGroup: ('CSE', 3)\n      Name Department  Year  Marks\n6  Lakshmi        CSE     3     95\n\nGroup: ('ECE', 2)\n    Name Department  Year  Marks\n7  Rahul        ECE     2     70\n\nGroup: ('ECE', 3)\n    Name Department  Year  Marks\n2   Arun        ECE     3     78\n3  Priya        ECE     3     88\n5   Anil        ECE     3     82\n\nAverage Marks by Department and Year:\nDepartment  Year\nCSE         2       83.333333\n            3       95.000000\nECE         2       70.000000\n            3       82.666667\nName: Marks, dtype: float64",
+        "explanation": "The groupby() function partitions the student DataFrame first by Department alone (CSE vs ECE), and subsequently creates cross-classified hierarchical subsets based on both Department and Year. Computing .mean() on the Marks column summarizes each cohort into clean comparative benchmarks."
+      },
+      {
+        "id": "7B",
+        "letter": "B",
+        "number": "7",
+        "title": "Compute Summary Statistics using the aggregate() Method",
+        "description": "Compute summary statistics such as sum, mean and standard deviation for the grouped data using aggregate method across multiple numerical columns.",
+        "aim": "To group tabular data by Department and compute multi-metric summary statistics (sum, mean, standard deviation) simultaneously for Marks and Attendance using the aggregate() method.",
+        "learningObjective": "Master flexible aggregation dictionaries, multi-function mappings, and hierarchical column generation using the aggregate() / agg() method.",
+        "syntax": "df.groupby('Department').aggregate({\n    'Marks': ['sum', 'mean', 'std'],\n    'Attendance': ['sum', 'mean', 'std']\n})",
+        "generalSyntax": "import pandas as pd\nsummary = df.groupby('category_col').aggregate({\n    'num_col1': ['sum', 'mean', 'std'],\n    'num_col2': ['min', 'max', 'count']\n})",
+        "aboutProgram": "While basic aggregations like .sum() or .mean() apply a single mathematical operation to all numeric columns, real-world data science pipelines frequently require disparate metrics across distinct variables. The aggregate() (or agg()) method provides an expressive mapping syntax using Python dictionaries, enabling data scientists to compute diverse summary metrics (sum, mean, std, min, max) across multiple columns in a single, highly-optimized vectorized pass.",
+        "visualPlotType": "aggregate_statistics_matrix",
+        "youtubeUrl": "https://www.youtube.com/watch?v=qy0fS5SrEgI",
+        "videoUrl": "https://www.youtube.com/watch?v=qy0fS5SrEgI",
+        "githubUrl": "https://github.com/tambalisathvika/DataScience-lab/tree/main/Experiment-7/7B_summary_statistics_aggregate.py",
+        "procedure": [
+          "Import pandas module into the Python environment.",
+          "Create a student performance dataset containing Department (CSE, ECE, EEE), Marks, and Attendance telemetry.",
+          "Construct a pandas DataFrame and display the complete original tabular records.",
+          "Group the dataset by the 'Department' categorical column.",
+          "Pass an aggregation dictionary to .aggregate() specifying ['sum', 'mean', 'std'] for both Marks and Attendance.",
+          "Print the resulting multi-level column DataFrame and inspect cross-departmental variances."
+        ],
+        "vivaVoce": [
+          {
+            "question": "What is the key difference between agg() and aggregate() in Pandas?",
+            "answer": "There is no difference in functionality; agg is simply a shorthand alias for aggregate. Both accept function names as strings, NumPy/built-in callables, or dictionary mappings."
+          },
+          {
+            "question": "Can you apply different aggregation functions to different columns in groupby?",
+            "answer": "Yes, by passing a dictionary mapping column names to lists of function names, e.g., {'Marks': ['mean', 'max'], 'Attendance': ['min', 'std']}."
+          },
+          {
+            "question": "Why is standard deviation (std) useful alongside mean in grouped data?",
+            "answer": "The mean measures the central tendency of the group, while the standard deviation measures dispersion or spread, indicating how uniformly members of that group performed."
+          }
+        ],
+        "program": "import pandas as pd\n\n# Create a DataFrame\ndata = {\n    'Department': ['CSE', 'CSE', 'CSE', 'ECE', 'ECE', 'ECE',\n                   'EEE', 'EEE', 'EEE'],\n    'Marks': [80, 75, 85, 70, 65, 75, 90, 85, 95],\n    'Attendance': [90, 85, 95, 80, 75, 85, 95, 90, 100]\n}\ndf = pd.DataFrame(data)\nprint(\"Original DataFrame:\")\nprint(df)\n\n# Group data by Department and calculate summary statistics\nresult = df.groupby('Department').aggregate({\n    'Marks': ['sum', 'mean', 'std'],\n    'Attendance': ['sum', 'mean', 'std']\n})\nprint(\"\\nSummary Statistics:\")\nprint(result)",
+        "output": "Original DataFrame:\n  Department  Marks  Attendance\n0        CSE     80          90\n1        CSE     75          85\n2        CSE     85          95\n3        ECE     70          80\n4        ECE     65          75\n5        ECE     75          85\n6        EEE     90          95\n7        EEE     85          90\n8        EEE     95         100\n\nSummary Statistics:\n           Marks            Attendance           \n             sum  mean  std        sum  mean  std\nDepartment                                       \nCSE          240  80.0  5.0        270  90.0  5.0\nECE          210  70.0  5.0        240  80.0  5.0\nEEE          270  90.0  5.0        285  95.0  5.0",
+        "explanation": "The aggregate() method allows evaluating multiple aggregation functions (sum, mean, standard deviation) across multiple numeric features (Marks and Attendance) in a single operation, producing a multi-indexed summary table that concisely profiles departmental performance."
+      },
+      {
+        "id": "7C",
+        "letter": "C",
+        "number": "7",
+        "title": "Grouped Aggregations & Exploratory Data Analysis (EDA) on Iris Dataset",
+        "description": "Use groupby function to split data into groups based on one column, multiple columns, compute summary statistics and perform exploratory data analysis on the online Iris dataset.",
+        "aim": "To ingest the online Iris dataset, perform exploratory data analysis (EDA) using info(), describe(), and value_counts(), and execute single and multiple column groupby aggregations across morphological floral features.",
+        "learningObjective": "Ingest online datasets directly via HTTP, perform exploratory data analysis (EDA), and execute complex feature aggregations across biological species.",
+        "syntax": "Online Ingestion:\ndf = pd.read_csv('https://.../iris.csv')\n\nSingle Group Aggregation:\ndf.groupby('species')['sepal_length'].agg(['count', 'sum', 'mean', 'std', 'min', 'max'])\n\nMulti-Feature Summary:\ndf.groupby('species').agg({'sepal_length': ['mean', 'std'], 'petal_length': ['mean', 'std']})",
+        "generalSyntax": "import pandas as pd\ndf = pd.read_csv('https://.../dataset.csv')\neda_summary = df.groupby('category').agg({'feature1': ['mean', 'std'], 'feature2': ['min', 'max']})",
+        "aboutProgram": "Exploratory Data Analysis (EDA) on standard benchmark datasets like Iris (curated by Ronald Fisher in 1936) is a cornerstone of modern data science. Using Pandas groupby on online datasets enables rapid hypothesis testing by segmenting observations by class (setosa, versicolor, virginica) to reveal morphological separation in petal and sepal dimensions.",
+        "visualPlotType": "iris_eda_distributions",
+        "youtubeUrl": "https://www.youtube.com/watch?v=0Lt9w-BxKFQ",
+        "videoUrl": "https://www.youtube.com/watch?v=0Lt9w-BxKFQ",
+        "githubUrl": "https://github.com/tambalisathvika/DataScience-lab/tree/main/Experiment-7/7C_iris_eda_groupby.py",
+        "procedure": [
+          "Import pandas module into the Python environment.",
+          "Load the Iris dataset directly from raw GitHub URL using pd.read_csv().",
+          "Inspect first 5 records using head(), dataset schema using info(), and numeric summary using describe().",
+          "Perform single-column groupby on 'species' for sepal_length with 6 metrics (count, sum, mean, std, min, max).",
+          "Perform multiple-column groupby on ['species', 'sepal_width'] and compute mean sepal_length.",
+          "Build an all-feature aggregate matrix across sepal_length, sepal_width, petal_length, and petal_width.",
+          "Perform exploratory analysis: species frequency counts, mean petal dimensions, and maximum sepal length."
+        ],
+        "vivaVoce": [
+          {
+            "question": "What makes the Iris dataset a standard benchmark in data science?",
+            "answer": "It contains 150 instances of 3 Iris species (setosa, versicolor, virginica) with 4 numeric physical features, providing a clean, balanced real-world dataset ideal for classification and grouping benchmarks."
+          },
+          {
+            "question": "What key pattern does the grouped petal_length metric reveal between species?",
+            "answer": "Iris setosa has distinctly smaller petal lengths (~1.46 cm) with tight variance, whereas versicolor (~4.26 cm) and virginica (~5.55 cm) have significantly larger, linearly separable petal measurements."
+          },
+          {
+            "question": "What happens if an online URL passed to pd.read_csv() cannot be reached?",
+            "answer": "Pandas raises an urllib.error.URLError or HTTPError. In production code, wrapping read_csv in a try-except block or providing a local fallback cache is recommended."
+          }
+        ],
+        "program": "import pandas as pd\n\n# Read the online Iris dataset\nurl = \"https://raw.githubusercontent.com/mwaskom/seaborn-data/master/iris.csv\"\ndf = pd.read_csv(url)\n\n# Display first 5 records\nprint(\"First 5 Records:\")\nprint(df.head())\n\n# Display dataset information\nprint(\"\\nDataset Information:\")\nprint(df.info())\n\n# Display statistical summary\nprint(\"\\nStatistical Summary:\")\nprint(df.describe())\n\n# 1. GroupBy using a single column\nprint(\"\\n1. GroupBy using a Single Column:\")\ngroup_single = df.groupby('species')['sepal_length'].agg(\n    ['count', 'sum', 'mean', 'std', 'min', 'max']\n)\nprint(group_single)\n\n# 2. GroupBy using multiple columns\nprint(\"\\n2. GroupBy using Multiple Columns:\")\ngroup_multiple = df.groupby(\n    ['species', 'sepal_width']\n)['sepal_length'].mean()\nprint(group_multiple.head(15))\n\n# 3. Summary statistics for each species\nprint(\"\\n3. Summary Statistics:\")\nsummary = df.groupby('species').agg({\n    'sepal_length': ['mean', 'std', 'min', 'max'],\n    'sepal_width': ['mean', 'std', 'min', 'max'],\n    'petal_length': ['mean', 'std', 'min', 'max'],\n    'petal_width': ['mean', 'std', 'min', 'max']\n})\nprint(summary)\n\n# 4. Exploratory Data Analysis\nprint(\"\\n4. Number of Records in Each Species:\")\nprint(df['species'].value_counts())\n\nprint(\"\\nAverage Petal Length by Species:\")\nprint(df.groupby('species')['petal_length'].mean())\n\nprint(\"\\nAverage Petal Width by Species:\")\nprint(df.groupby('species')['petal_width'].mean())\n\nprint(\"\\nMaximum Sepal Length by Species:\")\nprint(df.groupby('species')['sepal_length'].max())",
+        "output": "First 5 Records:\n   sepal_length  sepal_width  petal_length  petal_width species\n0           5.1          3.5           1.4          0.2  setosa\n1           4.9          3.0           1.4          0.2  setosa\n2           4.7          3.2           1.3          0.2  setosa\n3           4.6          3.1           1.5          0.2  setosa\n4           5.0          3.6           1.4          0.2  setosa\n\nDataset Information:\n<class 'pandas.DataFrame'>\nRangeIndex: 150 entries, 0 to 149\nData columns (total 5 columns):\n #   Column        Non-Null Count  Dtype  \n---  ------        --------------  -----  \n 0   sepal_length  150 non-null    float64\n 1   sepal_width   150 non-null    float64\n 2   petal_length  150 non-null    float64\n 3   petal_width   150 non-null    float64\n 4   species       150 non-null    object \ndtypes: float64(4), object(1)\nmemory usage: 6.0 KB\nNone\n\nStatistical Summary:\n       sepal_length  sepal_width  petal_length  petal_width\ncount    150.000000   150.000000    150.000000   150.000000\nmean       5.843333     3.057333      3.758000     1.199333\nstd        0.828066     0.435866      1.765298     0.762238\nmin        4.300000     2.000000      1.000000     0.100000\n25%        5.100000     2.800000      1.600000     0.300000\n50%        5.800000     3.000000      4.350000     1.300000\n75%        6.400000     3.300000      5.100000     1.800000\nmax        7.900000     4.400000      6.900000     2.500000\n\n1. GroupBy using a Single Column:\n            count    sum   mean       std  min  max\nspecies                                            \nsetosa         50  250.3  5.006  0.352490  4.3  5.8\nversicolor     50  296.8  5.936  0.516171  4.9  7.0\nvirginica      50  329.4  6.588  0.635880  4.9  7.9\n\n2. GroupBy using Multiple Columns:\nspecies  sepal_width\nsetosa   2.3            4.500000\n         2.9            4.400000\n         3.0            4.700000\n         3.1            4.800000\n         3.2            4.680000\n         3.3            5.050000\n         3.4            5.033333\n         3.5            5.150000\n         3.6            4.833333\n         3.7            5.266667\n         3.8            5.250000\n         3.9            5.400000\n         4.0            5.800000\n         4.1            5.200000\n         4.2            5.500000\nName: sepal_length, dtype: float64\n\n3. Summary Statistics:\n           sepal_length                      ... petal_width                    \n                   mean       std  min  max  ...        mean       std  min  max\nspecies                                      ...                                \nsetosa            5.006  0.352490  4.3  5.8  ...       0.246  0.105386  0.1  0.6\nversicolor        5.936  0.516171  4.9  7.0  ...       1.326  0.197753  1.0  1.8\nvirginica         6.588  0.635880  4.9  7.9  ...       2.026  0.274650  1.4  2.5\n\n[3 rows x 16 columns]\n\n4. Number of Records in Each Species:\nspecies\nsetosa        50\nversicolor    50\nvirginica     50\nName: count, dtype: int64\n\nAverage Petal Length by Species:\nspecies\nsetosa        1.462\nversicolor    4.260\nvirginica     5.552\nName: petal_length, dtype: float64\n\nAverage Petal Width by Species:\nspecies\nsetosa        0.246\nversicolor    1.326\nvirginica     2.026\nName: petal_width, dtype: float64\n\nMaximum Sepal Length by Species:\nspecies\nsetosa        5.8\nversicolor    7.0\nvirginica     7.9\nName: sepal_length, dtype: float64",
+        "explanation": "The program ingests the online Iris dataset and conducts an end-to-end exploratory pipeline. Grouping by species reveals that setosa has distinctly smaller petal dimensions (mean 1.46 cm length) compared to versicolor (4.26 cm) and virginica (5.55 cm), demonstrating how data aggregation unlocks class separability in scientific datasets."
+      }
+    ]
   }
 ];
+
