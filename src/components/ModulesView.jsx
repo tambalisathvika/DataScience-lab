@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { 
   BookOpen, Layers, Clock, Award, CheckCircle2, 
-  ArrowRight, ArrowLeft, Search, Code2, Terminal, 
-  FileText, Download, Printer, ExternalLink, 
-  Sparkles, Check, Copy, ChevronRight, X, FlaskConical,
+  ArrowRight, ArrowLeft, Search, Terminal, 
+  FileText, Download, Printer, 
+  Sparkles, Check, ChevronRight, X, FlaskConical,
   GraduationCap, HelpCircle, ShieldCheck, Cpu, Database
 } from 'lucide-react';
 import { dataScienceModules } from '../data/modulesData';
@@ -17,7 +17,6 @@ export default function ModulesView({
   const [moduleSearchQuery, setModuleSearchQuery] = useState('');
   const [topicSearchQuery, setTopicSearchQuery] = useState('');
   const [selectedTopic, setSelectedTopic] = useState(null); // For "Learn More" modal
-  const [copiedCode, setCopiedCode] = useState(false);
   const [downloadSuccess, setDownloadSuccess] = useState('');
 
   // Active module for detail view
@@ -81,10 +80,6 @@ Formula/Syntax: ${t.formulaOrSyntax || 'N/A'}
 Application:    ${t.realWorldApplication || 'N/A'}
 --------------------------------------------------------------------------------`).join('\n\n')}
 
-3. EXPERIMENTAL & COMPUTATIONAL CODE BENCHMARK:
-File: ${mod.codeExample.filename}
-${mod.codeExample.code}
-
 ================================================================================
 Mohan Babu University — Continuous Academic Evaluation Series (AY 2026–2027)
 ================================================================================`;
@@ -103,16 +98,6 @@ Mohan Babu University — Continuous Academic Evaluation Series (AY 2026–2027)
     setTimeout(() => setDownloadSuccess(''), 3000);
   };
 
-  const handleCopyCode = async (code) => {
-    try {
-      await navigator.clipboard.writeText(code);
-      setCopiedCode(true);
-      setTimeout(() => setCopiedCode(false), 2000);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   // Connect to related experiment
   const handleOpenRelatedExperiment = (expRef) => {
     if (!onNavigateToExperiment) return;
@@ -129,13 +114,6 @@ Mohan Babu University — Continuous Academic Evaluation Series (AY 2026–2027)
         title: expRef.title,
         description: expRef.relevance
       });
-    }
-  };
-
-  // Open in interactive code editor
-  const handleOpenInEditor = (codeSnippet, filename) => {
-    if (onNavigateToEditor) {
-      onNavigateToEditor(codeSnippet, filename);
     }
   };
 
@@ -351,47 +329,7 @@ Mohan Babu University — Continuous Academic Evaluation Series (AY 2026–2027)
           </section>
         )}
 
-        {/* 3. CODE IMPLEMENTATION SECTION */}
-        <section className="module-code-section">
-          <div className="pro-card module-code-card">
-            <div className="code-card-header">
-              <div className="code-header-left">
-                <Terminal size={17} style={{ color: '#38bdf8' }} />
-                <div>
-                  <span className="code-card-filename">{activeModule.codeExample.filename}</span>
-                  <span className="code-card-subtitle">{activeModule.codeExample.title}</span>
-                </div>
-              </div>
 
-              <div className="code-header-actions">
-                <button 
-                  className="code-action-btn"
-                  onClick={() => handleCopyCode(activeModule.codeExample.code)}
-                  title="Copy Code to Clipboard"
-                >
-                  {copiedCode ? <Check size={14} style={{ color: '#10b981' }} /> : <Copy size={14} />}
-                  <span>{copiedCode ? 'Copied!' : 'Copy Code'}</span>
-                </button>
-
-                <button 
-                  className="code-action-btn primary"
-                  onClick={() => handleOpenInEditor(activeModule.codeExample.code, activeModule.codeExample.filename)}
-                  title="Open this script directly in the interactive Code Editor"
-                >
-                  <Code2 size={14} />
-                  <span>Open in Code Editor</span>
-                  <ExternalLink size={12} />
-                </button>
-              </div>
-            </div>
-
-            <div className="code-view-container">
-              <pre className="code-view-pre">
-                <code>{activeModule.codeExample.code}</code>
-              </pre>
-            </div>
-          </div>
-        </section>
 
         {/* 4. ALL TOPICS (EVERY TOPIC DISPLAYED AS A CLEAN CLICKABLE ITEM) */}
         <section className="module-topics-section">

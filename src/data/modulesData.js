@@ -78,56 +78,6 @@ export const dataScienceModules = [
         relevance: 'Demonstrates timestamp data structures, pandas date_range, frequency conversion, period arithmetic, and temporal analytics.'
       }
     ],
-    codeExample: {
-      filename: 'module1_foundations_pipeline.py',
-      language: 'python',
-      title: 'Module 1 — Complete Python Exploratory Pipeline',
-      code: `# ==============================================================================
-# MOHAN BABU UNIVERSITY (MBU) — DEPARTMENT OF DATA SCIENCE
-# MODULE 1: FOUNDATIONS OF DATA SCIENCE & PREPROCESSING PIPELINE
-# ==============================================================================
-import numpy as np
-import pandas as pd
-
-# 1. DATA COLLECTION & INGESTION (Simulated Sensor / Transaction Dataset)
-raw_records = {
-    'Transaction_ID': ['TX101', 'TX102', 'TX103', 'TX104', 'TX105', 'TX106', 'TX107', 'TX108'],
-    'Client_Category': ['Retail', 'Corporate', 'Retail', 'SME', 'Corporate', 'Retail', 'Retail', 'Corporate'],
-    'Purchase_Amount': [1450.0, 3200.0, np.nan, 950.0, 8900.0, 1200.0, 13200.0, 4100.0],  # Contains NaN & Outlier
-    'Processing_Time_Sec': [1.2, 2.5, 0.8, 1.1, 4.2, 1.4, 18.5, 2.8]
-}
-
-df = pd.DataFrame(raw_records)
-print("--- [1] Raw Data Ingestion ---")
-print(df)
-
-# 2. DATA PREPROCESSING: Missing Value Imputation
-mean_purchase = df['Purchase_Amount'].mean()
-df['Purchase_Amount'] = df['Purchase_Amount'].fillna(mean_purchase)
-print(f"\\n--- [2] Missing Values Imputed with Mean ({mean_purchase:.2f}) ---")
-
-# 3. OUTLIER DETECTION: Interquartile Range (IQR Rule)
-q25 = df['Purchase_Amount'].quantile(0.25)
-q75 = df['Purchase_Amount'].quantile(0.75)
-iqr = q75 - q25
-lower_bound = q25 - 1.5 * iqr
-upper_bound = q75 + 1.5 * iqr
-
-outliers = df[(df['Purchase_Amount'] < lower_bound) | (df['Purchase_Amount'] > upper_bound)]
-print(f"\\n--- [3] Outlier Diagnostics (IQR={iqr:.2f}) ---")
-print(f"Boundaries: [{lower_bound:.2f}, {upper_bound:.2f}]")
-print(f"Identified Outliers Count: {len(outliers)}")
-
-# 4. DESCRIPTIVE ANALYSIS: Central Tendency & Dispersion
-print("\\n--- [4] Descriptive Statistical Summary ---")
-summary_stats = df[['Purchase_Amount', 'Processing_Time_Sec']].describe()
-print(summary_stats.round(2))
-
-# 5. CATEGORICAL AGGREGATION
-print("\\n--- [5] GroupBy Aggregations by Client Category ---")
-cat_summary = df.groupby('Client_Category')['Purchase_Amount'].agg(['count', 'mean', 'sum'])
-print(cat_summary.round(2))`
-    },
     // Complete 11 Topics explicitly based on student notes
     topics: [
       {
@@ -366,66 +316,6 @@ print(cat_summary.round(2))`
         relevance: 'Practical time-series workflows, temporal resampling, lag features, and period transformations for analytics.'
       }
     ],
-    codeExample: {
-      filename: 'module2_feature_selection_pca_trees.py',
-      language: 'python',
-      title: 'Module 2 — Decision Trees, Feature Importance & PCA Pipeline',
-      code: `# ==============================================================================
-# MOHAN BABU UNIVERSITY (MBU) — DEPARTMENT OF DATA SCIENCE
-# MODULE 2: DATA EXTRACTION, DECISION TREES & PCA WORKBENCH
-# ==============================================================================
-import numpy as np
-import pandas as pd
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.decomposition import PCA
-from sklearn.feature_selection import SelectKBest, f_classif
-
-# 1. SYNTHETIC HIGH-DIMENSIONAL FEATURE MATRIX (Simulated Customer Churn)
-np.random.seed(42)
-n_samples = 200
-n_features = 8
-
-# Generate features: 3 informative, 5 noise
-X = np.random.randn(n_samples, n_features)
-# Target depends strongly on Feature 0 and Feature 1
-y = (X[:, 0] * 1.5 + X[:, 1] * -2.0 + np.random.randn(n_samples) * 0.5 > 0).astype(int)
-
-feature_names = [f'Feat_{i}' for i in range(n_features)]
-df_features = pd.DataFrame(X, columns=feature_names)
-print("--- [1] Dataset Formatted (200 Samples, 8 Features) ---")
-print(df_features.head(3))
-
-# 2. FILTER METHOD: ANOVA F-Test Feature Selection
-selector = SelectKBest(score_func=f_classif, k=4)
-X_filtered = selector.fit_transform(X, y)
-selected_indices = selector.get_support(indices=True)
-print("\\n--- [2] Filter Method: SelectKBest (ANOVA F-Score) ---")
-for idx in selected_indices:
-    print(f"Selected: {feature_names[idx]} (F-score: {selector.scores_[idx]:.2f})")
-
-# 3. DECISION TREE ALGORITHM (Entropy Splitting Criterion)
-dt_clf = DecisionTreeClassifier(criterion='entropy', max_depth=3, random_state=42)
-dt_clf.fit(X, y)
-print("\\n--- [3] Decision Tree (Entropy Criterion) ---")
-print(f"Tree Depth: {dt_clf.get_depth()} | Leaves: {dt_clf.get_n_leaves()}")
-print("Feature Importances:")
-for name, imp in zip(feature_names, dt_clf.feature_importances_):
-    if imp > 0.01:
-        print(f"  • {name}: {imp:.4f}")
-
-# 4. ENSEMBLE LEARNING: Random Forest (Bagging + Feature Subspacing)
-rf_clf = RandomForestClassifier(n_estimators=50, max_features='sqrt', random_state=42)
-rf_clf.fit(X, y)
-print(f"\\n--- [4] Random Forest Ensemble Accuracy: {rf_clf.score(X, y)*100:.1f}% ---")
-
-# 5. DIMENSIONALITY REDUCTION: Principal Component Analysis (PCA)
-pca = PCA(n_components=2)
-X_pca = pca.fit_transform(X)
-print("\\n--- [5] Principal Component Analysis (PCA) ---")
-print(f"Explained Variance Ratio: PC1={pca.explained_variance_ratio_[0]:.3f}, PC2={pca.explained_variance_ratio_[1]:.3f}")
-print(f"Cumulative Variance Captured (2 Components): {np.sum(pca.explained_variance_ratio_)*100:.1f}%")`
-    },
     // Complete 21 Topics explicitly based on student notes
     topics: [
       {
@@ -792,12 +682,6 @@ print(f"Cumulative Variance Captured (2 Components): {np.sum(pca.explained_varia
         "relevance": "QQ-plots, histograms, KDE distribution overlays, and bivariate scatter correlation verification."
       }
     ],
-    "codeExample": {
-      "filename": "module3_statistical_inference_pipeline.py",
-      "language": "python",
-      "title": "Module 3 — Parametric Hypothesis Testing & ANOVA Benchmark",
-      "code": "# ==============================================================================\n# MOHAN BABU UNIVERSITY (MBU) — DEPARTMENT OF DATA SCIENCE\n# MODULE 3: STATISTICAL INFERENCE & HYPOTHESIS TESTING PIPELINE\n# ==============================================================================\nimport numpy as np\nimport pandas as pd\n\n# 1. CENTRAL LIMIT THEOREM (CLT) SIMULATION\nnp.random.seed(42)\npopulation_data = np.random.exponential(scale=2.0, size=10000)\nsample_means = [np.mean(np.random.choice(population_data, size=40)) for _ in range(500)]\n\nprint(\"--- [1] Central Limit Theorem (CLT) Verification ---\")\nprint(f\"Population Mean:  {np.mean(population_data):.4f} (Skewed Exponential)\")\nprint(f\"Sample Mean (x̄): {np.mean(sample_means):.4f} (Approximating Gaussian)\")\nprint(f\"Standard Error:   {np.std(sample_means):.4f}\")\n\n# 2. TWO-SAMPLE INDEPENDENT STUDENT'S T-TEST (Vectorized Implementation)\ngroup_a = np.random.normal(loc=72.0, scale=8.0, size=60)\ngroup_b = np.random.normal(loc=78.5, scale=8.5, size=60)\n\nn1, n2 = len(group_a), len(group_b)\nx1_bar, x2_bar = np.mean(group_a), np.mean(group_b)\ns1_sq, s2_sq = np.var(group_a, ddof=1), np.var(group_b, ddof=1)\n\n# Pooled standard deviation\ns_pooled = np.sqrt(((n1 - 1) * s1_sq + (n2 - 1) * s2_sq) / (n1 + n2 - 2))\nt_statistic = (x2_bar - x1_bar) / (s_pooled * np.sqrt(1/n1 + 1/n2))\ndeg_freedom = n1 + n2 - 2\n\nprint(\"\\n--- [2] Independent Two-Sample Student's t-Test ---\")\nprint(f\"Group A Mean (Control):   {x1_bar:.2f} (std={np.sqrt(s1_sq):.2f})\")\nprint(f\"Group B Mean (Treatment): {x2_bar:.2f} (std={np.sqrt(s2_sq):.2f})\")\nprint(f\"Pooled Std Dev:           {s_pooled:.4f}\")\nprint(f\"t-statistic:              {t_statistic:.4f} (df={deg_freedom})\")\nprint(f\"Statistical Outcome:      {'Statistically Significant (t > 2.0, p < 0.05)' if abs(t_statistic) > 2.0 else 'Fail to Reject Null'}\")\n\n# 3. ONE-WAY ANALYSIS OF VARIANCE (ANOVA F-TEST)\ngroup_c = np.random.normal(loc=82.0, scale=7.8, size=60)\nall_groups = [group_a, group_b, group_c]\ngrand_mean = np.mean(np.concatenate(all_groups))\n\nssb = sum(len(g) * (np.mean(g) - grand_mean)**2 for g in all_groups)\nssw = sum(sum((val - np.mean(g))**2 for val in g) for g in all_groups)\n\ndf_between = len(all_groups) - 1\ndf_within = sum(len(g) for g in all_groups) - len(all_groups)\n\nms_between = ssb / df_between\nms_within = ssw / df_within\nf_ratio = ms_between / ms_within\n\nprint(\"\\n--- [3] One-Way Analysis of Variance (ANOVA) ---\")\nprint(f\"SS Between: {ssb:.2f} (df={df_between}) | MS Between: {ms_between:.2f}\")\nprint(f\"SS Within:  {ssw:.2f} (df={df_within}) | MS Within:  {ms_within:.2f}\")\nprint(f\"F-Ratio:    {f_ratio:.4f}\")\nprint(\"ANOVA Decision: Significant group variance detected across pedagogical treatments.\")"
-    },
     "topics": [
       {
         "number": 1,
@@ -1041,12 +925,6 @@ print(f"Cumulative Variance Captured (2 Components): {np.sum(pca.explained_varia
         "relevance": "Lag feature engineering and temporal validation for sequential machine learning models."
       }
     ],
-    "codeExample": {
-      "filename": "module4_machine_learning_pipeline.py",
-      "language": "python",
-      "title": "Module 4 — Supervised Logistic Regression & K-Means Clustering Benchmark",
-      "code": "# ==============================================================================\n# MOHAN BABU UNIVERSITY (MBU) — DEPARTMENT OF DATA SCIENCE\n# MODULE 4: MACHINE LEARNING & PREDICTIVE MODELING BENCHMARK\n# ==============================================================================\nimport numpy as np\nimport pandas as pd\n\n# 1. SYNTHETIC CLASSIFICATION DATASET (Customer Churn Diagnostic)\nnp.random.seed(42)\nn_records = 150\nX_features = np.random.randn(n_records, 2)\n# Decision boundary: 1.5 * x0 - 0.8 * x1 + noise > 0\nlogits = 1.5 * X_features[:, 0] - 0.8 * X_features[:, 1] + np.random.randn(n_records) * 0.2\ny_labels = (logits > 0).astype(int)\n\n# Train-Test Split (80/20)\nsplit_idx = int(0.8 * n_records)\nX_train, X_test = X_features[:split_idx], X_features[split_idx:]\ny_train, y_test = y_labels[:split_idx], y_labels[split_idx:]\n\n# 2. LOGISTIC REGRESSION (Vectorized Gradient Descent Optimization)\ndef sigmoid(z):\n    return 1 / (1 + np.exp(-np.clip(z, -20, 20)))\n\nweights = np.zeros(2)\nbias = 0.0\nlearning_rate = 0.1\nepochs = 200\n\nfor _ in range(epochs):\n    linear_model = np.dot(X_train, weights) + bias\n    predictions = sigmoid(linear_model)\n    dw = (1 / len(X_train)) * np.dot(X_train.T, (predictions - y_train))\n    db = (1 / len(X_train)) * np.sum(predictions - y_train)\n    weights -= learning_rate * dw\n    bias -= learning_rate * db\n\n# Evaluate on test set\ntest_logits = np.dot(X_test, weights) + bias\ntest_preds = (sigmoid(test_logits) >= 0.5).astype(int)\naccuracy = np.mean(test_preds == y_test)\n\ntp = np.sum((test_preds == 1) & (y_test == 1))\ntn = np.sum((test_preds == 0) & (y_test == 0))\nfp = np.sum((test_preds == 1) & (y_test == 0))\nfn = np.sum((test_preds == 0) & (y_test == 1))\nprecision = tp / (tp + fp) if (tp + fp) > 0 else 0\nrecall = tp / (tp + fn) if (tp + fn) > 0 else 0\nf1 = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0\n\nprint(\"--- [1] Supervised Logistic Regression Classifier ---\")\nprint(f\"Optimal Weights: {weights.round(4)} | Bias: {bias:.4f}\")\nprint(f\"Test Accuracy:   {accuracy * 100:.2f}% ({np.sum(test_preds == y_test)} / {len(y_test)} correct)\")\nprint(f\"Precision:       {precision:.4f} | Recall: {recall:.4f} | F1-Score: {f1:.4f}\")\nprint(f\"Confusion Matrix: [TP={tp}, FP={fp}, FN={fn}, TN={tn}]\")\n\n# 3. UNSUPERVISED K-MEANS CLUSTERING (K=3)\nk = 3\ncentroids = X_features[np.random.choice(len(X_features), k, replace=False)]\n\nfor iteration in range(15):\n    distances = np.linalg.norm(X_features[:, np.newaxis] - centroids, axis=2)\n    cluster_assignments = np.argmin(distances, axis=1)\n    new_centroids = np.array([X_features[cluster_assignments == c].mean(axis=0) for c in range(k)])\n    if np.allclose(centroids, new_centroids):\n        break\n    centroids = new_centroids\n\ninertia = sum(np.sum((X_features[cluster_assignments == c] - centroids[c])**2) for c in range(k))\n\nprint(\"\\n--- [2] Unsupervised K-Means Clustering (K=3) ---\")\nprint(f\"Converged after {iteration + 1} iterations\")\nfor c in range(k):\n    cluster_size = np.sum(cluster_assignments == c)\n    print(f\"Cluster {c}: {cluster_size} points ({cluster_size / len(X_features) * 100:.1f}%) | Centroid: {centroids[c].round(3)}\")\nprint(f\"Total Inertia (WCSS): {inertia:.2f}\")"
-    },
     "topics": [
       {
         "number": 1,
@@ -1283,12 +1161,6 @@ print(f"Cumulative Variance Captured (2 Components): {np.sum(pca.explained_varia
         "relevance": "High-velocity streaming data ingestion, temporal downsampling, and sliding window telemetry."
       }
     ],
-    "codeExample": {
-      "filename": "module5_bigdata_deeplearning_pipeline.py",
-      "language": "python",
-      "title": "Module 5 — Distributed MapReduce Telemetry & Neural Network Backpropagation",
-      "code": "# ==============================================================================\n# MOHAN BABU UNIVERSITY (MBU) — DEPARTMENT OF DATA SCIENCE\n# MODULE 5: BIG DATA MAPREDUCE & NEURAL NETWORK ARCHITECTURE\n# ==============================================================================\nimport numpy as np\nimport pandas as pd\n\n# 1. BIG DATA DISTRIBUTED MAPREDUCE / RDD SIMULATION\ntelemetry_log_stream = [\n    \"ERROR 500 database_connection_timeout node_eu_1\",\n    \"WARN 429 rate_limit_exceeded node_us_2\",\n    \"INFO 200 query_cache_hit node_ap_1\",\n    \"ERROR 503 service_unavailable node_eu_2\",\n    \"INFO 200 query_executed_successfully node_us_1\",\n    \"WARN 404 resource_not_found node_us_2\",\n    \"ERROR 500 deadlock_detected node_eu_1\",\n    \"INFO 200 query_cache_hit node_us_1\"\n]\n\nmapped_records = []\nfor log in telemetry_log_stream:\n    tokens = log.split()\n    severity = tokens[0]\n    status_code = tokens[1]\n    mapped_records.append((f\"{severity}_{status_code}\", 1))\n\nshuffled = {}\nfor key, count in mapped_records:\n    shuffled.setdefault(key, []).append(count)\n\nreduced_aggregates = {k: sum(v) for k, v in shuffled.items()}\n\nprint(\"--- [1] Distributed MapReduce Telemetry Ingestion ---\")\ndf_mr = pd.DataFrame(list(reduced_aggregates.items()), columns=['Incident_Key', 'Total_Events']).sort_values(by='Total_Events', ascending=False)\nprint(df_mr.to_string(index=False))\n\n# 2. ARTIFICIAL NEURAL NETWORK: 2-LAYER PERCEPTRON (Forward & Backprop)\nnp.random.seed(42)\n\ndef relu(x):\n    return np.maximum(0, x)\n\ndef relu_derivative(x):\n    return (x > 0).astype(float)\n\ndef sigmoid(x):\n    return 1 / (1 + np.exp(-np.clip(x, -25, 25)))\n\nX_batch = np.array([\n    [0.1, 0.8, 0.4],\n    [0.9, 0.2, 0.6],\n    [0.3, 0.5, 0.7],\n    [0.8, 0.9, 0.1]\n])\ny_target = np.array([[0], [1], [0], [1]])\n\nW1 = np.random.randn(3, 4) * 0.5\nb1 = np.zeros((1, 4))\nW2 = np.random.randn(4, 1) * 0.5\nb2 = np.zeros((1, 1))\n\nalpha = 0.5\nprint(\"\\n--- [2] Multi-Layer Neural Network Training (Backpropagation) ---\")\n\nfor step in range(500):\n    Z1 = np.dot(X_batch, W1) + b1\n    A1 = relu(Z1)\n    Z2 = np.dot(A1, W2) + b2\n    A2 = sigmoid(Z2)\n\n    loss = -np.mean(y_target * np.log(A2 + 1e-12) + (1 - y_target) * np.log(1 - A2 + 1e-12))\n\n    dZ2 = A2 - y_target\n    dW2 = np.dot(A1.T, dZ2) / len(X_batch)\n    db2 = np.sum(dZ2, axis=0, keepdims=True) / len(X_batch)\n\n    dA1 = np.dot(dZ2, W2.T)\n    dZ1 = dA1 * relu_derivative(Z1)\n    dW1 = np.dot(X_batch.T, dZ1) / len(X_batch)\n    db1 = np.sum(dZ1, axis=0, keepdims=True) / len(X_batch)\n\n    W1 -= alpha * dW1\n    b1 -= alpha * db1\n    W2 -= alpha * dW2\n    b2 -= alpha * db2\n\n    if (step + 1) in [1, 100, 300, 500]:\n        print(f\"Epoch {step + 1:3d} | Binary Cross-Entropy Loss: {loss:.5f}\")\n\nprint(f\"\\nTarget Labels:     {y_target.flatten().tolist()}\")\nprint(f\"Model Predictions: {np.round(A2, 4).flatten().tolist()}\")\nprint(\"Final Convergence: Neural weights converged with mean prediction error < 0.04.\")"
-    },
     "topics": [
       {
         "number": 1,
